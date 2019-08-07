@@ -64,36 +64,6 @@ namespace SizeDiff {
 			return output;
 		}
 
-#if false
-		public string FormatChartJson (IEnumerable<Commit> commits, string app)
-		{
-			/*
-			{
-				"label": "66e88b",
-				"backroundColor": "rgba(255, 99, 132, 0.2)",
-				"data": [ ]
-			}
-			*/
-
-			var obj = commits.Select (commit => new {
-				label = Commit.Values[app]?.Keys.First() ?? "",
-				color = "rgba(255, 99, 132, 0.2)",
-				data = Commit.Vales[app]?.Values.F
-	 		});
-
-			string output = null;
-			foreach (var commit in commits) {
-				if (!commit.Values.TryGetValue (app, out var row))
-					continue;
-
-				if (output == null) {
-					output += $"{app},date,{row.Keys.Skip (1).Aggregate ((a, b) => $"{a},{b}")}\n";
-				}
-				output += $"{commit.Sha},{commit.Date.ToString ("O")},{row.Values.Skip (1).Aggregate ((a, b) => $"{a},{b ?? 0}")}\n";
-			}
-			return output;
-        }
-#endif
 		public static Task<Stream> GetRaw (string path, string sha, string repo)
 		{
 			var location = new Uri ($"https://raw.githubusercontent.com/{repo}/{sha}/{path}");
