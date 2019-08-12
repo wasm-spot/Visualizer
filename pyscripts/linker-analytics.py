@@ -2,6 +2,7 @@ import requests
 import pandas as pd
 from threading import Thread
 from queue import Queue
+import os
 
 class SizeExplorer():
 
@@ -83,8 +84,13 @@ def main():
     apps = list(df['App'])
     lib = list(df.columns)[1:]
     table = AppTable(apps, lib)
-    app_tables = table.separate_apps(commits)
-    print(app_tables['HelloWorld/bin/Release/netstandard2.0/dist/_framework/_bin/HelloWorld.dll'])
+    table.separate_apps(commits)
+
+def to_json():
+    for csv in os.listdir("app-csv/"):
+        df = pd.read_csv("app-csv/" + csv)
+        df.to_json("app-json/" + csv[:-4] + ".json", orient='table')
+            
 
 if __name__ == "__main__":
-    main()
+    to_json()
