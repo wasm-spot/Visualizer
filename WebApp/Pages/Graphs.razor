@@ -1,0 +1,50 @@
+@page "/"
+@inject HttpClient Http
+@inject IJSRuntime JsRuntime;
+@using Newtonsoft.Json;
+
+
+<h1>Linker Graphs</h1>
+
+<div class="dropdown">
+  <button class="dropbtn">View Graphs for App</button>
+  <div class="dropdown-content">
+    @if (apps == null) {
+        <p><em>Loading...</em></p>
+    } else {
+        @foreach (var app in apps)
+        {
+            <button onclick=@(()=>Graph(app))>@app</button>
+        }
+    }
+  </div>
+</div>
+
+@code {  
+    Dictionary<string, List<History.Info>> info;
+    string[] apps;
+    bool[] displayed;
+
+    private async Task Graph(string app) {
+        int index = Array.IndexOf(apps, app);
+        if (!displayed[index]) {
+            displayed[index] = true;
+            List<Dictionary<string, object>> data = new List<Dictionary<string, object>>();
+        
+            List<History.Info> infoPizza = info[app];
+            foreach (var item in infoPizza) {
+                data.Add(item.Library);
+            }
+            var json = JsonConvert.SerializeObject(data);
+            await JsRuntime.InvokeAsync<string>("graph", json);
+        }
+        
+    }
+
+
+    protected override async Task OnInitAsync() {
+        info = await History.LibraryTable.LoadHistory();
+        apps = info.Keys.ToArray();
+        displayed = new bool[apps.Length];
+    }
+}

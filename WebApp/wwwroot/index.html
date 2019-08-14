@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>WebApp</title>
+    <base href="/" />
+    <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/site.css" rel="stylesheet" />
+</head>
+<body>
+    <app>Loading...</app>
+
+    <script src="_framework/blazor.webassembly.js"></script>
+    <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.25.6/d3-legend.min.js"></script>
+
+    <script>
+    
+        function hexToRgb(hex) {
+            hex = hex.replace('#', '');
+            var bigint = parseInt(hex, 16);
+            var r = (bigint >> 16) & 255;
+            var g = (bigint >> 8) & 255;
+            var b = bigint & 255;
+
+            return "rgb(" + r + "," + g + "," + b + ")";
+        }
+        window.graph = function(json) {
+            var data = JSON.parse(json);
+            var color = d3.scaleOrdinal(d3.schemeCategory10);
+            var margin = {top: 120, right: 280, bottom: 130, left: 170},
+            width = 1200 - margin.left - margin.right,
+            height = 800 - margin.top - margin.bottom,
+            radius = 6;
+
+            var parseTime = d3.timeParse("%Y-%m-%dT%I:%M:%S.0000000+00:00");
+
+            var x = d3.scaleTime().range([0, width]);
+            var y = d3.scaleLinear().range([height, 0]);
+
+            var svg = d3.select("body").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+                .attr("transform", 
+                        "translate(" + margin.left + "," + margin.top + ")");
+
+
+            var lines = [];
+            var colors = [];
+            
+            var lib = Object.keys(data[0]).filter(function(value, index, arr) {
+                return value != "Date" && index != 0;
+            })
+            title = Object.keys(data[0])[0];
+            console.log(data);
+            data.forEach(function(d) {
+                d["Date"] = parseTime(d["Date"]);
+                lib.forEach(function(l) {
+                    d[l] = +d[l];
+                })
+            });
+
+            lib.forEach(function(l) {
+                line = d3.line()
+                    .x(function(d) { return x(d["Date"]); })
+                    .y(function(d) { return y(d[l]); });
+                lines.push(line);
+            })
+
+            x.domain(d3.extent(data, function(d) { return d["Date"]; }));
+            y.domain([0, d3.max(data, function(d) { 
+                return Math.max(d["mscorlib.dll"]); }) + 100000]);
+                
+            for (var i=0; i < lines.length; i++) {
+                colors.push(hexToRgb(color(i)))
+                svg.append("path")
+                        .data([data])
+                        .attr("class", "line")
+                        .attr("data-legend", lib[i])
+                        .style("stroke", color(i))
+                        .style("fill-opacity", 0)
+                        .style("stroke-width", 2)
+                        .attr("d", lines[i]);
+            }
+
+            svg.append("g")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x));
+
+            svg.append("g")
+                .call(d3.axisLeft(y));
+
+            var ordinal = d3.scaleOrdinal()
+                .domain(lib)
+                .range(colors)
+
+            svg.append("g")
+                .attr("class", "legendOrdinal")
+                .attr("transform", "translate(" + (width + 20) + ",20)")
+                .style("font-size", "10px")
+                .style("font-family", "Arial")
+
+            var legendOrdinal = d3.legendColor()
+                .scale(ordinal);
+
+            svg.select(".legendOrdinal")
+                .call(legendOrdinal);
+
+                svg.append("text")
+                    .attr("x", (width / 2))             
+                    .attr("y", 0 - (margin.top / 2))
+                    .attr("text-anchor", "middle")  
+                    .style("font-size", "16px") 
+                    .style("text-decoration", "underline")  
+                    .text(title);
+        }
+
+</script>
+</body>
+</html>
