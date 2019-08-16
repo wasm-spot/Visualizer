@@ -2,9 +2,8 @@
 <meta charset="utf-8">
 <style> /* set the CSS */
 
-.line {
+.data-line {
   fill: none;
-  stroke: steelblue;
   stroke-width: 2px;
 }
 
@@ -24,6 +23,8 @@
 
             return "rgb(" + r + "," + g + "," + b + ")";
         }
+
+
         function graph(url) {
             var color = d3.scaleOrdinal(d3.schemeCategory10);
             var margin = {top: 120, right: 170, bottom: 130, left: 170},
@@ -31,17 +32,17 @@
             height = 800 - margin.top - margin.bottom,
             radius = 6;
 
-            var parseTime = d3.timeParse("%Y-%m-%dT%I:%M:%SZ");
-
-            var x = d3.scaleTime().range([0, width]);
-            var y = d3.scaleLinear().range([height, 0]);
-
             var svg = d3.select("body").append("svg")
                 .attr("width", width + margin.left + margin.right)
                 .attr("height", height + margin.top + margin.bottom)
             .append("g")
                 .attr("transform", 
                         "translate(" + margin.left + "," + margin.top + ")");
+
+            var x = d3.scaleTime().range([0, width]);
+            var y = d3.scaleLinear().range([height, 0]);
+
+            var parseTime = d3.timeParse("%Y-%m-%dT%I:%M:%SZ");
 
             d3.csv(url, function(error, data) {
                 if (error) throw error;
@@ -80,22 +81,68 @@
                     return Math.max(d["mscorlib.dll"], d["System.dll"], 
                                     d["System.Core.dll"]); }) + 100000]);
                 
+
+                var zoom = d3.zoom()
+                    .scaleExtent([1, 2])
+                    .on("zoom", zoomed);
+
+                var view = svg.append("rect")
+                    .attr("class", "view")
+                    .attr("x", 0.5)
+                    .attr("y", 0.5)
+                    .attr("width", width - 20)
+                    .attr("height", height - 1)
+                    .attr("fill-opacity", 0);
+
+
+                var xAxis = d3.axisBottom(x);
+                var yAxis = d3.axisLeft(y);
+
+                var gX = svg.append("g")
+                    .attr("transform", "translate(0," + height + ")")
+                    .call(xAxis);
+
+                var gY = svg.append("g")
+                    .call(yAxis);
+
+                function zoomed() {
+                    view.attr("transform", d3.event.transform);
+                    gX.call(xAxis.scale(d3.event.transform.rescaleX(x)));
+                    gY.call(yAxis.scale(d3.event.transform.rescaleY(y)));
+
+                    svg.selectAll(".data-line").attr("transform", d3.event.transform);
+                }
+
+                function resetted() {
+                    svg.transition()
+                        .duration(750)
+                        .call(zoom.transform, d3.zoomIdentity);
+                }
+
+
+                svg.append('defs')
+                    .append('clipPath')
+                    .attr('id', 'clip')
+                    .append('rect')
+                        .attr('x', 0)
+                        .attr('y', 0)
+                        .attr('width', width)
+                        .attr('height', height);
+
+                const main = svg.append('g')
+                    .attr('class', 'main')
+                    .attr('clip-path', 'url(#clip)');
+
+                
                 for (var i=0; i < lines.length; i++) {
                     colors.push(hexToRgb(color(i)))
-                    svg.append("path")
+                    main.append("path")
                             .data([data])
-                            .attr("class", "line")
+                            .attr("class", "data-line")
                             .attr("data-legend", lib[i])
                             .style("stroke", color(i))
                             .attr("d", lines[i]);
                 }
-
-                svg.append("g")
-                    .attr("transform", "translate(0," + height + ")")
-                    .call(d3.axisBottom(x));
-
-                svg.append("g")
-                    .call(d3.axisLeft(y));
 
                 var ordinal = d3.scaleOrdinal()
                     .domain(lib)
@@ -112,11 +159,9 @@
 
                 svg.select(".legendOrdinal")
                     .call(legendOrdinal);
+
+                svg.call(zoom);
             });
-        }
-
-        var App = {
-
         }
         graph("https://raw.githubusercontent.com/lewing/SizeExplorer/master/app-csv/HelloWorld-bin-Release-netstandard2-0-dist-_framework-_bin-HelloWorld-dll.csv");
         graph("https://raw.githubusercontent.com/lewing/SizeExplorer/master/app-csv/BlazingPizza-Client-bin-Release-netstandard2-0-BlazingPizza-Client-dll.csv");

@@ -46,6 +46,12 @@
                 .attr("transform", 
                         "translate(" + margin.left + "," + margin.top + ")");
 
+            var zoom = d3.zoom()
+                .scaleExtent([1, 3])
+                .on("zoom", zoomed);
+
+            var xAxis = d3.axisBottom(x);
+            var yAxis = d3.axisLeft(y);
 
             var lines = [];
             var colors = [];
@@ -73,24 +79,46 @@
             y.domain([0, d3.max(data, function(d) { 
                 return Math.max(d["mscorlib.dll"]); }) + 100000]);
                 
-            for (var i=0; i < lines.length; i++) {
-                colors.push(hexToRgb(color(i)))
-                svg.append("path")
-                        .data([data])
-                        .attr("class", "line")
-                        .attr("data-legend", lib[i])
-                        .style("stroke", color(i))
-                        .style("fill-opacity", 0)
-                        .style("stroke-width", 2)
-                        .attr("d", lines[i]);
-            }
+            var view = svg.append("rect")
+                .attr("class", "view")
+                .attr("x", 0.5)
+                .attr("y", 0.5)
+                .attr("width", width - 20)
+                .attr("height", height - 1)
+                .attr("fill-opacity", 0);
 
-            svg.append("g")
+            var gX = svg.append("g")
                 .attr("transform", "translate(0," + height + ")")
-                .call(d3.axisBottom(x));
+                .call(xAxis);
 
-            svg.append("g")
-                .call(d3.axisLeft(y));
+            var gY = svg.append("g")
+                .call(yAxis)
+                .attr("class", "axis axis--y");
+
+            svg.append('defs')
+                .append('clipPath')
+                .attr('id', 'clip')
+                .append('rect')
+                    .attr('x', 0)
+                    .attr('y', 0)
+                    .attr('width', width)
+                    .attr('height', height);
+
+            const main = svg.append('g')
+                .attr('class', 'main')
+                .attr('clip-path', 'url(#clip)');
+
+            for (var i=0; i < lines.length; i++) {
+            colors.push(hexToRgb(color(i)))
+            main.append("path")
+                    .data([data])
+                    .attr("class", "data-line")
+                    .attr("data-legend", lib[i])
+                    .style("stroke", color(i))
+                    .style("fill-opacity", 0)
+                    .style("stroke-width", 2)
+                    .attr("d", lines[i]);
+        }
 
             var ordinal = d3.scaleOrdinal()
                 .domain(lib)
@@ -108,13 +136,29 @@
             svg.select(".legendOrdinal")
                 .call(legendOrdinal);
 
-                svg.append("text")
-                    .attr("x", (width / 2))             
-                    .attr("y", 0 - (margin.top / 2))
-                    .attr("text-anchor", "middle")  
-                    .style("font-size", "16px") 
-                    .style("text-decoration", "underline")  
-                    .text(title);
+            svg.selectAll("cell")
+
+            svg.append("text")
+                .attr("x", (width / 2))             
+                .attr("y", 0 - (margin.top / 2))
+                .attr("text-anchor", "middle")  
+                .style("font-size", "16px") 
+                .style("text-decoration", "underline")  
+                .text(title);
+
+            svg.append("button")
+                .style("position", "absolute");
+
+            svg.call(zoom);
+
+            function zoomed() {
+                view.attr("transform", d3.event.transform);
+                gX.call(xAxis.scale(d3.event.transform.rescaleX(x)));
+                gY.call(yAxis.scale(d3.event.transform.rescaleY(y)));
+
+                svg.selectAll(".data-line").attr("transform", d3.event.transform);
+            }
+
         }
 
 </script>
