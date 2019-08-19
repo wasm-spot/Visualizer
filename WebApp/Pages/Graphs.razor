@@ -7,7 +7,8 @@
 <h1>Linker Graphs</h1>
 
 <div class="dropdown">
-  <button class="dropbtn">View Graphs for App</button>
+  <button class="dropbtn btn">View Graphs for App</button>
+  <button onclick="@clear" class="btn btn-danger">Clear all graphs</button>
   <div class="dropdown-content">
     @if (apps == null) {
         <p><em>Loading...</em></p>
@@ -41,6 +42,10 @@
         
     }
 
+    private async void clear() {
+        await JsRuntime.InvokeAsync<string>("clear");
+        displayed = new bool[apps.Length];
+    }
 
     protected override async Task OnInitAsync() {
         info = await History.LibraryTable.LoadHistory();
