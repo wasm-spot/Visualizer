@@ -60,7 +60,6 @@
                 return value != "Date" && index != 0;
             })
             title = Object.keys(data[0])[0];
-            console.log(data);
             data.forEach(function(d) {
                 d["Date"] = parseTime(d["Date"]);
                 lib.forEach(function(l) {
