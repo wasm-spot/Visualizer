@@ -15,10 +15,10 @@
     } else {
         @foreach (var app in apps)
         {
-            <button onclick=@(()=>Graph(app))>@app</button>
+            <button onclick=@(()=>Graph(app, false))>@app</button>
         }
     }
-  </div>
+    </div>
 </div>
 
 @code {  
@@ -26,7 +26,7 @@
     string[] apps;
     bool[] displayed;
 
-    private async Task Graph(string app) {
+    private async Task Graph(string app, bool area) {
         int index = Array.IndexOf(apps, app);
         if (!displayed[index]) {
             displayed[index] = true;
@@ -38,6 +38,7 @@
             }
             var json = JsonConvert.SerializeObject(data);
             await JsRuntime.InvokeAsync<string>("graph", json);
+            await JsRuntime.InvokeAsync<string>("areaGraph", json);
         }
         
     }
