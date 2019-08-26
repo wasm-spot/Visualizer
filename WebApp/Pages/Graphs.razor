@@ -8,14 +8,14 @@
 
 <div class="dropdown">
   <button class="dropbtn btn">View Graphs for App</button>
-  <button onclick="@clear" class="btn btn-danger">Clear all graphs</button>
+  <button @onclick="clear" class="btn btn-danger">Clear all graphs</button>
   <div class="dropdown-content">
     @if (apps == null) {
         <p><em>Loading...</em></p>
     } else {
         @foreach (var app in apps)
         {
-            <button onclick=@(()=>Graph(app, false))>@app</button>
+            <button onclick=(()=>@Graph(app, false))>@app</button>
         }
     }
     </div>
@@ -48,7 +48,7 @@
         displayed = new bool[apps.Length];
     }
 
-    protected override async Task OnInitAsync() {
+    protected override async Task OnInitializedAsync() {
         info = await History.LibraryTable.LoadHistory();
         apps = info.Keys.ToArray();
         displayed = new bool[apps.Length];
