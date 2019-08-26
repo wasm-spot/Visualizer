@@ -15,7 +15,7 @@
     } else {
         @foreach (var app in apps)
         {
-            <button onclick=(()=>@Graph(app, false))>@app</button>
+            <button @onclick="@( e => Graph(app, false) )">@app</button>
         }
     }
     </div>
