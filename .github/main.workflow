@@ -1,8 +1,17 @@
-workflow "Build" {
-  on = "push"
-  resolves = ["Setup Dotnet for use with actions"]
-}
+name: dotnet Core CI
 
-action "Setup Dotnet for use with actions" {
-  uses = "actions/setup-dotnet@6c0e2a2a6b8dbd557c411f0bd105b341d4ce40d2"
-}
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v1
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.0.100-preview9-014004
+    - name: Build with dotnet
+      run: dotnet build WebApp --configuration Release
