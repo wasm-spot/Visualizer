@@ -1,0 +1,1918 @@
+[
+  {
+    "type": "assembly",
+    "name": "WebAssembly.Bindings",
+    "size": 8610,
+    "sections": [
+      {
+        "type": "class",
+        "name": "public auto ansi beforefieldinit WebAssembly.AnyRef\n       extends [netstandard]System.Object",
+        "size": 78,
+        "sections": [
+          {
+            "type": "method",
+            "name": "public hidebysig newslot specialname virtual final \n          instance int32  get_JSHandle() cil managed\n  ",
+            "size": 7,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname \n          instance void  set_JSHandle(int32 \u0027value\u0027) cil managed\n  ",
+            "size": 8,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname rtspecialname \n          instance void  .ctor(int32 js_handle) cil managed\n  ",
+            "size": 29,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname rtspecialname \n          instance void  .ctor(native int js_handle) cil managed\n  ",
+            "size": 34,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed WebAssembly.ConvertEnum\n       extends [netstandard]System.Enum",
+        "size": 0,
+        "sections": []
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi beforefieldinit WebAssembly.ExportAttribute\n       extends [netstandard]System.Attribute",
+        "size": 85,
+        "sections": [
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor() cil managed\n  ",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor([netstandard]System.Type contractType) cil managed\n  ",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(string contractName) cil managed\n  ",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(string contractName,\n                               [netstandard]System.Type contractType) cil managed\n  ",
+            "size": 23,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname instance string \n          get_ContractName() cil managed\n  ",
+            "size": 7,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname instance [netstandard]System.Type \n          get_ContractType() cil managed\n  ",
+            "size": 7,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname instance class WebAssembly.ConvertEnum \n          get_EnumValue() cil managed\n  ",
+            "size": 7,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname instance void \n          set_EnumValue(class WebAssembly.ConvertEnum \u0027value\u0027) cil managed\n  ",
+            "size": 8,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "interface public abstract auto ansi WebAssembly.IJSObject",
+        "size": 0,
+        "sections": []
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi beforefieldinit WebAssembly.JSException\n       extends [netstandard]System.Exception",
+        "size": 10,
+        "sections": [
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(string msg) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi beforefieldinit WebAssembly.JSObject\n       extends WebAssembly.AnyRef\n       implements WebAssembly.IJSObject,\n                  [netstandard]System.IDisposable",
+        "size": 709,
+        "sections": [
+          {
+            "type": "method",
+            "name": "public hidebysig specialname instance bool \n          get_IsDisposed() cil managed\n  ",
+            "size": 7,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname \n          instance void  set_IsDisposed(bool \u0027value\u0027) cil managed\n  ",
+            "size": 8,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor() cil managed\n  ",
+            "size": 79,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname rtspecialname \n          instance void  .ctor(native int js_handle) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname rtspecialname \n          instance void  .ctor(int32 js_handle) cil managed\n  ",
+            "size": 15,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname rtspecialname \n          instance void  .ctor(int32 js_handle,\n                               object raw_obj) cil managed\n  ",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance object \n          Invoke(string \u0027method\u0027,\n                 object[] args) cil managed\n  ",
+            "size": 43,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance object \n          GetObjectProperty(string name) cil managed\n  ",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance void \n          SetObjectProperty(string name,\n                            object \u0027value\u0027,\n                            [opt] bool createIfNotExists,\n                            [opt] bool hasOwnProperty) cil managed\n  ",
+            "size": 105,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig newslot specialname virtual final \n          instance int32  get_Length() cil managed\n  ",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname instance void \n          set_Length(int32 \u0027value\u0027) cil managed\n  ",
+            "size": 21,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance bool \n          HasOwnProperty(string prop) cil managed\n  ",
+            "size": 27,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance bool \n          PropertyIsEnumerable(string prop) cil managed\n  ",
+            "size": 27,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "family hidebysig instance void \n          FreeHandle() cil managed\n  ",
+            "size": 81,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig virtual instance bool \n          Equals(object obj) cil managed\n  ",
+            "size": 57,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig virtual instance int32 \n          GetHashCode() cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "family hidebysig virtual instance void \n          Finalize() cil managed\n  ",
+            "size": 21,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig newslot virtual final \n          instance void  Dispose() cil managed\n  ",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "family hidebysig newslot virtual \n          instance void  Dispose(bool disposing) cil managed\n  ",
+            "size": 46,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig virtual instance string \n          ToString() cil managed\n  ",
+            "size": 57,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed WebAssembly.Runtime\n       extends [netstandard]System.Object",
+        "size": 3041,
+        "sections": [
+          {
+            "type": "method",
+            "name": "public hidebysig static string \n          InvokeJS(string str) cil managed\n  ",
+            "size": 31,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig specialname rtspecialname static \n          void  .cctor() cil managed\n  ",
+            "size": 22,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig static int32  New\u003CT\u003E(object[] _params) cil managed\n  ",
+            "size": 56,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig static int32  New(string hostClassName,\n                                             object[] _params) cil managed\n  ",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig static class WebAssembly.JSObject \n          NewJSObject([opt] class WebAssembly.JSObject js_func_ptr,\n                      object[] _params) cil managed\n  ",
+            "size": 53,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static int32 \n          BindJSObject(int32 js_id,\n                       [netstandard]System.Type mappedType) cil managed\n  ",
+            "size": 93,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static int32 \n          BindCoreCLRObject(int32 js_id,\n                            int32 gcHandle) cil managed\n  ",
+            "size": 137,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static int32 \n          BindJSType(int32 js_id,\n                     [netstandard]System.Type mappedType) cil managed\n  ",
+            "size": 122,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static int32 \n          UnBindJSObject(int32 js_id) cil managed\n  ",
+            "size": 56,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static void  UnBindJSObjectAndFree(int32 js_id) cil managed\n  ",
+            "size": 85,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static void  UnBindRawJSObjectAndFree(int32 gcHandle) cil managed\n  ",
+            "size": 184,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig static void  FreeObject(object obj) cil managed\n  ",
+            "size": 132,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static object \n          CreateTaskSource(int32 js_id) cil managed\n  ",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static void  SetTaskSourceResult([netstandard]System.Threading.Tasks.TaskCompletionSource\u00601\u003Cobject\u003E tcs,\n                                                             object result) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static void  SetTaskSourceFailure([netstandard]System.Threading.Tasks.TaskCompletionSource\u00601\u003Cobject\u003E tcs,\n                                                              string reason) cil managed\n  ",
+            "size": 15,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static int32 \n          GetTaskAndBind([netstandard]System.Threading.Tasks.TaskCompletionSource\u00601\u003Cobject\u003E tcs,\n                         int32 js_id) cil managed\n  ",
+            "size": 18,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static int32 \n          BindExistingObject(object raw_obj,\n                             int32 js_id) cil managed\n  ",
+            "size": 76,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static int32 \n          GetJSObjectId(object raw_obj) cil managed\n  ",
+            "size": 55,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static object \n          GetMonoObject(int32 gc_handle) cil managed\n  ",
+            "size": 60,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static object \n          BoxInt(int32 i) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static object \n          BoxDouble(float64 d) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static object \n          BoxBool(int32 b) cil managed\n  ",
+            "size": 18,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static bool  IsSimpleArray(object a) cil managed\n  ",
+            "size": 54,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static object \n          GetCoreType(string coreObj) cil managed\n  ",
+            "size": 31,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static string \n          GetCallSignature(native int method_handle) cil managed\n  ",
+            "size": 386,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static object \n          ObjectToEnum(native int method_handle,\n                       int32 parm,\n                       object obj) cil managed\n  ",
+            "size": 72,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static void  GenericSetupJSContinuation\u003CT\u003E([netstandard]System.Threading.Tasks.Task\u00601\u003C!!T\u003E task,\n                                                                       class WebAssembly.JSObject cont_obj) cil managed\n  ",
+            "size": 54,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static void  SetupJSContinuation([netstandard]System.Threading.Tasks.Task task,\n                                                             class WebAssembly.JSObject cont_obj) cil managed\n  ",
+            "size": 189,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig static object \n          GetGlobalObject([opt] string str) cil managed\n  ",
+            "size": 41,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static string \n          ObjectToString(object o) cil managed\n  ",
+            "size": 44,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static float64 \n          GetDateValue(object dtv) cil managed\n  ",
+            "size": 149,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static [netstandard]System.DateTime \n          CreateDateTime(float64 ticks) cil managed\n  ",
+            "size": 21,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig static [netstandard]System.Enum \n          EnumFromExportContract([netstandard]System.Type enumType,\n                                 object \u0027value\u0027) cil managed\n  ",
+            "size": 411,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig static object \n          EnumToExportContract([netstandard]System.Enum \u0027value\u0027) cil managed\n  ",
+            "size": 213,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig static void  StopProfile() cil managed noinlining\n  ",
+            "size": 2,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig static void \n          DumpAotProfileData(uint8\u0026 buf,\n                             int32 len,\n                             string s) cil managed\n  ",
+            "size": 66,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor() cil managed\n  ",
+            "size": 8,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi beforefieldinit WebAssembly.Host.HostObject\n       extends WebAssembly.Host.HostObjectBase",
+        "size": 16,
+        "sections": [
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(string hostName,\n                               object[] _params) cil managed\n  ",
+            "size": 16,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public abstract auto ansi beforefieldinit WebAssembly.Host.HostObjectBase\n       extends WebAssembly.JSObject\n       implements WebAssembly.Host.IHostObject",
+        "size": 75,
+        "sections": [
+          {
+            "type": "method",
+            "name": "family hidebysig specialname rtspecialname \n          instance void  .ctor(int32 js_handle) cil managed\n  ",
+            "size": 65,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname rtspecialname \n          instance void  .ctor(native int js_handle) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "interface public abstract auto ansi WebAssembly.Host.IHostObject",
+        "size": 0,
+        "sections": []
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi beforefieldinit WebAssembly.Core.Array\n       extends WebAssembly.Core.CoreObject",
+        "size": 274,
+        "sections": [
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(object[] _params) cil managed\n  ",
+            "size": 15,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname rtspecialname \n          instance void  .ctor(native int js_handle) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance int32 \n          Push(object[] elements) cil managed\n  ",
+            "size": 18,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance object \n          Pop() cil managed\n  ",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance object \n          Shift() cil managed\n  ",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance int32 \n          UnShift(object[] elements) cil managed\n  ",
+            "size": 18,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance int32 \n          IndexOf(object searchElement,\n                  [opt] int32 fromIndex) cil managed\n  ",
+            "size": 36,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance int32 \n          LastIndexOf(object searchElement) cil managed\n  ",
+            "size": 27,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance int32 \n          LastIndexOf(object searchElement,\n                      int32 endIndex) cil managed\n  ",
+            "size": 36,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname instance object \n          get_Item(int32 i) cil managed\n  ",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname instance void \n          set_Item(int32 i,\n                   object \u0027value\u0027) cil managed\n  ",
+            "size": 38,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi beforefieldinit WebAssembly.Core.ArrayBuffer\n       extends WebAssembly.Core.CoreObject",
+        "size": 165,
+        "sections": [
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor() cil managed\n  ",
+            "size": 19,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(int32 length) cil managed\n  ",
+            "size": 29,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname rtspecialname \n          instance void  .ctor(native int js_handle) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname instance int32 \n          get_ByteLength() cil managed\n  ",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname instance bool \n          get_IsView() cil managed\n  ",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance class WebAssembly.Core.ArrayBuffer \n          Slice(int32 begin) cil managed\n  ",
+            "size": 32,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance class WebAssembly.Core.ArrayBuffer \n          Slice(int32 begin,\n                int32 end) cil managed\n  ",
+            "size": 41,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public abstract auto ansi beforefieldinit WebAssembly.Core.CoreObject\n       extends WebAssembly.JSObject",
+        "size": 75,
+        "sections": [
+          {
+            "type": "method",
+            "name": "family hidebysig specialname rtspecialname \n          instance void  .ctor(int32 js_handle) cil managed\n  ",
+            "size": 65,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname rtspecialname \n          instance void  .ctor(native int js_handle) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi beforefieldinit WebAssembly.Core.DataView\n       extends WebAssembly.Core.CoreObject",
+        "size": 1071,
+        "sections": [
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer) cil managed\n  ",
+            "size": 24,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer,\n                               int32 byteOffset) cil managed\n  ",
+            "size": 33,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer,\n                               int32 byteOffset,\n                               int32 byteLength) cil managed\n  ",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer) cil managed\n  ",
+            "size": 24,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer,\n                               int32 byteOffset) cil managed\n  ",
+            "size": 33,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer,\n                               int32 byteOffset,\n                               int32 byteLength) cil managed\n  ",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname rtspecialname \n          instance void  .ctor(native int js_handle) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname instance int32 \n          get_ByteLength() cil managed\n  ",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname instance int32 \n          get_ByteOffset() cil managed\n  ",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname instance class WebAssembly.Core.ArrayBuffer \n          get_Buffer() cil managed\n  ",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance float32 \n          GetFloat32(int32 byteOffset,\n                     [opt] bool littleEndian) cil managed\n  ",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance float64 \n          GetFloat64(int32 byteOffset,\n                     [opt] bool littleEndian) cil managed\n  ",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance int16 \n          GetInt16(int32 byteOffset,\n                   [opt] bool littleEndian) cil managed\n  ",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance int32 \n          GetInt32(int32 byteOffset,\n                   [opt] bool littleEndian) cil managed\n  ",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance int8 \n          GetInt8(int32 byteOffset,\n                  [opt] bool littleEndian) cil managed\n  ",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance uint16 \n          GetUint16(int32 byteOffset,\n                    [opt] bool littleEndian) cil managed\n  ",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance uint32 \n          GetUint32(int32 byteOffset,\n                    [opt] bool littleEndian) cil managed\n  ",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance uint8 \n          GetUint8(int32 byteOffset,\n                   [opt] bool littleEndian) cil managed\n  ",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance void \n          SetFloat32(int32 byteOffset,\n                     float32 \u0027value\u0027,\n                     [opt] bool littleEndian) cil managed\n  ",
+            "size": 46,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance void \n          SetFloat64(int32 byteOffset,\n                     float64 \u0027value\u0027,\n                     [opt] bool littleEndian) cil managed\n  ",
+            "size": 46,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance void \n          SetInt16(int32 byteOffset,\n                   int16 \u0027value\u0027,\n                   [opt] bool littleEndian) cil managed\n  ",
+            "size": 46,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance void \n          SetInt32(int32 byteOffset,\n                   int32 \u0027value\u0027,\n                   [opt] bool littleEndian) cil managed\n  ",
+            "size": 46,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance void \n          SetInt8(int32 byteOffset,\n                  int8 \u0027value\u0027,\n                  [opt] bool littleEndian) cil managed\n  ",
+            "size": 46,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance void \n          SetUint16(int32 byteOffset,\n                    uint16 \u0027value\u0027,\n                    [opt] bool littleEndian) cil managed\n  ",
+            "size": 46,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance void \n          SetUint32(int32 byteOffset,\n                    uint32 \u0027value\u0027,\n                    [opt] bool littleEndian) cil managed\n  ",
+            "size": 46,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance void \n          SetUint8(int32 byteOffset,\n                   uint8 \u0027value\u0027,\n                   [opt] bool littleEndian) cil managed\n  ",
+            "size": 46,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig instance !!U \n          UnBoxValue\u003Cvaluetype .ctor ([netstandard]System.ValueType) U\u003E(object jsValue) cil managed\n  ",
+            "size": 108,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed beforefieldinit WebAssembly.Core.Float32Array\n       extends class WebAssembly.Core.TypedArray\u00602\u003Cclass WebAssembly.Core.Float32Array,float32\u003E",
+        "size": 119,
+        "sections": [
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor() cil managed\n  ",
+            "size": 9,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(int32 length) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer,\n                               int32 byteOffset) cil managed\n  ",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer,\n                               int32 byteOffset,\n                               int32 length) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer,\n                               int32 byteOffset) cil managed\n  ",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer,\n                               int32 byteOffset,\n                               int32 length) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname rtspecialname \n          instance void  .ctor(native int js_handle) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          [System.Memory]System.Span\u00601\u003Cfloat32\u003E \n          op_Implicit(class WebAssembly.Core.Float32Array typedarray) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          class WebAssembly.Core.Float32Array \n          op_Implicit([System.Memory]System.Span\u00601\u003Cfloat32\u003E span) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed beforefieldinit WebAssembly.Core.Float64Array\n       extends class WebAssembly.Core.TypedArray\u00602\u003Cclass WebAssembly.Core.Float64Array,float64\u003E",
+        "size": 119,
+        "sections": [
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor() cil managed\n  ",
+            "size": 9,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(int32 length) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer,\n                               int32 byteOffset) cil managed\n  ",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer,\n                               int32 byteOffset,\n                               int32 length) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer,\n                               int32 byteOffset) cil managed\n  ",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer,\n                               int32 byteOffset,\n                               int32 length) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname rtspecialname \n          instance void  .ctor(native int js_handle) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          [System.Memory]System.Span\u00601\u003Cfloat64\u003E \n          op_Implicit(class WebAssembly.Core.Float64Array typedarray) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          class WebAssembly.Core.Float64Array \n          op_Implicit([System.Memory]System.Span\u00601\u003Cfloat64\u003E span) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi beforefieldinit WebAssembly.Core.Function\n       extends WebAssembly.Core.CoreObject",
+        "size": 128,
+        "sections": [
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(object[] args) cil managed\n  ",
+            "size": 15,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname rtspecialname \n          instance void  .ctor(native int js_handle) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance object \n          Apply([opt] object thisArg,\n                [opt] object[] argsArray) cil managed\n  ",
+            "size": 26,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance class WebAssembly.Core.Function \n          Bind([opt] object thisArg,\n               [opt] object[] argsArray) cil managed\n  ",
+            "size": 31,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance object \n          Call([opt] object thisArg,\n               object[] argsArray) cil managed\n  ",
+            "size": 46,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed beforefieldinit WebAssembly.Core.Int16Array\n       extends class WebAssembly.Core.TypedArray\u00602\u003Cclass WebAssembly.Core.Int16Array,int16\u003E",
+        "size": 119,
+        "sections": [
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor() cil managed\n  ",
+            "size": 9,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(int32 length) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer,\n                               int32 byteOffset) cil managed\n  ",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer,\n                               int32 byteOffset,\n                               int32 length) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer,\n                               int32 byteOffset) cil managed\n  ",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer,\n                               int32 byteOffset,\n                               int32 length) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname rtspecialname \n          instance void  .ctor(native int js_handle) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          [System.Memory]System.Span\u00601\u003Cint16\u003E \n          op_Implicit(class WebAssembly.Core.Int16Array typedarray) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          class WebAssembly.Core.Int16Array \n          op_Implicit([System.Memory]System.Span\u00601\u003Cint16\u003E span) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed beforefieldinit WebAssembly.Core.Int32Array\n       extends class WebAssembly.Core.TypedArray\u00602\u003Cclass WebAssembly.Core.Int32Array,int32\u003E",
+        "size": 119,
+        "sections": [
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor() cil managed\n  ",
+            "size": 9,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(int32 length) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer,\n                               int32 byteOffset) cil managed\n  ",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer,\n                               int32 byteOffset,\n                               int32 length) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer,\n                               int32 byteOffset) cil managed\n  ",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer,\n                               int32 byteOffset,\n                               int32 length) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname rtspecialname \n          instance void  .ctor(native int js_handle) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          [System.Memory]System.Span\u00601\u003Cint32\u003E \n          op_Implicit(class WebAssembly.Core.Int32Array typedarray) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          class WebAssembly.Core.Int32Array \n          op_Implicit([System.Memory]System.Span\u00601\u003Cint32\u003E span) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed beforefieldinit WebAssembly.Core.Int8Array\n       extends class WebAssembly.Core.TypedArray\u00602\u003Cclass WebAssembly.Core.Int8Array,int8\u003E",
+        "size": 119,
+        "sections": [
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor() cil managed\n  ",
+            "size": 9,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(int32 length) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer,\n                               int32 byteOffset) cil managed\n  ",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer,\n                               int32 byteOffset,\n                               int32 length) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer,\n                               int32 byteOffset) cil managed\n  ",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer,\n                               int32 byteOffset,\n                               int32 length) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname rtspecialname \n          instance void  .ctor(native int js_handle) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          [System.Memory]System.Span\u00601\u003Cint8\u003E \n          op_Implicit(class WebAssembly.Core.Int8Array typedarray) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          class WebAssembly.Core.Int8Array \n          op_Implicit([System.Memory]System.Span\u00601\u003Cint8\u003E span) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi beforefieldinit WebAssembly.Core.SharedArrayBuffer\n       extends WebAssembly.Core.CoreObject",
+        "size": 97,
+        "sections": [
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(int32 length) cil managed\n  ",
+            "size": 29,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname rtspecialname \n          instance void  .ctor(native int js_handle) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname instance int32 \n          get_ByteLength() cil managed\n  ",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance class WebAssembly.Core.SharedArrayBuffer \n          Slice(int32 begin,\n                int32 end) cil managed\n  ",
+            "size": 41,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public abstract auto ansi beforefieldinit WebAssembly.Core.TypedArray\u00602\u003CT,valuetype .ctor ([netstandard]System.ValueType) U\u003E\n       extends WebAssembly.Core.CoreObject\n       implements WebAssembly.Core.ITypedArray,\n                  class WebAssembly.Core.ITypedArray\u00602\u003C!T,!U\u003E",
+        "size": 1715,
+        "sections": [
+          {
+            "type": "method",
+            "name": "family hidebysig specialname rtspecialname \n          instance void  .ctor() cil managed\n  ",
+            "size": 19,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "family hidebysig specialname rtspecialname \n          instance void  .ctor(int32 length) cil managed\n  ",
+            "size": 29,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "family hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer) cil managed\n  ",
+            "size": 24,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "family hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer,\n                               int32 byteOffset) cil managed\n  ",
+            "size": 33,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "family hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer,\n                               int32 byteOffset,\n                               int32 length) cil managed\n  ",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "family hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer) cil managed\n  ",
+            "size": 24,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "family hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer,\n                               int32 byteOffset) cil managed\n  ",
+            "size": 33,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "family hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer,\n                               int32 byteOffset,\n                               int32 length) cil managed\n  ",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname rtspecialname \n          instance void  .ctor(native int js_handle) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig newslot virtual final \n          instance class WebAssembly.Core.TypedArrayTypeCode \n          GetTypedArrayType() cil managed\n  ",
+            "size": 133,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig newslot specialname virtual final \n          instance int32  get_BytesPerElement() cil managed\n  ",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig newslot specialname virtual final \n          instance string  get_Name() cil managed\n  ",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig newslot specialname virtual final \n          instance int32  get_ByteLength() cil managed\n  ",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig newslot specialname virtual final \n          instance class WebAssembly.Core.ArrayBuffer \n          get_Buffer() cil managed\n  ",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance void \n          Fill(!U \u0027value\u0027) cil managed\n  ",
+            "size": 28,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance void \n          Fill(!U \u0027value\u0027,\n               int32 start) cil managed\n  ",
+            "size": 37,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance void \n          Fill(!U \u0027value\u0027,\n               int32 start,\n               int32 end) cil managed\n  ",
+            "size": 46,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig newslot virtual final \n          instance void  Set(class WebAssembly.Core.Array \u0027array\u0027) cil managed\n  ",
+            "size": 23,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig newslot virtual final \n          instance void  Set(class WebAssembly.Core.Array \u0027array\u0027,\n                             int32 offset) cil managed\n  ",
+            "size": 32,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig newslot virtual final \n          instance void  Set(class WebAssembly.Core.ITypedArray typedArray) cil managed\n  ",
+            "size": 23,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig newslot virtual final \n          instance void  Set(class WebAssembly.Core.ITypedArray typedArray,\n                             int32 offset) cil managed\n  ",
+            "size": 32,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig newslot virtual final \n          instance !T  Slice() cil managed\n  ",
+            "size": 22,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig newslot virtual final \n          instance !T  Slice(int32 begin) cil managed\n  ",
+            "size": 32,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig newslot virtual final \n          instance !T  Slice(int32 begin,\n                             int32 end) cil managed\n  ",
+            "size": 41,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig newslot virtual final \n          instance !T  SubArray() cil managed\n  ",
+            "size": 22,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig newslot virtual final \n          instance !T  SubArray(int32 begin) cil managed\n  ",
+            "size": 32,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig newslot virtual final \n          instance !T  SubArray(int32 begin,\n                                int32 end) cil managed\n  ",
+            "size": 41,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname instance [netstandard]System.Nullable\u00601\u003C!U\u003E \n          get_Item(int32 i) cil managed\n  ",
+            "size": 48,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname instance void \n          set_Item(int32 i,\n                   [netstandard]System.Nullable\u00601\u003C!U\u003E \u0027value\u0027) cil managed\n  ",
+            "size": 43,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig instance [netstandard]System.Nullable\u00601\u003C!U\u003E \n          UnBoxValue(object jsValue) cil managed\n  ",
+            "size": 100,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance !U[] \n          ToArray() cil managed\n  ",
+            "size": 46,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig static !T  From([System.Memory]System.ReadOnlySpan\u00601\u003C!U\u003E span) cil managed\n  ",
+            "size": 147,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance int32 \n          CopyTo([System.Memory]System.Span\u00601\u003C!U\u003E span) cil managed\n  ",
+            "size": 91,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig instance int32 \n          CopyFrom(void* ptrSource,\n                   int32 offset,\n                   int32 count) cil managed\n  ",
+            "size": 63,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig instance int32 \n          CopyFrom([System.Memory]System.ReadOnlySpan\u00601\u003C!U\u003E span) cil managed\n  ",
+            "size": 99,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "family hidebysig instance void \n          ValidateTarget([System.Memory]System.Span\u00601\u003C!U\u003E target) cil managed\n  ",
+            "size": 45,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "family hidebysig instance void \n          ValidateSource([System.Memory]System.ReadOnlySpan\u00601\u003C!U\u003E source) cil managed\n  ",
+            "size": 45,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "family hidebysig static void  ValidateFromSource([System.Memory]System.ReadOnlySpan\u00601\u003C!U\u003E source) cil managed\n  ",
+            "size": 45,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "family hidebysig static void  ValidateFromSource(!U[] source,\n                                                           int32 offset,\n                                                           int32 count) cil managed\n  ",
+            "size": 75,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed WebAssembly.Core.TypedArrayTypeCode\n       extends [netstandard]System.Enum",
+        "size": 0,
+        "sections": []
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed beforefieldinit WebAssembly.Core.Uint16Array\n       extends class WebAssembly.Core.TypedArray\u00602\u003Cclass WebAssembly.Core.Uint16Array,uint16\u003E",
+        "size": 119,
+        "sections": [
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor() cil managed\n  ",
+            "size": 9,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(int32 length) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer,\n                               int32 byteOffset) cil managed\n  ",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer,\n                               int32 byteOffset,\n                               int32 length) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer,\n                               int32 byteOffset) cil managed\n  ",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer,\n                               int32 byteOffset,\n                               int32 length) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname rtspecialname \n          instance void  .ctor(native int js_handle) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          [System.Memory]System.Span\u00601\u003Cuint16\u003E \n          op_Implicit(class WebAssembly.Core.Uint16Array typedarray) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          class WebAssembly.Core.Uint16Array \n          op_Implicit([System.Memory]System.Span\u00601\u003Cuint16\u003E span) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed beforefieldinit WebAssembly.Core.Uint32Array\n       extends class WebAssembly.Core.TypedArray\u00602\u003Cclass WebAssembly.Core.Uint32Array,uint32\u003E",
+        "size": 119,
+        "sections": [
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor() cil managed\n  ",
+            "size": 9,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(int32 length) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer,\n                               int32 byteOffset) cil managed\n  ",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer,\n                               int32 byteOffset,\n                               int32 length) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer,\n                               int32 byteOffset) cil managed\n  ",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer,\n                               int32 byteOffset,\n                               int32 length) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname rtspecialname \n          instance void  .ctor(native int js_handle) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          [System.Memory]System.Span\u00601\u003Cuint32\u003E \n          op_Implicit(class WebAssembly.Core.Uint32Array typedarray) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          class WebAssembly.Core.Uint32Array \n          op_Implicit([System.Memory]System.Span\u00601\u003Cuint32\u003E span) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed beforefieldinit WebAssembly.Core.Uint8Array\n       extends class WebAssembly.Core.TypedArray\u00602\u003Cclass WebAssembly.Core.Uint8Array,uint8\u003E",
+        "size": 119,
+        "sections": [
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor() cil managed\n  ",
+            "size": 9,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(int32 length) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer,\n                               int32 byteOffset) cil managed\n  ",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer,\n                               int32 byteOffset,\n                               int32 length) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer,\n                               int32 byteOffset) cil managed\n  ",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer,\n                               int32 byteOffset,\n                               int32 length) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname rtspecialname \n          instance void  .ctor(native int js_handle) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          [System.Memory]System.Span\u00601\u003Cuint8\u003E \n          op_Implicit(class WebAssembly.Core.Uint8Array typedarray) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          class WebAssembly.Core.Uint8Array \n          op_Implicit([System.Memory]System.Span\u00601\u003Cuint8\u003E span) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed beforefieldinit WebAssembly.Core.Uint8ClampedArray\n       extends class WebAssembly.Core.TypedArray\u00602\u003Cclass WebAssembly.Core.Uint8ClampedArray,uint8\u003E",
+        "size": 119,
+        "sections": [
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor() cil managed\n  ",
+            "size": 9,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(int32 length) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer,\n                               int32 byteOffset) cil managed\n  ",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.ArrayBuffer buffer,\n                               int32 byteOffset,\n                               int32 length) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer,\n                               int32 byteOffset) cil managed\n  ",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor(class WebAssembly.Core.SharedArrayBuffer buffer,\n                               int32 byteOffset,\n                               int32 length) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "assembly hidebysig specialname rtspecialname \n          instance void  .ctor(native int js_handle) cil managed\n  ",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          [System.Memory]System.Span\u00601\u003Cuint8\u003E \n          op_Implicit(class WebAssembly.Core.Uint8ClampedArray typedarray) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          class WebAssembly.Core.Uint8ClampedArray \n          op_Implicit([System.Memory]System.Span\u00601\u003Cuint8\u003E span) cil managed\n  ",
+            "size": 12,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "interface public abstract auto ansi WebAssembly.Core.ITypedArray",
+        "size": 0,
+        "sections": []
+      },
+      {
+        "type": "class",
+        "name": "interface public abstract auto ansi WebAssembly.Core.ITypedArray\u00602\u003CT,valuetype .ctor ([netstandard]System.ValueType) U\u003E",
+        "size": 0,
+        "sections": []
+      }
+    ]
+  },
+  {
+    "type": "assembly",
+    "name": "WebAssembly.Net.Http",
+    "size": 208,
+    "sections": [
+      {
+        "type": "class",
+        "name": "public auto ansi WebAssembly.Net.Http.HttpClient.WasmHttpMessageHandler\n       extends [netstandard]System.Net.Http.HttpMessageHandler",
+        "size": 208,
+        "sections": [
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          class WebAssembly.Net.Http.HttpClient.FetchCredentialsOption \n          get_DefaultCredentials() cil managed\n  ",
+            "size": 6,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          void  set_DefaultCredentials(class WebAssembly.Net.Http.HttpClient.FetchCredentialsOption \u0027value\u0027) cil managed\n  ",
+            "size": 7,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          class WebAssembly.Net.Http.HttpClient.RequestCache \n          get_Cache() cil managed\n  ",
+            "size": 6,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          void  set_Cache(class WebAssembly.Net.Http.HttpClient.RequestCache \u0027value\u0027) cil managed\n  ",
+            "size": 7,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          class WebAssembly.Net.Http.HttpClient.RequestMode \n          get_Mode() cil managed\n  ",
+            "size": 6,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          void  set_Mode(class WebAssembly.Net.Http.HttpClient.RequestMode \u0027value\u0027) cil managed\n  ",
+            "size": 7,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          bool  get_StreamingSupported() cil managed\n  ",
+            "size": 6,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          bool  get_StreamingEnabled() cil managed\n  ",
+            "size": 6,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname static \n          void  set_StreamingEnabled(bool \u0027value\u0027) cil managed\n  ",
+            "size": 7,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig specialname rtspecialname static \n          void  .cctor() cil managed\n  ",
+            "size": 81,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "public hidebysig specialname rtspecialname \n          instance void  .ctor() cil managed\n  ",
+            "size": 16,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig static class WebAssembly.Net.Http.HttpClient.WasmHttpMessageHandler \n          GetHttpMessageHandler() cil managed\n  ",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "private hidebysig instance void \n          handlerInit() cil managed\n  ",
+            "size": 42,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed WebAssembly.Net.Http.HttpClient.FetchCredentialsOption\n       extends [netstandard]System.Enum",
+        "size": 0,
+        "sections": []
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed WebAssembly.Net.Http.HttpClient.RequestCache\n       extends [netstandard]System.Enum",
+        "size": 0,
+        "sections": []
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed WebAssembly.Net.Http.HttpClient.RequestMode\n       extends [netstandard]System.Enum",
+        "size": 0,
+        "sections": []
+      }
+    ]
+  }
+]

@@ -1,0 +1,200 @@
+System.Diagnostics.DebuggerHiddenAttribute-mscorlib,14
+System.Diagnostics.DebuggerHiddenAttribute-I18N.CJK,6
+System.Diagnostics.DebuggerHiddenAttribute-I18N,3
+System.Diagnostics.DebuggerHiddenAttribute-System.Text.Encodings.Web,1
+System.Diagnostics.DebuggerHiddenAttribute-System.Security.Policy.Evidence System.Reflection.Assembly,4
+System.Diagnostics.DebuggerHiddenAttribute-System.Reflection.Assembly System.Reflection.Assembly,4
+System.Diagnostics.DebuggerStepThroughAttribute-mscorlib,9
+System.Diagnostics.DebuggerStepThroughAttribute-I18N.CJK,4
+System.Diagnostics.DebuggerStepThroughAttribute-I18N,3
+System.Diagnostics.DebuggerStepThroughAttribute-System.Security.Policy.Evidence System.Reflection.Assembly,4
+System.Diagnostics.DebuggerStepThroughAttribute-System.Reflection.Assembly System.Reflection.Assembly,4
+System.Diagnostics.DebuggerStepThroughAttribute-WebApp,1
+System.Runtime.InteropServices.ClassInterfaceAttribute-mscorlib,23
+System.Runtime.InteropServices.ClassInterfaceAttribute-System.Reflection.RuntimeAssembly,1
+System.Runtime.InteropServices.ClassInterfaceAttribute-I18N,1
+System.Runtime.InteropServices.ComVisibleAttribute-mscorlib,306
+System.Runtime.InteropServices.ComVisibleAttribute-System.Reflection.RuntimeAssembly,1
+System.Runtime.InteropServices.ComVisibleAttribute-I18N,44
+System.Runtime.InteropServices.ComVisibleAttribute-System.Text.Json,1
+System.Runtime.InteropServices.ComVisibleAttribute-System.Text.Encodings.Web,8
+System.Runtime.InteropServices.ComVisibleAttribute-System.IO.Stream System.Reflection.Assembly,6
+System.Runtime.InteropServices.ComVisibleAttribute-I18N.CJK,8
+System.Runtime.InteropServices.ComVisibleAttribute-System.String System.Reflection.Assembly,5
+System.Runtime.InteropServices.ComVisibleAttribute-System.Reflection.Assembly System.Reflection.Assembly,37
+System.Runtime.InteropServices.ComVisibleAttribute-System.Security.Policy.Evidence System.Reflection.Assembly,22
+System.Runtime.InteropServices.ComVisibleAttribute-System.Boolean System.Reflection.Assembly,2
+System.Runtime.InteropServices.ComVisibleAttribute-WebApp,26
+System.CLSCompliantAttribute-mscorlib,179
+System.CLSCompliantAttribute-I18N,19
+System.CLSCompliantAttribute-I18N.CJK,7
+System.CLSCompliantAttribute-System.Text.Encodings.Web,6
+System.CLSCompliantAttribute-System.IO.Stream System.Reflection.Assembly,2
+System.CLSCompliantAttribute-System.Reflection.Assembly System.Reflection.Assembly,1
+System.CLSCompliantAttribute-System.Byte* System.Globalization.GlobalizationAssembly,1
+System.CLSCompliantAttribute-WebApp,9
+System.Reflection.DefaultMemberAttribute-mscorlib,22
+System.Reflection.DefaultMemberAttribute-System.Text.Json,1
+System.Reflection.DefaultMemberAttribute-System.Text.Encodings.Web,2
+System.Reflection.DefaultMemberAttribute-I18N,7
+System.Reflection.DefaultMemberAttribute-WebApp,9
+System.Reflection.DefaultMemberAttribute-System.Reflection.Assembly System.Reflection.Assembly,4
+System.Reflection.DefaultMemberAttribute-System.Security.Policy.Evidence System.Reflection.Assembly,2
+System.Diagnostics.DebuggerTypeProxyAttribute-mscorlib,8
+System.Diagnostics.DebuggerTypeProxyAttribute-System.Text.Json,1
+System.Diagnostics.DebuggerTypeProxyAttribute-WebApp,7
+System.Diagnostics.DebuggerTypeProxyAttribute-System.Text.Encodings.Web,2
+System.Diagnostics.DebuggerTypeProxyAttribute-System.Reflection.Assembly System.Reflection.Assembly,1
+System.Diagnostics.DebuggerTypeProxyAttribute-I18N,1
+System.Diagnostics.DebuggerTypeProxyAttribute-I18N.CJK,1
+System.Diagnostics.DebuggerDisplayAttribute-mscorlib,8
+System.Diagnostics.DebuggerDisplayAttribute-System.Text.Json,1
+System.Diagnostics.DebuggerDisplayAttribute-WebApp,10
+System.Diagnostics.DebuggerDisplayAttribute-System.Text.Encodings.Web,2
+System.Diagnostics.DebuggerDisplayAttribute-I18N,2
+System.Diagnostics.DebuggerDisplayAttribute-System.Reflection.Assembly System.Reflection.Assembly,1
+System.Diagnostics.DebuggerDisplayAttribute-I18N.CJK,2
+System.Runtime.InteropServices.GuidAttribute-mscorlib,24
+System.Runtime.InteropServices.GuidAttribute-I18N.CJK,1
+System.Runtime.Serialization.OptionalFieldAttribute-mscorlib,19
+System.Runtime.Serialization.OptionalFieldAttribute-I18N,4
+System.Runtime.Serialization.OptionalFieldAttribute-System.Text.Encodings.Web,6
+System.MonoTODOAttribute:mscorlib.dll-mscorlib,16
+System.MonoTODOAttribute:mscorlib.dll-System.String System.Reflection.Assembly,1
+System.MonoTODOAttribute:mscorlib.dll-System.IO.Stream System.Reflection.Assembly,1
+System.MonoTODOAttribute:mscorlib.dll-I18N.CJK,2
+System.MonoTODOAttribute:mscorlib.dll-System.Boolean System.Reflection.Assembly,3
+System.MonoTODOAttribute:mscorlib.dll-System.Security.Policy.Evidence System.Reflection.Assembly,2
+System.MonoTODOAttribute:mscorlib.dll-System.Reflection.Assembly System.Reflection.Assembly,2
+System.MonoTODOAttribute:mscorlib.dll-I18N,1
+System.MonoTODOAttribute:mscorlib.dll-WebApp,1
+System.MonoTODOAttribute:mscorlib.dll-System.Text.Encodings.Web,1
+System.Runtime.CompilerServices.IsReadOnlyAttribute-mscorlib,6
+System.Runtime.CompilerServices.IsReadOnlyAttribute-System.Text.Json,1
+System.Runtime.CompilerServices.IsReadOnlyAttribute-WebApp,7
+System.Runtime.CompilerServices.IsReadOnlyAttribute-System.Text.Encodings.Web,5
+System.Runtime.CompilerServices.IsReadOnlyAttribute-I18N,7
+System.Runtime.CompilerServices.IsReadOnlyAttribute-I18N.CJK,2
+System.ObsoleteAttribute-mscorlib,23
+System.ObsoleteAttribute-I18N,17
+System.ObsoleteAttribute-System.Text.Encodings.Web,4
+System.ObsoleteAttribute-System.IO.Stream System.Reflection.Assembly,2
+System.ObsoleteAttribute-I18N.CJK,2
+System.ObsoleteAttribute-System.Reflection.Assembly System.Reflection.Assembly,11
+System.ObsoleteAttribute-System.String System.Reflection.Assembly,1
+System.ObsoleteAttribute-System.IO.FileStream System.Reflection.Assembly,1
+System.ObsoleteAttribute-System.Reflection.RuntimeAssembly System.Reflection.RuntimeAssembly,1
+System.ObsoleteAttribute-WebApp,4
+System.Runtime.Versioning.NonVersionableAttribute:mscorlib.dll-mscorlib,22
+System.Runtime.Versioning.NonVersionableAttribute:mscorlib.dll-System.Text.Encodings.Web,6
+System.Runtime.Versioning.NonVersionableAttribute:mscorlib.dll-I18N,5
+System.Runtime.Versioning.NonVersionableAttribute:mscorlib.dll-System.IO.FileStream System.Reflection.Assembly,1
+System.Runtime.Versioning.NonVersionableAttribute:mscorlib.dll-System.Security.Policy.Evidence System.Reflection.Assembly,2
+System.Runtime.Versioning.NonVersionableAttribute:mscorlib.dll-System.Reflection.Assembly System.Reflection.Assembly,2
+System.Runtime.Versioning.NonVersionableAttribute:mscorlib.dll-WebApp,1
+System.AttributeUsageAttribute-mscorlib,61
+System.AttributeUsageAttribute-I18N,7
+System.AttributeUsageAttribute-System.Text.Json,3
+System.AttributeUsageAttribute-System.Text.Encodings.Web,5
+System.AttributeUsageAttribute-WebApp,5
+System.AttributeUsageAttribute-System.Security.Policy.Evidence System.Reflection.Assembly,2
+System.AttributeUsageAttribute-System.Reflection.Assembly System.Reflection.Assembly,2
+System.Runtime.InteropServices.ComDefaultInterfaceAttribute-mscorlib,21
+System.Runtime.InteropServices.ComDefaultInterfaceAttribute-System.Reflection.RuntimeAssembly,1
+System.Runtime.InteropServices.ComDefaultInterfaceAttribute-I18N,1
+System.Runtime.InteropServices.InterfaceTypeAttribute-mscorlib,22
+System.Runtime.InteropServices.InterfaceTypeAttribute-I18N.CJK,1
+System.Runtime.InteropServices.TypeLibImportClassAttribute-mscorlib,20
+System.Runtime.CompilerServices.IsByRefLikeAttribute-mscorlib,6
+System.Runtime.CompilerServices.IsByRefLikeAttribute-System.Text.Encodings.Web,3
+System.Runtime.CompilerServices.IsByRefLikeAttribute-I18N,8
+System.Runtime.CompilerServices.IsByRefLikeAttribute-System.IO.FileStream System.Reflection.Assembly,1
+System.Runtime.CompilerServices.IsByRefLikeAttribute-WebApp,1
+System.Runtime.CompilerServices.CompilerGeneratedAttribute-mscorlib,72
+System.Runtime.CompilerServices.CompilerGeneratedAttribute-I18N,21
+System.Runtime.CompilerServices.CompilerGeneratedAttribute-WebApp,46
+System.Runtime.CompilerServices.CompilerGeneratedAttribute-System.IO.Stream System.Reflection.Assembly,6
+System.Runtime.CompilerServices.CompilerGeneratedAttribute-I18N.CJK,12
+System.Runtime.CompilerServices.CompilerGeneratedAttribute-System.Text.Json,10
+System.Runtime.CompilerServices.CompilerGeneratedAttribute-System.Text.Encodings.Web,15
+System.Runtime.CompilerServices.CompilerGeneratedAttribute-System.Reflection.Assembly System.Reflection.Assembly,11
+System.Runtime.CompilerServices.CompilerGeneratedAttribute-System.Security.Policy.Evidence System.Reflection.Assembly,6
+System.ThreadStaticAttribute-mscorlib,15
+System.ThreadStaticAttribute-WebApp,2
+System.FlagsAttribute-mscorlib,37
+System.FlagsAttribute-I18N,16
+System.FlagsAttribute-System.IO.FileStream System.Reflection.Assembly,4
+System.FlagsAttribute-System.IO.Stream System.Reflection.Assembly,2
+System.FlagsAttribute-I18N.CJK,2
+System.FlagsAttribute-WebApp,4
+System.FlagsAttribute-System.String System.Reflection.Assembly,1
+System.FlagsAttribute-System.Text.Json,1
+System.FlagsAttribute-System.Reflection.Assembly System.Reflection.Assembly,8
+System.FlagsAttribute-System.Security.Policy.Evidence System.Reflection.Assembly,6
+System.Runtime.ConstrainedExecution.ReliabilityContractAttribute-mscorlib,78
+System.Runtime.ConstrainedExecution.ReliabilityContractAttribute-I18N.CJK,7
+System.Runtime.ConstrainedExecution.ReliabilityContractAttribute-System.Text.Encodings.Web,4
+System.Runtime.ConstrainedExecution.ReliabilityContractAttribute-System.Text.Json,1
+System.Runtime.ConstrainedExecution.ReliabilityContractAttribute-I18N,4
+System.Runtime.ConstrainedExecution.ReliabilityContractAttribute-System.IO.FileStream System.Reflection.Assembly,2
+System.Runtime.ConstrainedExecution.ReliabilityContractAttribute-WebApp,9
+System.Runtime.ConstrainedExecution.ReliabilityContractAttribute-System.Reflection.Assembly System.Reflection.Assembly,1
+System.Runtime.Serialization.OnDeserializedAttribute-mscorlib,7
+System.Runtime.Serialization.OnDeserializedAttribute-I18N,1
+System.Runtime.Serialization.OnDeserializedAttribute-System.Text.Json,1
+System.Runtime.Serialization.OnDeserializedAttribute-System.Text.Encodings.Web,1
+System.Runtime.Serialization.OnSerializingAttribute-mscorlib,4
+System.Runtime.Serialization.OnSerializingAttribute-I18N,1
+System.Runtime.Serialization.OnSerializingAttribute-System.Text.Json,1
+System.Runtime.Serialization.OnSerializingAttribute-System.Text.Encodings.Web,1
+System.Runtime.Serialization.OnDeserializingAttribute-mscorlib,4
+System.Runtime.Serialization.OnDeserializingAttribute-I18N,1
+System.Runtime.Serialization.OnDeserializingAttribute-System.Text.Encodings.Web,1
+System.Runtime.CompilerServices.IsReadOnlyAttribute:System.Memory.dll-System.Text.Encodings.Web,4
+System.Runtime.CompilerServices.IsReadOnlyAttribute:System.Memory.dll-mscorlib,1
+System.Runtime.CompilerServices.IsReadOnlyAttribute:System.Memory.dll-WebApp,11
+System.Runtime.CompilerServices.ExtensionAttribute-mscorlib,29
+System.Runtime.CompilerServices.ExtensionAttribute-WebApp,10
+System.Runtime.CompilerServices.ExtensionAttribute-I18N,6
+System.Runtime.CompilerServices.ExtensionAttribute-System.IO.Stream System.Reflection.Assembly,1
+System.Runtime.CompilerServices.ExtensionAttribute-I18N.CJK,2
+System.Runtime.CompilerServices.ExtensionAttribute-System.Text.Encodings.Web,5
+System.Runtime.CompilerServices.ExtensionAttribute-System.Reflection.Assembly System.Reflection.Assembly,4
+System.ParamArrayAttribute-mscorlib,10
+System.ParamArrayAttribute-I18N.CJK,2
+System.ParamArrayAttribute-WebApp,2
+System.ParamArrayAttribute-System.IO.FileStream System.Reflection.Assembly,1
+System.ParamArrayAttribute-I18N,2
+System.ParamArrayAttribute-System.Reflection.Assembly System.Reflection.Assembly,1
+System.Diagnostics.StackTraceHiddenAttribute:mscorlib.dll-mscorlib,4
+System.Diagnostics.StackTraceHiddenAttribute:mscorlib.dll-I18N.CJK,6
+System.Runtime.CompilerServices.IntrinsicAttribute:mscorlib.dll-I18N,12
+System.Runtime.CompilerServices.IntrinsicAttribute:mscorlib.dll-mscorlib,4
+System.Runtime.CompilerServices.IntrinsicAttribute:mscorlib.dll-System.Text.Encodings.Web,1
+System.Runtime.Versioning.NonVersionableAttribute:System.Runtime.CompilerServices.Unsafe.dll-System.Text.Encodings.Web,6
+System.Runtime.Versioning.NonVersionableAttribute:System.Runtime.CompilerServices.Unsafe.dll-mscorlib,5
+System.Runtime.Versioning.NonVersionableAttribute:System.Runtime.CompilerServices.Unsafe.dll-I18N,3
+System.Runtime.Versioning.NonVersionableAttribute:System.Runtime.CompilerServices.Unsafe.dll-WebApp,4
+System.Diagnostics.Tracing.EventAttribute-System.Text.Json,2
+System.Diagnostics.Tracing.EventAttribute-mscorlib,5
+System.Runtime.CompilerServices.FriendAccessAllowedAttribute:mscorlib.dll-WebApp,3
+System.Runtime.CompilerServices.FriendAccessAllowedAttribute:mscorlib.dll-mscorlib,3
+System.Runtime.CompilerServices.FriendAccessAllowedAttribute:mscorlib.dll-I18N.CJK,7
+System.Runtime.CompilerServices.DecimalConstantAttribute-mscorlib,8
+System.Runtime.CompilerServices.TypeForwardedFromAttribute-mscorlib,1
+System.Runtime.CompilerServices.TypeForwardedFromAttribute-System.Reflection.Assembly System.Reflection.Assembly,1
+System.Runtime.CompilerServices.TypeForwardedFromAttribute-I18N,3
+System.Runtime.CompilerServices.TypeForwardedFromAttribute-I18N.CJK,1
+System.Runtime.CompilerServices.TypeForwardedFromAttribute-WebApp,1
+System.Runtime.CompilerServices.IsReadOnlyAttribute:System.Text.Json.dll-WebApp,19
+System.Runtime.CompilerServices.IsReadOnlyAttribute:System.Text.Json.dll-mscorlib,1
+System.Runtime.CompilerServices.IntrinsicAttribute:System.Numerics.Vectors.dll-I18N,11
+System.Runtime.CompilerServices.IntrinsicAttribute:System.Numerics.Vectors.dll-mscorlib,1
+System.Runtime.CompilerServices.IntrinsicAttribute:System.Numerics.Vectors.dll-WebApp,2
+System.Runtime.CompilerServices.IsReadOnlyAttribute:Microsoft.AspNetCore.Components.dll-I18N.CJK,15
+System.Runtime.CompilerServices.IsReadOnlyAttribute:Microsoft.AspNetCore.Components.dll-mscorlib,1
+System.Runtime.CompilerServices.IsReadOnlyAttribute:Microsoft.Extensions.Logging.Abstractions.dll-I18N.CJK,3
+System.Runtime.CompilerServices.IsReadOnlyAttribute:Microsoft.Extensions.Logging.Abstractions.dll-mscorlib,1
+System.Runtime.CompilerServices.IsReadOnlyAttribute:Microsoft.Extensions.Logging.Abstractions.dll-WebApp,2
+System.Runtime.CompilerServices.IsReadOnlyAttribute:Microsoft.Extensions.DependencyInjection.dll-WebApp,11
+System.Runtime.CompilerServices.IsReadOnlyAttribute:Microsoft.Extensions.DependencyInjection.dll-mscorlib,3
