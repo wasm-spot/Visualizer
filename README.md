@@ -11,3 +11,10 @@ In the WebApp/ folder, run:
 `dotnet run`
 
 Go to localhost:5001
+
+# To view sunburst visualization:
+In the web/ folder, run:
+
+`python -m http.server`
+
+Go to localhost:8000/sunburst.html
