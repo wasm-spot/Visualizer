@@ -35,9 +35,11 @@ namespace History {
             foreach(var revision in commits) {
                 var stream = await GetRaw (path, revision.sha, repo);
                 var table = ReadTable(stream);
-                var commit = new Commit { Sha = revision.sha,
-                                        Date = revision.date,
-                                        Values = new Dictionary<string, Dictionary<string, object>>()};
+                var commit = new Commit {
+			Sha = revision.sha,
+                        Date = revision.date,
+                        Values = new Dictionary<string, Dictionary<string, object>>()
+		};
                 var columns = table.Columns.Cast<DataColumn>().ToArray();
                 for (int i = table.Rows.Count-1; i>=0; i--) {
                     var values = table.Rows[i].ItemArray;
