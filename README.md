@@ -2,7 +2,6 @@
 
 A visualizer for il linker related data
 
-
 # Directory:
 web/: files for plotting JSON with d3.js
 
