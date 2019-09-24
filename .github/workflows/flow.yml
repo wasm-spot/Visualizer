@@ -6,7 +6,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    
+
     steps:
     - uses: actions/checkout@v1
     - name: Setup .NET Core
@@ -14,4 +14,4 @@ jobs:
       with:
         dotnet-version: 3.0.100-preview9-014004
     - name: Build with dotnet
-      run: dotnet build --configuration Release
+      run: dotnet build WebApp --configuration Release
