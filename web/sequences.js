@@ -41,7 +41,7 @@ var names
 // Use d3.text and d3.csvParseRows so that we do not need to have a header
 // row, and can receive the csv as an array of arrays.
 d3.text("csv/data.csv", function(text) {
-  var assembly = formatAssembly("json/cleaner.json")
+  var assembly = formatAssembly("json/mscorlib.json")
   var csv = d3.csvParseRows(assembly);
   
   names = csv.map(function(value, index) { return value[0]; })
@@ -53,13 +53,13 @@ d3.text("csv/data.csv", function(text) {
   
 });
 
+var assemblyTree = formatAssemblyTree("json/mscorlib.json")
 
 // Main function to draw and set up the visualization, once we have the data.
 function createVisualization(json, names) {
   colors = d3.scaleOrdinal()
     .domain(names)
     .range(d3.schemeCategory20b)
-  console.log(colors.length)
   // Basic setup of page elements.
   initializeBreadcrumbTrail();
   drawLegend(names);
@@ -211,9 +211,7 @@ function updateBreadcrumbs(nodeArray, percentageString) {
     var l = entering.selectAll(".bread text")._parents;
     l.forEach(function(t, i) {
         t = d3.selectAll("tspan").nodes()
-        console.log(t)
         var len  = t.map(tspan => tspan.getComputedTextLength());
-        console.log(len)
     })
 
   // Merge enter and update selections; set position for all nodes.
@@ -236,7 +234,6 @@ function updateBreadcrumbs(nodeArray, percentageString) {
 }
 
 function drawLegend(names) {
-
   // Dimensions of legend item: width, height, spacing, radius of rounded rect.
   var li = {
     w: 400, h: 30, s: 3, r: 3
@@ -355,6 +352,43 @@ function formatAssembly(json) {
         }
     })
     return csv_str;
+}
+
+//  given json file of assembly dependencies, reformat to match format
+//  needed for treemap visualization
+function formatAssemblyTree(json) {
+    var request = new XMLHttpRequest();
+    request.open("GET", json, false);
+    request.send(null)
+
+    var data = JSON.parse(request.responseText);
+    var as_dict = {};
+    data.forEach(function(as) {
+        var as_name = as["name"];
+        
+        as_dict["name"] = as_name;
+        as_dict["children"] = [];
+        var classes = as["sections"];
+        if (classes != null) {
+            classes.forEach(function(cl) {
+                var class_dict = {};
+                var class_name = cl["name"];
+                class_dict["name"] = class_name;
+                class_dict["children"] = []
+                var methods = cl["sections"];
+                if (methods != null) {
+                    methods.forEach(function(method) {
+                        class_dict["children"].push({"name": method["name"], 
+                                                    "value": method["size"]});
+                    })
+                    as_dict["children"].push(class_dict);
+                }
+            })
+            
+        }
+    })
+    console.log(as_dict)
+    return as_dict;
 }
 
 function wrap(text, width) {
