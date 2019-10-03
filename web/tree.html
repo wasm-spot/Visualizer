@@ -29,13 +29,18 @@ form {
 <script src="https://d3js.org/d3-color.v1.min.js"></script>
 <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
 <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script src="https://d3js.org/d3-hierarchy.v1.min.js"></script>
 <script>
 'use strict';
 
 const margin = {top: 40, right: 10, bottom: 10, left: 10},
-      width = 2080 - margin.left - margin.right,
-      height = 1080 - margin.top - margin.bottom,
-      color = d3.scaleOrdinal().range(d3.schemeSet3);
+      width = window.innerWidth - margin.left - margin.right,
+      height = window.innerHeight - margin.top - margin.bottom,
+      color = d3.scaleOrdinal().range(d3.schemeSet3),
+      x = d3.scaleLinear().range([0, width]),
+      y = d3.scaleLinear().range([0, height]);
+var data_node,
+    data_root;
       
 const treemap = d3.treemap()
                     .size([width, height]);
@@ -58,6 +63,7 @@ const div = d3.select("body").append("div")
 
 var data = formatAssemblyTree("json/mscorlib.json");
 
+data_node = data_root = data;
 
 var classes = data["children"].map(x => x["name"])
 
@@ -66,7 +72,6 @@ const root = d3.hierarchy(data, (d) => d.children)
                 .sort((a, b) => b.value - a.value);
 
 const tree = treemap(root);
-
 
 const node = div.datum(root).selectAll(".node")
     .data(tree.leaves())
@@ -96,7 +101,8 @@ const node = div.datum(root).selectAll(".node")
             .style("overflow-y", "hidden")
             .style("font-size", "10px");
         assembly.text("class: ")
-    });
+    })
+    .on("click", function(d) { return zoom(data_node == d.parent ? data_root : d.parent); });
 
 d3.selectAll("input").on("change", function change() {
     const value = this.value === "count"
@@ -115,8 +121,31 @@ d3.selectAll("input").on("change", function change() {
         .style("height", (d) => Math.max(0, d.y1 - d.y0  - 1) + "px")
 });
 
+d3.select(window).on("click", function() { zoom(data_root); });
 
+function zoom(d) {
+  d.dx = d.x1 - d.x0;
+  d.dy = d.y1 - d.y0;
+  var kx = width / d.dx, ky = height / d.dy;
+  x.domain([d.x0, d.x1]);
+  y.domain([d.y0, d.y1]);
+  console.log(d.x0, x(d.x0))
+  var t = div.selectAll(".node").transition()
+      .duration(d3.event.altKey ? 7500 : 750)
+      .attr("transform", function(d) { return "translate(" + x(d.x0) + "," + y(d.y0) + ")"; });
 
+  t.select(".node")
+      .attr("width", function(d) { return kx * d.dx - 1; })
+      .attr("height", function(d) { return ky * d.dy - 1; })
+
+  t.select("text")
+      .attr("x", function(d) { return kx * d.dx / 2; })
+      .attr("y", function(d) { return ky * d.dy / 2; })
+      .style("opacity", function(d) { return kx * d.dx > d.w ? 1 : 0; });
+
+  data_node = d;
+  d3.event.stopPropagation();
+}
 
 //  given json file of assembly dependencies, reformat to match format
 //  needed for treemap visualization
