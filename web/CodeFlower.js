@@ -14,7 +14,7 @@ var CodeFlower = function(selector, w, h) {
     .attr('width', w)
     .attr('height', h);
 
-  this.force = d3.forceSimulation()
+  this.force = d3.layout.force()
     .on("tick", this.tick.bind(this))
     .charge(function(d) { return d._children ? -d.size / 120 : -70; })
     .linkDistance(function(d) { return d.target._children ? 120 : 45; })
@@ -130,9 +130,6 @@ CodeFlower.prototype.click = function(d) {
     });
 
   this.update();
-
-  
-  
 };
 
 CodeFlower.prototype.mouseover = function(d) {
