@@ -322,6 +322,6 @@ app {
         background-color: green;
     }
 
-    input {
-        margin-left: 15px;
+    label {
+        margin-right: 15px; 
     }

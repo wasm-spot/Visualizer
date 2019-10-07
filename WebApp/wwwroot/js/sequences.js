@@ -55,8 +55,6 @@ function displaySunburst() {
 }
 
 
-var assemblyTree = formatAssemblyTree("json/mscorlib.json")
-
 // Main function to draw and set up the visualization, once we have the data.
 function createVisualization(json, names) {
   colors = d3v4.scaleOrdinal()
@@ -328,7 +326,7 @@ function buildHierarchy(csv) {
 
 //  given json file of assembly dependencies, reformat to match format
 //  needed for sunburst visualization
-function formatAssembly(json) {
+function formatAssembly(json, inputSize=100) {
     var request = new XMLHttpRequest();
     request.open("GET", json, false);
     request.send(null)
@@ -345,52 +343,18 @@ function formatAssembly(json) {
                 if (methods != null) {
                     methods.forEach(function(method) {
                         var method_name = method["name"];
-                        var size = method["size"];
-                        var line = as_name + "-" + class_name + "-" + method_name + "," + size + "\n";
-                        csv_str += line;
+                        var size = +method["size"];
+                        if (size >= inputSize) {
+                            var line = as_name + "-" + class_name + "-" + method_name + "," + size + "\n";
+                            csv_str += line;
+                        }
+                        
                     })
                 }
             })
         }
     })
     return csv_str;
-}
-
-//  given json file of assembly dependencies, reformat to match format
-//  needed for treemap visualization
-function formatAssemblyTree(json) {
-    var request = new XMLHttpRequest();
-    request.open("GET", json, false);
-    request.send(null)
-
-    var data = JSON.parse(request.responseText);
-    var as_dict = {};
-    data.forEach(function(as) {
-        var as_name = as["name"];
-        
-        as_dict["name"] = as_name;
-        as_dict["children"] = [];
-        var classes = as["sections"];
-        if (classes != null) {
-            classes.forEach(function(cl) {
-                var class_dict = {};
-                var class_name = cl["name"];
-                class_dict["name"] = class_name;
-                class_dict["children"] = []
-                var methods = cl["sections"];
-                if (methods != null) {
-                    methods.forEach(function(method) {
-                        class_dict["children"].push({"name": method["name"], 
-                                                    "value": method["size"]});
-                    })
-                    as_dict["children"].push(class_dict);
-                }
-            })
-            
-        }
-    })
-    console.log(as_dict)
-    return as_dict;
 }
 
 function wrap(text, width) {

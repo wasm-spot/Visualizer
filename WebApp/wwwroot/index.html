@@ -26,10 +26,14 @@
     <script src="js/line.js"></script>
     <script>
         window.tree = function () {
+            d3v4.select("#options")
+                .style("display", null);
             displayTreemap();
         }
 
         window.sunburst = function() {
+            d3v4.select("#options")
+                .style("display", null);
             d3v4.select("#explanation")
                 .style("display", "block");
             d3v4.select("#sequence")
@@ -145,6 +149,8 @@
             d3v4.select(".tree")
                 .style("display", "none");
             d3v4.selectAll(".node")
+                .style("display", "none");
+            d3v4.select("#options")
                 .style("display", "none");
         }
 

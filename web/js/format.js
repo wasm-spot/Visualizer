@@ -24,7 +24,7 @@ function formatAssemblyTree(json) {
                 var class_dict = {};
                 var class_name = cl["name"];
                 class_dict["name"] = class_name;
-                class_dict["children"] = []
+                class_dict["children"] = [];
                 var methods = cl["sections"];
                 if (methods != null) {
                     var names = [];
