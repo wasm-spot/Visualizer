@@ -314,3 +314,14 @@ app {
         stroke: #9ecae1;
         stroke-width: 1.5px;
     }
+
+    .btn-submit {
+        padding: 5px;
+        margin-left: 15px;
+        color: white;
+        background-color: green;
+    }
+
+    input {
+        margin-left: 15px;
+    }

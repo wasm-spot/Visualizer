@@ -1,15 +1,59 @@
 function displayTreemap() {
-    var el_id = 'chart';
-    var obj = document.getElementById(el_id);
-    var divWidth = obj.offsetWidth;
-    var margin = {top: 30, right: 100, bottom: window.innerHeight*0.1, left: 100},
-        width = window.innerWidth -25,
-        height = window.innerHeight - margin.top - margin.bottom,
-        formatNumber = d3v4.format(","),
-        transitioning;
-    var color = d3v4.scaleOrdinal().range(d3v4.schemeCategory20c);
-    // sets x and y scale to determine size of visible boxes
-    var x = d3v4.scaleLinear()
+
+
+    var schema = {
+        fields: [
+            {name: 'size', type: 'number', display: 'Only view methods greater than this size: '}
+        ]
+    };
+
+    
+
+
+    var form = d3v4.select("#options").append("form");
+    var p = form.selectAll("p")
+                .data(schema.fields)
+                .enter()
+                .append("p")
+                .each(function(d) {
+                    var self = d3v4.select(this);
+                    var label = self.append("label")
+                                    .text(d.display)
+                    if (d.type == 'number') {
+                        var input = self.append("input")
+                                        .attr("id", "size")
+                                        .attr({
+                                            type: function(d){ return d.type; },
+                                            name: function(d){ return d.name; }
+                                        });
+                    }
+                })
+                .append("button")
+                    .attr("type", "button")
+                    .attr("class", "btn btn-submit")
+                    .on("click", function() {
+                        var inputSize = document.getElementById("size").value;
+                        displayTree(inputSize);
+                    })
+                    .text("display")
+    }
+
+    function displayTree(inputSize) {
+        var el_id = 'chart';
+        var obj = document.getElementById(el_id);
+        var divWidth = obj.offsetWidth;
+        var margin = {top: 30, right: 100, bottom: window.innerHeight*0.1, left: 100},
+            width = window.innerWidth -25,
+            height = window.innerHeight - margin.top - margin.bottom,
+            formatNumber = d3v4.format(","),
+            transitioning;
+
+        var color = d3v4.scaleOrdinal().range(d3v4.schemeCategory20c);
+
+        d3v4.select("svg").remove();
+
+        // sets x and y scale to determine size of visible boxes
+        var x = d3v4.scaleLinear()
         .domain([0, width])
         .range([0, width]);
     var y = d3v4.scaleLinear()
@@ -39,7 +83,7 @@ function displayTreemap() {
             .attr("y", 6 - margin.top)
             .attr("dy", ".75em");
 
-    var data = formatAssemblyTree("json/mscorlib.json")
+    var data = formatAssemblyTree("json/mscorlib.json", size=inputSize)
     var root = d3v4.hierarchy(data);
     console.log(root);
     treemap(root
@@ -222,5 +266,8 @@ function displayTreemap() {
             })
             .join(sep);
     }
-}
+    }
+                    
+    
+
 

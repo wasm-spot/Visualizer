@@ -1,6 +1,7 @@
 //  given json file of assembly dependencies, reformat to match format
 //  needed for treemap visualization
-function formatAssemblyTree(json) {
+function formatAssemblyTree(json, size=100) {
+    console.log(size);
     var request = new XMLHttpRequest();
     request.open("GET", json, false);
     request.send(null)
@@ -22,7 +23,7 @@ function formatAssemblyTree(json) {
                 var methods = cl["sections"];
                 if (methods != null) {
                     methods.forEach(function(method) {
-                        if (parseInt(method["size"]) > 100) {
+                        if (parseInt(method["size"]) > size) {
                             if (class_dict["children"] == null) {
                                 class_dict["children"] = [];
                                 class_dict["name"] = class_name;
