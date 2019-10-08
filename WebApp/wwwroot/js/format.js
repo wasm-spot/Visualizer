@@ -1,22 +1,21 @@
-function getMethodName(name) {
+function getMethodName(name, sunburst=false) {
     name = name.split("(")[0];
-    name = name.replace(" ", "\n");
+    if (!sunburst) {
+        name = name.replace(" ", "\n");
+    }
     return name;
 }
 
+
 //  given json file of assembly dependencies, reformat to match format
 //  needed for treemap visualization
-function formatAssemblyTree(json, size=100, overload=true) {
-    console.log(size);
-    var request = new XMLHttpRequest();
-    request.open("GET", json, false);
-    request.send(null)
-
-    var data = JSON.parse(request.responseText);
+function formatAssemblyTree(data, size=100, overload=true, type="tree") {
     var as_dict = {};
+    if (type == "sunburst") {
+        var csv_str = "";
+    }
     data.forEach(function(as) {
         var as_name = as["name"];
-        
         as_dict["name"] = as_name;
         as_dict["children"] = [];
         var classes = as["sections"];
@@ -24,7 +23,6 @@ function formatAssemblyTree(json, size=100, overload=true) {
             classes.forEach(function(cl) {
                 var class_dict = {};
                 var class_name = cl["name"];
-
                 var methods = cl["sections"];
                 if (methods != null) {
                     var names = [];
@@ -32,7 +30,7 @@ function formatAssemblyTree(json, size=100, overload=true) {
                     methods.forEach(function(method) {
                         var methodName = method["name"];
                         if (overload) {
-                            methodName = getMethodName(methodName);
+                            methodName = getMethodName(methodName, type=="sunburst");
                         }
                         var ix = names.indexOf(methodName);
                         if (ix != -1) {
@@ -48,8 +46,17 @@ function formatAssemblyTree(json, size=100, overload=true) {
                                 class_dict["children"] = [];
                                 class_dict["name"] = class_name;
                             }
-                            class_dict["children"].push({"name": names[i], 
+                            if (type == "tree") {
+                                class_dict["children"].push({"name": names[i], 
                                                     "value": sizes[i]});
+                            } else if (type == "flower") {
+                                class_dict["children"].push({"name": names[i], 
+                                                        "size": sizes[i]});
+                            } else if (type == "sunburst") {
+                                var line = as_name + "-" + class_name + "-" + names[i] + "," + sizes[i] + "\n";
+                                csv_str += line;
+                            }
+                            
                         }
                     }
                         
@@ -62,5 +69,10 @@ function formatAssemblyTree(json, size=100, overload=true) {
             
         }
     })
+    if (type == "sunburst") {
+        console.log(csv_str)
+        return csv_str;
+    }
+
     return as_dict;
 }

@@ -35,20 +35,21 @@ var arc = d3v4.arc()
 // row, and can receive the csv as an array of arrays.
 
 
-function displaySunburst() {
+function displaySunburst(data) {
     d3v4.select("#submit")
         .on("click", function() {
             var inputSize = document.getElementById("size").value;
             var overload = document.getElementById("overload").checked;
-            createVisualization(inputSize, overload)
+            createVisualization(data, inputSize, overload)
         })
 }
 
 // Main function to draw and set up the visualization, once we have the data.
-function createVisualization(inputSize, overload) {
+function createVisualization(data, inputSize, overload) {
     d3v4.select("#sunburst").remove();
-    var assembly = formatAssembly("json/mscorlib.json", inputSize, overload)
+    var assembly = formatAssemblyTree(data, inputSize, overload, type="sunburst");
     var csv = d3v4.csvParseRows(assembly);
+
 
     var names = csv.map(function(value, index) { return value[0]; })
     names = names.map(function(value, index) { return value.split("-")})
@@ -331,59 +332,6 @@ function buildHierarchy(csv) {
   }
   return root;
 };
-
-
-function getMethodName(name) {
-    name = name.split("(")[0];
-    name = name.replace(" ", "\n");
-    return name;
-}
-
-//  given json file of assembly dependencies, reformat to match format
-//  needed for sunburst visualization
-function formatAssembly(json, inputSize=100, overload=false) {
-    var request = new XMLHttpRequest();
-    request.open("GET", json, false);
-    request.send(null)
-    var data = JSON.parse(request.responseText);
-    var csv_str = "";
-    data.forEach(function(as) {
-        var as_name = as["name"];
-        var type = as["type"];
-        var classes = as["sections"];
-        if (classes != null) {
-            classes.forEach(function(cl) {
-                var class_name = cl["name"];
-                var methods = cl["sections"];
-                if (methods != null) {
-                    var names = [];
-                    var sizes = [];
-                    methods.forEach(function(method) {
-                        var method_name = method["name"];
-                        if (overload) {
-                            method_name = getMethodName(method_name);
-                        }
-                        var ix = names.indexOf(method_name);
-                        if (ix != -1) {
-                            sizes[ix] += +method["size"];
-                        } else {
-                            names.push(method_name);
-                            sizes.push(+method["size"])
-                        }
-                    })
-                    for(var i=0; i<names.length; i++) {
-                        if (sizes[i]>= inputSize) {
-                            var line = as_name + "-" + class_name + "-" + names[i] + "," + sizes[i] + "\n";
-                            csv_str += line;
-                        }
-                    }
-                    
-                }
-            })
-        }
-    })
-    return csv_str;
-}
 
 function wrap(text, width) {
     text = text._parents

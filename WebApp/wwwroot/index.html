@@ -19,6 +19,13 @@
     <script>
         var d3v4 = window.d3;
         window.d3 = null;
+        
+
+        var request = new XMLHttpRequest();
+        request.open("GET", "json/mscorlib.json", false);
+        request.send(null)
+
+        var data = JSON.parse(request.responseText);
     </script>
     <script src="js/sequences.js"></script>
     <script src="js/format.js"></script>
@@ -28,17 +35,23 @@
         window.tree = function () {
             d3v4.select("#options")
                 .style("display", null);
-            displayTreemap();
+            d3v4.select("#chart")
+                .style("display", null);
+            displayTreemap(data);
         }
 
         window.sunburst = function() {
+            clear();
             d3v4.select("#options")
+                .style("display", null);
+            d3v4.select("#chart")
                 .style("display", null);
             d3v4.select("#explanation")
                 .style("display", "block");
             d3v4.select("#sequence")
                 .style("display", null);
-            displaySunburst();
+            
+            displaySunburst(data);
         }
 
         window.graph = function(json) {
@@ -57,85 +70,23 @@
         var d3v3 = window.d3;
         window.d3 = null;
 
-        function getMethodName(name) {
-            name = name.split("(")[0];
-            return name;
-        }
-        
-        //  given json file of assembly dependencies, reformat to match format
-        //  needed for treemap visualization
-        function formatCodeFlower(json, size=100, overload=true) {
-            var request = new XMLHttpRequest();
-            request.open("GET", json, false);
-            request.send(null)
-
-            var data = JSON.parse(request.responseText);
-            var as_dict = {};
-            data.forEach(function(as) {
-                var as_name = as["name"];
-                
-                as_dict["name"] = as_name;
-                as_dict["children"] = [];
-                var classes = as["sections"];
-                if (classes != null) {
-                    classes.forEach(function(cl) {
-                        var class_dict = {};
-                        var class_name = cl["name"];
-                        // class_dict["name"] = class_name;
-                        // class_dict["children"] = []
-                        var methods = cl["sections"];
-                        if (methods != null) {
-                            var names = [];
-                            var sizes = [];
-                            methods.forEach(function(method) {
-                                var methodName = method["name"];
-                                if (overload) {
-                                    methodName = getMethodName(methodName);
-                                }
-                                var ix = names.indexOf(methodName);
-                                if (ix != -1) {
-                                    sizes[ix] += +method["size"];
-                                } else {
-                                    names.push(methodName);
-                                    sizes.push(+method["size"])
-                                }
-                            })
-                            for (var i=0; i<names.length; i++) {
-                                if (sizes[i] >= size) {
-                                    if (class_dict["children"] == null) {
-                                        class_dict["children"] = [];
-                                        class_dict["name"] = class_name;
-                                    }
-                                    class_dict["children"].push({"name": names[i], 
-                                                        "size": sizes[i]});
-                                }
-                                
-                            }
-                            if (class_dict["name"] != null) {
-                                as_dict["children"].push(class_dict);
-                            }
-                        }
-                    })
-                    
-                }
-            })
-            return as_dict;
-        }
-
         window.flower = function() {
-
+            clear();
             //TODO: move this to flower.js
             d3v3.select("#options")
+                .style("display", null);
+            d3v3.select("#visualization")
                 .style("display", null);
             d3v3.select("#submit")
                 .on("click", function() {
                     d3v3.select("svg").remove();
                     var inputSize = document.getElementById("size").value;
                     var overload = document.getElementById("overload").checked;
-                    var jsonData = formatCodeFlower("json/mscorlib.json", size=inputSize, overload=overload);
+                    var jsonData = formatAssemblyTree(data, size=inputSize, overload=overload, type="flower");
                     var myFlower = new CodeFlower("#visualization", window.innerWidth, window.innerHeight, inputSize);
                     myFlower.update(jsonData);
                     myFlower.collapseNode();
+                    window.scrollTo(0,document.body.scrollHeight);
                 })
             
         }
@@ -190,6 +141,10 @@
             d3v4.selectAll(".node")
                 .style("display", "none");
             d3v4.select("#options")
+                .style("display", "none");
+            d3v4.select("#visualization")
+                .style("display", "none");
+            d3v4.select("#chart")
                 .style("display", "none");
         }
 

@@ -1,14 +1,15 @@
-function displayTreemap() {
+function displayTreemap(data) {
 
     d3v4.select("#submit")
         .on("click", function() {
             var inputSize = document.getElementById("size").value;
             var overload = document.getElementById("overload").checked;
-            displayTree(inputSize, overload);
+            displayTree(data, inputSize, overload);
+            window.scrollTo(0,document.body.scrollHeight);
         })
     }
 
-    function displayTree(inputSize, overload) {
+    function displayTree(data, inputSize, overload) {
         var el_id = 'chart';
         var obj = document.getElementById(el_id);
         var divWidth = obj.offsetWidth;
@@ -53,7 +54,7 @@ function displayTreemap() {
             .attr("y", 6 - margin.top)
             .attr("dy", ".75em");
 
-    var data = formatAssemblyTree("json/mscorlib.json", size=inputSize, overload=overload)
+    data = formatAssemblyTree(data, size=inputSize, overload=overload, type="tree")
     var root = d3v4.hierarchy(data);
     treemap(root
         .sum(function (d) {
