@@ -318,6 +318,7 @@ app {
     .btn-submit {
         padding: 5px;
         margin-left: 15px;
+        margin-bottom: 15px;
         color: white;
         background-color: green;
     }

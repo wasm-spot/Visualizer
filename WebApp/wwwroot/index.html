@@ -64,7 +64,7 @@
         
         //  given json file of assembly dependencies, reformat to match format
         //  needed for treemap visualization
-        function formatCodeFlower(json) {
+        function formatCodeFlower(json, size=100, overload=true) {
             var request = new XMLHttpRequest();
             request.open("GET", json, false);
             request.send(null)
@@ -81,23 +81,39 @@
                     classes.forEach(function(cl) {
                         var class_dict = {};
                         var class_name = cl["name"];
-                        class_dict["name"] = class_name;
-                        class_dict["children"] = []
+                        // class_dict["name"] = class_name;
+                        // class_dict["children"] = []
                         var methods = cl["sections"];
                         if (methods != null) {
                             var names = [];
+                            var sizes = [];
                             methods.forEach(function(method) {
-                                var methodName = getMethodName(method["name"]);
+                                var methodName = method["name"];
+                                if (overload) {
+                                    methodName = getMethodName(methodName);
+                                }
                                 var ix = names.indexOf(methodName);
                                 if (ix != -1) {
-                                    class_dict["children"][ix]["size"] += +method["size"];
+                                    sizes[ix] += +method["size"];
                                 } else {
                                     names.push(methodName);
-                                    class_dict["children"].push({"name": methodName, 
-                                                            "size": +method["size"]});
+                                    sizes.push(+method["size"])
                                 }
                             })
-                            as_dict["children"].push(class_dict);
+                            for (var i=0; i<names.length; i++) {
+                                if (sizes[i] >= size) {
+                                    if (class_dict["children"] == null) {
+                                        class_dict["children"] = [];
+                                        class_dict["name"] = class_name;
+                                    }
+                                    class_dict["children"].push({"name": names[i], 
+                                                        "size": sizes[i]});
+                                }
+                                
+                            }
+                            if (class_dict["name"] != null) {
+                                as_dict["children"].push(class_dict);
+                            }
                         }
                     })
                     
@@ -107,15 +123,38 @@
         }
 
         window.flower = function() {
-            var jsonData = formatCodeFlower("json/mscorlib.json");
-            var myFlower = new CodeFlower("#visualization", window.innerWidth, window.innerHeight);
-            myFlower.update(jsonData);
-            myFlower.collapseNode();
+
+            //TODO: move this to flower.js
+            d3v3.select("#options")
+                .style("display", null);
+            d3v3.select("#submit")
+                .on("click", function() {
+                    d3v3.select("svg").remove();
+                    var inputSize = document.getElementById("size").value;
+                    var overload = document.getElementById("overload").checked;
+                    var jsonData = formatCodeFlower("json/mscorlib.json", size=inputSize, overload=overload);
+                    var myFlower = new CodeFlower("#visualization", window.innerWidth, window.innerHeight, inputSize);
+                    myFlower.update(jsonData);
+                    myFlower.collapseNode();
+                })
+            
         }
     </script>
 
     <div id="main">
-        <div id="options"></div>
+        <div id="options">
+            <form>
+                <p>
+                    <label>Only view methods greater than this size: </label>
+                    <input id="size">
+                </p>
+                <p>
+                    <label>Merge overloaded methods</label>
+                    <input id="overload" type="checkbox">
+                </p>
+                <button id="submit" type="button" class="btn btn-submit">display</button>
+            </form>
+        </div>
         <div id="sequence"></div>
         <div id="chart">
             <div id="explanation" style="visibility: hidden;">
@@ -152,6 +191,10 @@
                 .style("display", "none");
             d3v4.select("#options")
                 .style("display", "none");
+        }
+
+        window.onload = function() {
+            clear();
         }
 
        

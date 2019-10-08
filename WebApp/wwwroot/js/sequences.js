@@ -33,30 +33,38 @@ var arc = d3v4.arc()
 
 // Use d3v4.text and d3v4.csvParseRows so that we do not need to have a header
 // row, and can receive the csv as an array of arrays.
-var assembly = formatAssembly("json/mscorlib.json")
-var csv = d3v4.csvParseRows(assembly);
 
-var names = csv.map(function(value, index) { return value[0]; })
-names = names.map(function(value, index) { return value.split("-")})
-names = [].concat(...names)
-var json = buildHierarchy(csv);
 
 function displaySunburst() {
+    d3v4.select("#submit")
+        .on("click", function() {
+            var inputSize = document.getElementById("size").value;
+            var overload = document.getElementById("overload").checked;
+            createVisualization(inputSize, overload)
+        })
+}
+
+// Main function to draw and set up the visualization, once we have the data.
+function createVisualization(inputSize, overload) {
+    d3v4.select("#sunburst").remove();
+    var assembly = formatAssembly("json/mscorlib.json", inputSize, overload)
+    var csv = d3v4.csvParseRows(assembly);
+
+    var names = csv.map(function(value, index) { return value[0]; })
+    names = names.map(function(value, index) { return value.split("-")})
+    names = [].concat(...names)
+    var json = buildHierarchy(csv);
+
     height = window.innerHeight * 0.8;
     width = window.innerHeight * 0.6;
     vis = d3v4.select("#chart").append("svg:svg")
+        .attr("id", "sunburst")
         .attr("width", width)
         .attr("height", height)
         .style("margin-left", 100)
         .append("svg:g")
         .attr("id", "container")
         .attr("transform", "translate(" + width / 2 + "," + window.innerHeight * 0.35 + ")");
-    createVisualization(json, names);
-}
-
-
-// Main function to draw and set up the visualization, once we have the data.
-function createVisualization(json, names) {
   colors = d3v4.scaleOrdinal()
     .domain(names)
     .range(d3v4.schemeCategory20c)
@@ -324,9 +332,16 @@ function buildHierarchy(csv) {
   return root;
 };
 
+
+function getMethodName(name) {
+    name = name.split("(")[0];
+    name = name.replace(" ", "\n");
+    return name;
+}
+
 //  given json file of assembly dependencies, reformat to match format
 //  needed for sunburst visualization
-function formatAssembly(json, inputSize=100) {
+function formatAssembly(json, inputSize=100, overload=false) {
     var request = new XMLHttpRequest();
     request.open("GET", json, false);
     request.send(null)
@@ -341,15 +356,28 @@ function formatAssembly(json, inputSize=100) {
                 var class_name = cl["name"];
                 var methods = cl["sections"];
                 if (methods != null) {
+                    var names = [];
+                    var sizes = [];
                     methods.forEach(function(method) {
                         var method_name = method["name"];
-                        var size = +method["size"];
-                        if (size >= inputSize) {
-                            var line = as_name + "-" + class_name + "-" + method_name + "," + size + "\n";
+                        if (overload) {
+                            method_name = getMethodName(method_name);
+                        }
+                        var ix = names.indexOf(method_name);
+                        if (ix != -1) {
+                            sizes[ix] += +method["size"];
+                        } else {
+                            names.push(method_name);
+                            sizes.push(+method["size"])
+                        }
+                    })
+                    for(var i=0; i<names.length; i++) {
+                        if (sizes[i]>= inputSize) {
+                            var line = as_name + "-" + class_name + "-" + names[i] + "," + sizes[i] + "\n";
                             csv_str += line;
                         }
-                        
-                    })
+                    }
+                    
                 }
             })
         }

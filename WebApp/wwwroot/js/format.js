@@ -32,7 +32,7 @@ function formatAssemblyTree(json, size=100, overload=true) {
                     methods.forEach(function(method) {
                         var methodName = method["name"];
                         if (overload) {
-                            methodName = getMethodName(method["name"]);
+                            methodName = getMethodName(methodName);
                         }
                         var ix = names.indexOf(methodName);
                         if (ix != -1) {
@@ -43,7 +43,7 @@ function formatAssemblyTree(json, size=100, overload=true) {
                         }
                     })
                     for (var i=0; i<names.length; i++) {
-                        if (sizes[0] >= size) {
+                        if (sizes[i] >= size) {
                             if (class_dict["children"] == null) {
                                 class_dict["children"] = [];
                                 class_dict["name"] = class_name;

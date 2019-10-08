@@ -1,6 +1,9 @@
-var CodeFlower = function(selector, w, h) {
+var CodeFlower = function(selector, w, h, size) {
   this.w = w;
   this.h = h;
+
+  this.size = size;
+  this.overload = true;
 
   d3v3.select(selector).selectAll("svg").remove();
 
@@ -19,7 +22,6 @@ var CodeFlower = function(selector, w, h) {
     .charge(function(d) { return d._children ? -d.size / 120 : -70; })
     .linkDistance(function(d) { return d.target._children ? 120 : 45; })
     .size([h, w]);
-
 };
 
 CodeFlower.prototype.update = function(json) {
@@ -120,12 +122,13 @@ CodeFlower.prototype.click = function(d) {
     d.children = d._children;
     d._children = null;
   }
+  console.log(d.index)
   this.force
     .nodes(this.nodes)
     .links(this.links)
     .charge(function(d){
-        var charge = -100;
-        if (d.index === 0) charge = 2 * charge;
+        var charge = -500;
+        if (d.index === 0) charge = 3 * charge;
         return charge;
     });
 

@@ -1,49 +1,11 @@
 function displayTreemap() {
 
-
-    var schema = {
-        fields: [
-            {name: 'size', type: 'number', display: 'Only view methods greater than this size: '},
-            {name: 'overflow', type: 'checkbox', display: 'Merge overloaded methods'}
-        ]
-    };
-    var form = d3v4.select("#options").append("form");
-    var p = form.selectAll("p")
-                .data(schema.fields)
-                .enter()
-                .append("p")
-                .each(function(d) {
-                    var self = d3v4.select(this);
-                    var label = self.append("label")
-                                    .text(d.display)
-                    if (d.type == 'number') {
-                        var input = self.append("input")
-                                        .attr("id", "size")
-                                        .attr({
-                                            "type": function(d){ return d.type; },
-                                            "name": function(d){ return d.name; }
-                                        });
-                    }
-                    if (d.type == "checkbox") {
-                        console.log(d.type)
-                        var input = self.append("input")
-                                        .attr("id", "overload")
-                                        .attr("type", "checkbox")
-                                        .attr({
-                                            "type": function(d){ return d.type; },
-                                            "name": function(d){ return d.name; }
-                                        })
-                    }
-                })
-    form.append("button")
-    .attr("type", "button")
-    .attr("class", "btn btn-submit")
-    .on("click", function() {
-        var inputSize = document.getElementById("size").value;
-        var overload = document.getElementById("overload").checked;
-        displayTree(inputSize, overload);
-    })
-    .text("display")       
+    d3v4.select("#submit")
+        .on("click", function() {
+            var inputSize = document.getElementById("size").value;
+            var overload = document.getElementById("overload").checked;
+            displayTree(inputSize, overload);
+        })
     }
 
     function displayTree(inputSize, overload) {
