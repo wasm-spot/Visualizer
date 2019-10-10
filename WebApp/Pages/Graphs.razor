@@ -31,6 +31,7 @@
       <li><button @onclick="sunburst" class="btn">Sunburst</button></li>
       <li><button @onclick="tree" class="btn">Treemap</button></li>
       <li><button @onclick="flower" class="btn">Code flower</button></li>
+      <li><button @onclick="slope" class="btn">Slopegraph</button></li>
       <li><button @onclick="clear" class="btn">Clear graphs</button></li>
     </ul>
   </div>
@@ -42,7 +43,6 @@
     Dictionary<string, List<History.Info>> info;
     string[] apps;
     bool[] displayed;
-    bool forceReload;
 
     private async Task Graph(string app, bool area) {
         int index = Array.IndexOf(apps, app);
@@ -63,8 +63,6 @@
     }
 
     private async void clear() {
-        
-        NavigationManager.NavigateTo("/");
         await JsRuntime.InvokeAsync<string>("clear");
         displayed = new bool[apps.Length];
     }
@@ -72,25 +70,19 @@
     private async void sunburst() {
         
         clear();
-        NavigationManager.NavigateTo("/");
         await JsRuntime.InvokeAsync<string>("sunburst");   
     }
 
     private async void tree() {
-        
-        clear();
-        if (NavigationManager.ToBaseRelativePath(NavigationManager.Uri) == "") {
-            forceReload = false;
-        } else {
-            forceReload = true;
-        };
-        NavigationManager.NavigateTo("/", forceReload);
         await JsRuntime.InvokeAsync<string>("tree");
     }
 
     private async void flower() {
         await JsRuntime.InvokeAsync<string>("flower");
-        
+    }
+
+    private async void slope() {
+        await JsRuntime.InvokeAsync<string>("slope");
     }
 
     protected override async Task OnInitializedAsync() {
