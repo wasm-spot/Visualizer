@@ -13,7 +13,7 @@ function formatAssemblyTree(data, size=100, overload=true, type="tree") {
     var as_dict = {};
     if (type == "sunburst") {
         var csv_str = "";
-    }
+    } 
     data.forEach(function(as) {
         var as_name = as["name"];
         as_dict["name"] = as_name;
@@ -55,11 +55,10 @@ function formatAssemblyTree(data, size=100, overload=true, type="tree") {
                             } else if (type == "sunburst") {
                                 var line = as_name + "-" + class_name + "-" + names[i] + "," + sizes[i] + "\n";
                                 csv_str += line;
-                            }
-                            
+                            } 
                         }
                     }
-                        
+               
                     if (class_dict["name"] != null) {
                         as_dict["children"].push(class_dict);
                     }
@@ -75,4 +74,48 @@ function formatAssemblyTree(data, size=100, overload=true, type="tree") {
     }
 
     return as_dict;
+}
+
+function formatMethods(data, size=100, overload=true) {
+    var data_list = []
+    data.forEach(function(as) {
+        var asName = as["name"];
+        if (as.sections != null) {
+            as.sections.forEach(function(cl) {
+                var className = cl["name"];
+                var names = [];
+                var sizes = [];
+                cl.sections.forEach(function(method) {
+                    var methodName = method["name"];
+                    if (overload) {
+                        methodName = getMethodName(methodName);
+                    }
+                    var ix = names.indexOf(methodName);
+                    if (ix != -1) {
+                        sizes[ix] += +method["size"];
+                    } else {
+                        names.push(methodName);
+                        sizes.push(+method["size"])
+                    }
+                })
+
+                for (var i=0; i<names.length; i++) {
+                    if (sizes[i] >= size) {
+                        data_list.push({"name": className + "\n" + names[i], 
+                                        "value": sizes[i]});
+                    }
+                }
+            })
+        }
+    })
+
+    return data_list;
+}
+
+function formatComparison(data_in, data_out, size=100, overload=true) {
+    var data = {}
+    data["linker_in"] = formatMethods(data_in);
+    data["linker_out"] = formatMethods(data_out);
+
+    return data;
 }

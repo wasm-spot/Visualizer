@@ -24,13 +24,19 @@
         var request = new XMLHttpRequest();
         request.open("GET", "json/mscorlib.json", false);
         request.send(null)
-
         var data = JSON.parse(request.responseText);
+
+        request.open("GET", "json/linker-in-mscorlib.json", false);
+        request.send(null)
+
+        var data_in = JSON.parse(request.responseText);
+        var data_out = data;
     </script>
     <script src="js/sequences.js"></script>
     <script src="js/format.js"></script>
     <script src="js/treemap.js"></script>
     <script src="js/line.js"></script>
+    <script src="js/slopegraph.js"></script>
     <script>
         window.tree = function () {
             d3v4.select("#options")
@@ -60,6 +66,13 @@
 
         window.areaGraph = function(json) {
             displayAreaGraph(json);
+        }
+
+        window.slope = function(json) {
+            clear();
+            d3v4.select("#options")
+                .style("display", null);
+            displaySlopegraph(data_in, data_out);
         }
     </script>
     

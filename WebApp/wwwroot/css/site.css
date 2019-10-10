@@ -326,3 +326,40 @@ app {
     label {
         margin-right: 15px; 
     }
+
+    .title {
+        font-size: 18px;
+        font-weight: 700;
+      }
+      
+      .slope-line {
+        stroke: #333;
+        stroke-width: 2px;
+        stroke-linecap: round;
+      }
+      
+      .slope-label-left, .slope-label-right {
+        font-size: 10px;
+        cursor: default;
+        font-weight: 400;
+      }
+      
+      .label-figure {
+        font-weight: 700;
+          }
+      
+      .border-lines {
+        stroke: #999;
+        stroke-width: 1px;
+      }
+      
+      .voronoi path {
+        fill: none;
+        pointer-events: all;
+      }
+      
+      .slope-circle {
+        fill: white;
+        stroke: black;
+        stroke-width: 2px;
+      }
