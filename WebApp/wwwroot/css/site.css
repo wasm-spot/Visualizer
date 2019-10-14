@@ -364,9 +364,10 @@ app {
         stroke-width: 2px;
       }
 
-      #tooltip {
+      .tooltip {
           position: absolute;
           background-color: lightgray;
           padding: 5px;
           opacity: 0.8;
+          font-size: 12px;
       }

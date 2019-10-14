@@ -1,3 +1,7 @@
+var parseTime = d3v4.timeParse("%Y-%m-%dT%I:%M:%S.0000000+00:00");
+var formatTime = d3v4.timeFormat("%Y-%m-%d");
+var dayRange = d3v4.timeDay;
+
 function displayLineGraph(json) {
     var margin = {top: 120, right: 280, bottom: 150, left: 170},
     width = window.innerWidth - margin.left - margin.right,
@@ -5,7 +9,6 @@ function displayLineGraph(json) {
     radius = 6;
 
     var data = JSON.parse(json);
-    var parseTime = d3v4.timeParse("%Y-%m-%dT%I:%M:%S.0000000+00:00");
 
     var x = d3v4.scaleTime().range([0, width]);
     var y = d3v4.scaleLinear().range([height, 0]);
@@ -122,13 +125,7 @@ function displayLineGraph(json) {
                     .attr("height", height)
                     .attr("opacity", 0)
                     .on("mousemove", drawTooltip)
-                    .on("mouseover", showTooltip)
                     .on("mouseout", removeTooltip);
-
-    function showTooltip() {
-        tooltip.style("display", "block");
-        tooltipLine.style("stroke", "black");
-    }
 
     function removeTooltip() {
         if (tooltip) tooltip.style("display", "none");
@@ -137,14 +134,14 @@ function displayLineGraph(json) {
 
     function drawTooltip() {
         var date = x.invert(d3v4.mouse(this)[0]) ;
-        
+
         tooltipLine.attr("stroke", "black")
             .attr("x1", x(date))
             .attr("x2", x(date))
             .attr("y1", 0)
             .attr("y2", height);
 
-        tooltip.html(date)
+        tooltip.html(formatTime(date))
             .style("display", "block")
             .style("left", d3v4.event.pageX + 20 + "px")
             .style("top", d3v4.event.pageY - 20 + "px")
@@ -152,7 +149,11 @@ function displayLineGraph(json) {
         for (var i=0; i<lib.length; i++) {
             tooltip.append("div")
                 .style("color", color(lib[i]))
-                .html(() => lib[i] + ": " + data.find(h => parseTime(h.Date) == parseTime(date))[lib[i]]);
+                .html(() => lib[i] + ": " + data.find(h => {
+                    var day = dayRange(h["Date"])
+                    return day > dayRange.offset(date, -3) && 
+                            day < dayRange.offset(date, 3);
+                })[lib[i]]);
         }
     }
 
@@ -228,7 +229,6 @@ function displayAreaGraph (json) {
     radius = 6;
     
     var data = JSON.parse(json);
-    var parseTime = d3v4.timeParse("%Y-%m-%dT%I:%M:%S.0000000+00:00");
 
     var x = d3v4.scaleTime().range([0, width]);
     var y = d3v4.scaleLinear().range([height, 0]);
@@ -263,6 +263,7 @@ function displayAreaGraph (json) {
         .keys(lib)
         (data)
         
+    console.log(stackedData)
     x.domain(d3v4.extent(data, function(d) { return d["Date"]; }));
     y.domain([0, d3v4.max(data, function(d) { 
         return Math.max(d["mscorlib.dll"], d["System.dll"], 
@@ -317,6 +318,49 @@ function displayAreaGraph (json) {
         .append("g")
         .attr("class", "brush")
         .call(brush)
+
+    var tooltip = d3v4.select("#tooltip-area");
+    var tooltipLine = svg.append("line");
+
+    var tipBox = areaChart.append("rect")
+                        .attr("width", width)
+                        .attr("height", height)
+                        .attr("opacity", 0)
+                        .on("mousemove", drawTooltip)
+                        .on("mouseout", removeTooltip)
+    
+    function removeTooltip() {
+        if (tooltip) tooltip.style("display", "none");
+        if (tooltipLine) tooltipLine.attr("stroke", "none");
+    }
+
+    function drawTooltip() {
+        var date = x.invert(d3v4.mouse(this)[0]);
+
+        tooltipLine.attr("stroke", "black")
+                    .attr("x1", x(date))
+                    .attr("x2", x(date))
+                    .attr("y1", 0)
+                    .attr("y1", height);
+
+        tooltip.html(formatTime(date))
+            .style("display", "block")
+            .style("left", d3v4.event.pageX + 20 + "px")
+            .style("top", d3v4.event.pageY - 20 + "px")
+
+        for (var i=0; i<lib.length; i++) {
+            tooltip.append("div")
+                .style("color", color(lib[i]))
+                .html(() => {
+                    var line = stackedData[i].find(h => {
+                        var day = dayRange(h.data["Date"])
+                        return day > dayRange.offset(date, -3) && 
+                                day < dayRange.offset(date, 3);
+                    });
+                    return lib[i] + ": " + (line[1] - line[0]);
+            });
+        }
+    }
 
     var idleTimeout
     function idled() { idleTimeout = null; }
