@@ -1,0 +1,13 @@
+*.ipynb_checkpoints/
+*.bin/
+.npmignore
+
+*.eslintrc*
+*.cache
+*.DS_STORE
+WebApp/.vscode/*
+.vscode/*
+*bin/*
+*obj/*
+WebApp/bin/*
+WebApp/obj/*
