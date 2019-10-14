@@ -1,5 +1,5 @@
 // Dimensions of sunburst.
-var width = window.innerHeight * 0.6;
+var width = window.innerHeight * 0.5;
 var height = window.innerHeight * 0.8;
 var radius = Math.min(width, height) / 2;
 
@@ -35,19 +35,40 @@ var arc = d3v4.arc()
 // row, and can receive the csv as an array of arrays.
 
 
-function displaySunburst(data) {
+function displaySunburst(data, data_in = null) {
+    // Not ready yet
+    // if (document.getElementById("compare") == null) {
+    //     var compare = d3v4.select("#fields")
+    //         .append("p")
+    //     compare.append("label").text("Compare")
+    //         .attr("id", "compare-label")
+    //     compare.append("input")
+    //         .attr("id", "compare")
+    //         .attr("type", "checkbox")
+    // } else {
+    //     d3v4.select("#compare")
+    //         .style("display", null);
+    //     d3v4.select("#compare-label")
+    //         .style("display", null);
+    // }
+    
     d3v4.select("#submit")
         .on("click", function() {
             var inputSize = document.getElementById("size").value;
             var overload = document.getElementById("overload").checked;
-            createVisualization(data, inputSize, overload)
+            //var compare = document.getElementById("compare").checked;
+            createVisualization(data, inputSize, overload);
+            // if (compare && data_in != null) {
+            //     console.log("compare")
+            //     createVisualization(data_in, inputSize, overload, compare="in");
+            // }
         })
 }
 
 // Main function to draw and set up the visualization, once we have the data.
-function createVisualization(data, inputSize, overload) {
+function createVisualization(data, inputSize, overload, compare=null) {
     d3v4.select("#sunburst").remove();
-    var assembly = formatAssemblyTree(data, inputSize, overload, type="sunburst");
+    var assembly = formatAssemblyTree(data, inputSize, overload, type="sunburst", compare=compare);
     var csv = d3v4.csvParseRows(assembly);
 
 

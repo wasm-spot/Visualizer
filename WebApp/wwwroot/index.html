@@ -44,6 +44,10 @@
                 .style("display", null);
             d3v4.select("#chart")
                 .style("display", null);
+            d3v4.select("#compare")
+                .style("display", "none");
+            d3v4.select("#compare-label")
+                .style("display", "none");
             displayTreemap(data);
         }
 
@@ -58,7 +62,7 @@
             d3v4.select("#sequence")
                 .style("display", null);
             
-            displaySunburst(data);
+            displaySunburst(data, data_in);
         }
 
         window.graph = function(json) {
@@ -71,6 +75,10 @@
 
         window.slope = function(json) {
             clear();
+            d3v4.selectAll("#compare")
+                .style("display", "none");
+            d3v4.select("#compare-label")
+                .style("display", "none");
             d3v4.select("#options")
                 .style("display", null);
             displaySlopegraph(data_in, data_out);
@@ -91,6 +99,10 @@
                 .style("display", null);
             d3v3.select("#visualization")
                 .style("display", null);
+            d3v3.selectAll("#compare")
+                .style("display", "none");
+            d3v3.select("#compare-label")
+                .style("display", "none");
             d3v3.select("#submit")
                 .on("click", function() {
                     d3v3.select("svg").remove();
@@ -113,7 +125,7 @@
                     <label>Only view methods greater than this size: </label>
                     <input id="size">
                 </p>
-                <p>
+                <p id="fields">
                     <label>Merge overloaded methods</label>
                     <input id="overload" type="checkbox">
                 </p>
@@ -122,6 +134,8 @@
         </div>
         <div id="sequence"></div>
         <div id="chart">
+            
+
             <div id="explanation" style="visibility: hidden;">
             <span id="percentage"></span><br/>
             of overall size
@@ -129,6 +143,7 @@
         </div>
     </div>
       <div id="visualization"></div>
+      <div id="tooltip"></div>
     
     <script>
 

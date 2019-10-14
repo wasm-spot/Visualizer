@@ -31,6 +31,7 @@ function displayLineGraph(json) {
         .range(d3v4.schemeCategory10)
 
     title = Object.keys(data[0])[0];
+ 
     data.forEach(function(d) {
         d["Date"] = parseTime(d["Date"]);
         lib.forEach(function(l) {
@@ -42,7 +43,7 @@ function displayLineGraph(json) {
         line = d3v4.line()
             .x(function(d) { return x(d["Date"]); })
             .y(function(d) { return y(d[l]); });
-        lines.push(line);
+            lines.push(line);
     })
 
     x.domain(d3v4.extent(data, function(d) { return d["Date"]; }));
@@ -90,7 +91,7 @@ function displayLineGraph(json) {
     for (var i=0; i < lines.length; i++) {
         main.append("path")
                 .data([data])
-                .attr("class", "myLine " + lib[i].replace(/\./g, ''))
+                .attr("class", "hover-line myLine " + lib[i].replace(/\./g, ''))
                 .style("stroke", color(lib[i]))
                 .style("fill-opacity", 0)
                 .style("stroke-width", 2)
@@ -112,6 +113,48 @@ function displayLineGraph(json) {
         .style("font-size", "16px") 
         .style("text-decoration", "underline")  
         .text(title);
+
+    var tooltip = d3v4.select("#tooltip");
+    var tooltipLine = svg.append('line');
+
+    var tipBox = main.append("rect")
+                    .attr("width", width )
+                    .attr("height", height)
+                    .attr("opacity", 0)
+                    .on("mousemove", drawTooltip)
+                    .on("mouseover", showTooltip)
+                    .on("mouseout", removeTooltip);
+
+    function showTooltip() {
+        tooltip.style("display", "block");
+        tooltipLine.style("stroke", "black");
+    }
+
+    function removeTooltip() {
+        if (tooltip) tooltip.style("display", "none");
+        if (tooltipLine) tooltipLine.attr("stroke", "none");
+    }
+
+    function drawTooltip() {
+        var date = x.invert(d3v4.mouse(this)[0]) ;
+        
+        tooltipLine.attr("stroke", "black")
+            .attr("x1", x(date))
+            .attr("x2", x(date))
+            .attr("y1", 0)
+            .attr("y2", height);
+
+        tooltip.html(date)
+            .style("display", "block")
+            .style("left", d3v4.event.pageX + 20 + "px")
+            .style("top", d3v4.event.pageY - 20 + "px")
+
+        for (var i=0; i<lib.length; i++) {
+            tooltip.append("div")
+                .style("color", color(lib[i]))
+                .html(() => lib[i] + ": " + data.find(h => parseTime(h.Date) == parseTime(date))[lib[i]]);
+        }
+    }
 
     var idleTimeout
     function idled() { idleTimeout = null; }
@@ -240,14 +283,14 @@ function displayAreaGraph (json) {
     svg.append("g")
         .call(yAxis)
 
-        // Add Y axis label:
-        svg.append("text")
-            .attr("text-anchor", "end")
-            .attr("x", 0)
-            .attr("y", -20 )
-            .text("Size")
-            .style("font-family", "Arial")
-            .attr("text-anchor", "start")
+    // Add Y axis label:
+    svg.append("text")
+        .attr("text-anchor", "end")
+        .attr("x", 0)
+        .attr("y", -20 )
+        .text("Size")
+        .style("font-family", "Arial")
+        .attr("text-anchor", "start")
 
     var brush = d3v4.brushX()
         .extent([[0,0], [width, height]])
