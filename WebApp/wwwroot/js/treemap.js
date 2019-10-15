@@ -9,10 +9,9 @@ function displayTreemap(data) {
         })
     }
 
-    function displayTree(data, inputSize, overload) {
+    function displayTree(data, inputSize, overload, flower=false) {
         var el_id = 'chart';
         var obj = document.getElementById(el_id);
-        var divWidth = obj.offsetWidth;
         var margin = {top: 30, right: 100, bottom: window.innerHeight*0.1, left: 100},
             width = window.innerWidth -25,
             height = window.innerHeight - margin.top - margin.bottom,
@@ -20,28 +19,52 @@ function displayTreemap(data) {
             transitioning;
 
         var color = d3v4.scaleOrdinal().range(d3v4.schemeCategory20c);
-
-        d3v4.select("svg").remove();
+        if (!flower) {
+            d3v4.select("svg").remove();
+            data = formatAssemblyTree(data, size=inputSize, overload=overload, type="tree")
+        } else {
+            width *= 0.3;
+            height *= 0.3;
+            el_id = "visualization";
+            d3v4.select("#flower-tree").remove();
+        }
 
         // sets x and y scale to determine size of visible boxes
         var x = d3v4.scaleLinear()
         .domain([0, width])
         .range([0, width]);
-    var y = d3v4.scaleLinear()
-        .domain([0, height])
-        .range([0, height]);
-    var treemap = d3v4.treemap()
-            .size([width, height])
-            .paddingInner(0)
-            .round(false);
-    var svg = d3v4.select('#'+el_id).append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.bottom + margin.top)
+        var y = d3v4.scaleLinear()
+            .domain([0, height])
+            .range([0, height]);
+        var treemap = d3v4.treemap()
+                .size([width, height])
+                .paddingInner(0)
+                .round(false);
+
+    if (flower) {
+        var svg = d3v4.select('#'+el_id).append("svg")
+        .attr("id", "flower-tree")
+        .attr("width", width)
+        .attr("height", height)
         .style("margin-left", -margin.left + "px")
-        .style("margin.right", -margin.right + "px")
+        .style("margin-right", -margin.right + "px")
+        .style("position", "absolute")
+        .style("left", 0)
         .append("g")
             .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
             .style("shape-rendering", "crispEdges");
+    } else{
+        var svg = d3v4.select('#'+el_id).append("svg")
+        .attr("width", width + margin.left + margin.right)
+        .attr("height", height + margin.bottom + margin.top)
+        .style("margin-left", -margin.left + "px")
+        .style("margin-right", -margin.right + "px")
+        .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
+            .style("shape-rendering", "crispEdges");
+    }
+
+
     var grandparent = svg.append("g")
             .attr("class", "grandparent");
         grandparent.append("rect")
@@ -54,16 +77,17 @@ function displayTreemap(data) {
             .attr("y", 6 - margin.top)
             .attr("dy", ".75em");
 
-    data = formatAssemblyTree(data, size=inputSize, overload=overload, type="tree")
     var root = d3v4.hierarchy(data);
     treemap(root
         .sum(function (d) {
+            if (flower) return d.size;
             return d.value;
         })
         .sort(function (a, b) {
             return b.height - a.height || b.value - a.value
         })
     );
+    console.log(root)
     display(root);
 
     function display(d) {

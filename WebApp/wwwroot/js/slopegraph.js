@@ -125,10 +125,29 @@ function drawSlope(data_in, data_out, inputSize, overload) {
             return y1(d.values[1].value);
         });
 
+    
+
     var leftSlopeCircle = slopeGroups.append("circle")
         .attr("class", "slope-circle")
         .attr("r", config.radius)
-        .attr("cy", d => y1(d.values[0].value));
+        .attr("cy", d => y1(d.values[0].value))
+        .append("title")
+            .text(d => d.key + "\n" + "Size: " + d.values[0].value)
+        .on("mouseover", mouseoverCircle)
+        .on("mouseout", mouseleaveCircle);
+
+    function mouseoverCircle(d) {
+        var circle = d3v4.select(this)
+        console.log("over")
+
+        circle.attr("r", config.radius * 1.2);
+    }
+
+    function mouseleaveCircle(d) {
+        var circle = d3v4.select(this);
+
+        circle.attr("r", config.radius);
+    }
 
     var leftSlopeLabels = slopeGroups.append("g")
         .attr("class", "slope-label-left")
@@ -146,13 +165,13 @@ function drawSlope(data_in, data_out, inputSize, overload) {
         .attr("text-anchor", "end")
         .text(d => (d.values[0].value).toPrecision(3));
 
-    leftSlopeLabels.append("text")
-        .attr("x", d => d.xLeftPosition)
-        .attr("y", d => d.yLeftPosition)
-        .attr("dx", -config.labelKeyOffset)
-        .attr("dy", 3)
-        .attr("text-anchor", "end")
-        .text(d => d.key);
+    // leftSlopeLabels.append("text")
+    //     .attr("x", d => d.xLeftPosition)
+    //     .attr("y", d => d.yLeftPosition)
+    //     .attr("dx", -config.labelKeyOffset)
+    //     .attr("dy", 3)
+    //     .attr("text-anchor", "end")
+    //     .text(d => d.key);
 
     var rightSlopeCircle = slopeGroups.append("circle")
         .attr("class", "slope-circle")
@@ -176,13 +195,13 @@ function drawSlope(data_in, data_out, inputSize, overload) {
         .attr("text-anchor", "start")
         .text(d => (d.values[1].value).toPrecision(3));
 
-    rightSlopeLabels.append("text")
-        .attr("x", d => d.xRightPosition)
-        .attr("y", d => d.yRightPosition)
-        .attr("dx", config.labelKeyOffset)
-        .attr("dy", 3)
-        .attr("text-anchor", "start")
-        .text(d => d.key);
+    // rightSlopeLabels.append("text")
+    //     .attr("x", d => d.xRightPosition)
+    //     .attr("y", d => d.yRightPosition)
+    //     .attr("dx", config.labelKeyOffset)
+    //     .attr("dy", 3)
+    //     .attr("text-anchor", "start")
+    //     .text(d => d.key);
 
     var titles = svg.append("g")
                     .attr("class", "title")
@@ -199,11 +218,11 @@ function drawSlope(data_in, data_out, inputSize, overload) {
         .attr("dy", -margin.top/2)
         .text(config.rightTitle);
 
-    relax(leftSlopeLabels, "yLeftPosition");
+    // relax(leftSlopeLabels, "yLeftPosition");
     leftSlopeLabels.selectAll("text")
         .attr("y", d => d.yLeftPosition);
     
-    relax(rightSlopeLabels, "yRightPosition");
+    // relax(rightSlopeLabels, "yRightPosition");
     rightSlopeLabels.selectAll("text")
         .attr("y", d => d.yRightPosition);
 
@@ -220,13 +239,25 @@ function drawSlope(data_in, data_out, inputSize, overload) {
             .on("mouseover", mouseover)
             .on("mouseout", mouseout);
 
+    var tooltip = d3v4.select("#tooltip");
+
     function mouseover(d) {
         d3v4.select(d.data.group).attr("opacity", 1);
+        tooltip
+            .html(d.data.name)
+            .style("display","block")
+            .style("left", d3v4.event.pageX + 20 + "px")
+            .style("top", d3v4.event.pageY -20 + "px") 
+
+        tooltip.append("div")
+            .html("Size: " + d.data.value + "(" + d.data.state + ")");
     }
 
     function mouseout(d) {
         d3v4.selectAll(".slope-group")
             .attr("opacity", config.unfocusOpacity);
+
+        tooltip.style("display", "none");
     }
 
     //  function to reposition an array selection of labels (in the y axis)

@@ -46,7 +46,7 @@ function formatAssemblyTree(data, size=100, overload=true, type="tree", compare=
                                 class_dict["children"] = [];
                                 class_dict["name"] = class_name;
                             }
-                            if (type == "tree") {
+                            if (type == "tree" || type == "flame") {
                                 class_dict["children"].push({"name": names[i], 
                                                     "value": sizes[i]});
                             } else if (type == "flower") {
@@ -76,7 +76,6 @@ function formatAssemblyTree(data, size=100, overload=true, type="tree", compare=
         console.log(csv_str)
         return csv_str;
     }
-
     return as_dict;
 }
 

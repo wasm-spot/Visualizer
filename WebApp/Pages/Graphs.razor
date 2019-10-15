@@ -32,6 +32,7 @@
       <li><button @onclick="tree" class="btn">Treemap</button></li>
       <li><button @onclick="flower" class="btn">Code flower</button></li>
       <li><button @onclick="slope" class="btn">Slopegraph</button></li>
+      <!-- <li><button @onclick="flame" class="btn">Flame graph</button></li> -->
       <li><button @onclick="clear" class="btn">Clear graphs</button></li>
     </ul>
   </div>
@@ -83,6 +84,10 @@
 
     private async void slope() {
         await JsRuntime.InvokeAsync<string>("slope");
+    }
+
+    private async void flame() {
+        await JsRuntime.InvokeAsync<string>("flame");
     }
 
     protected override async Task OnInitializedAsync() {

@@ -263,7 +263,6 @@ function displayAreaGraph (json) {
         .keys(lib)
         (data)
         
-    console.log(stackedData)
     x.domain(d3v4.extent(data, function(d) { return d["Date"]; }));
     y.domain([0, d3v4.max(data, function(d) { 
         return Math.max(d["mscorlib.dll"], d["System.dll"], 

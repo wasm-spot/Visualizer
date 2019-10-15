@@ -9,6 +9,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
     <link href="css/site.css" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/spiermar/d3-flame-graph@1.0.4/dist/d3.flameGraph.min.css"/>
     <link rel="stylesheet" type="text/css" href="css/sequences.css"/>
 </head>
 <body>
@@ -16,11 +17,11 @@
     
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/spiermar/d3-flame-graph@2.0.3/dist/d3-flamegraph.min.js"></script>
     <script>
         var d3v4 = window.d3;
         window.d3 = null;
-        
-
         var request = new XMLHttpRequest();
         request.open("GET", "json/mscorlib.json", false);
         request.send(null)
@@ -37,6 +38,7 @@
     <script src="js/treemap.js"></script>
     <script src="js/line.js"></script>
     <script src="js/slopegraph.js"></script>
+    <script src="js/flame.js"></script>
     <script>
         window.tree = function () {
             clear();
@@ -83,6 +85,37 @@
                 .style("display", null);
             displaySlopegraph(data_in, data_out);
         }
+
+        window.flame = function(json) {
+            clear();
+            d3v4.select("#chart")
+                .style("display", null);
+            displayFlameGraph(data);
+        }
+
+        window.clear = function(){
+            d3v4.selectAll("svg").remove();
+            d3v4.select("#explanation")
+                .style("display", "none");
+            d3v4.select("#sequence")
+                .style("display", "none");
+            d3v4.select(".description")
+                .style("display", "none");
+            d3v4.select(".tree")
+                .style("display", "none");
+            d3v4.selectAll(".node")
+                .style("display", "none");
+            d3v4.select("#options")
+                .style("display", "none");
+            d3v4.select("#visualization")
+                .style("display", "none");
+            d3v4.select("#chart")
+                .style("display", "none");
+        }
+
+        window.onload = function() {
+            clear();
+        }
     </script>
     
 
@@ -91,7 +124,6 @@
     <script>
         var d3v3 = window.d3;
         window.d3 = null;
-
         window.flower = function() {
             clear();
             //TODO: move this to flower.js
@@ -156,30 +188,6 @@
             var b = bigint & 255;
 
             return "rgb(" + r + "," + g + "," + b + ")";
-        }
-
-        window.clear = function(){
-            d3v4.selectAll("svg").remove();
-            d3v4.select("#explanation")
-                .style("display", "none");
-            d3v4.select("#sequence")
-                .style("display", "none");
-            d3v4.select(".description")
-                .style("display", "none");
-            d3v4.select(".tree")
-                .style("display", "none");
-            d3v4.selectAll(".node")
-                .style("display", "none");
-            d3v4.select("#options")
-                .style("display", "none");
-            d3v4.select("#visualization")
-                .style("display", "none");
-            d3v4.select("#chart")
-                .style("display", "none");
-        }
-
-        window.onload = function() {
-            clear();
         }
 
 </script>

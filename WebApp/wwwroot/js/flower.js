@@ -122,13 +122,20 @@ CodeFlower.prototype.click = function(d) {
     d.children = d._children;
     d._children = null;
   }
-  console.log(d.index)
+  console.log(d)
+  if (d.index > 0) {
+    displayTree(d, this.size, this.overload, flower=true);
+    d3v3.select("#chart")
+        .style("display", null)
+  }
+  
   this.force
     .nodes(this.nodes)
     .links(this.links)
     .charge(function(d){
         var charge = -500;
         if (d.index === 0) charge = 3 * charge;
+        
         return charge;
     });
 
