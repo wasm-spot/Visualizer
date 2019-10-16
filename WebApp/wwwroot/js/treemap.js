@@ -14,6 +14,7 @@ function displayTreemap(data) {
         var obj = document.getElementById(el_id);
         var margin = {top: 30, right: 100, bottom: window.innerHeight*0.1, left: 100},
             width = window.innerWidth -25,
+            grandparent_width = width,
             height = window.innerHeight - margin.top - margin.bottom,
             formatNumber = d3v4.format(","),
             transitioning;
@@ -23,16 +24,17 @@ function displayTreemap(data) {
             d3v4.select("svg").remove();
             data = formatAssemblyTree(data, size=inputSize, overload=overload, type="tree")
         } else {
-            width *= 0.3;
+            width *= 0.8;
             height *= 0.3;
+            grandparent_width = width/2;
             el_id = "visualization";
             d3v4.select("#flower-tree").remove();
         }
 
         // sets x and y scale to determine size of visible boxes
         var x = d3v4.scaleLinear()
-        .domain([0, width])
-        .range([0, width]);
+            .domain([0, width])
+            .range([0, width]);
         var y = d3v4.scaleLinear()
             .domain([0, height])
             .range([0, height]);
@@ -40,7 +42,7 @@ function displayTreemap(data) {
                 .size([width, height])
                 .paddingInner(0)
                 .round(false);
-
+        
     if (flower) {
         var svg = d3v4.select('#'+el_id).append("svg")
         .attr("id", "flower-tree")
@@ -67,27 +69,36 @@ function displayTreemap(data) {
 
     var grandparent = svg.append("g")
             .attr("class", "grandparent");
-        grandparent.append("rect")
-            .attr("y", -margin.top)
-            .attr("width", width)
-            .attr("height", margin.top)
-            .attr("fill", '#bbbbbb');
-        grandparent.append("text")
-            .attr("x", 6)
-            .attr("y", 6 - margin.top)
-            .attr("dy", ".75em");
+    grandparent.append("rect")
+        .attr("y", -margin.top)
+        .attr("width", grandparent_width) 
+        .attr("height", margin.top)
+        .attr("fill", '#bbbbbb');
+    grandparent.append("text")
+        .attr("x", 6)
+        .attr("y", 6 - margin.top)
+        .attr("dy", ".75em");
 
+    if (flower) {
+        grandparent.style("font-size", "10px");
+    }
+
+    // if (data.children == null) data.children = data._children;
     var root = d3v4.hierarchy(data);
+    console.log(root)
     treemap(root
         .sum(function (d) {
-            if (flower) return d.size;
-            return d.value;
+            if (flower){
+                return d.size;
+            } else {
+                return d.value;
+            }
         })
         .sort(function (a, b) {
             return b.height - a.height || b.value - a.value
         })
     );
-    console.log(root)
+    
     display(root);
 
     function display(d) {
@@ -108,10 +119,20 @@ function displayTreemap(data) {
         var g1 = svg.insert("g", ".grandparent")
             .datum(d)
             .attr("class", "depth");
-        var g = g1.selectAll("g")
+
+        if (d._children != null) {
+            var g = g1.selectAll("g")
+            .data(d._children)
+            .enter()
+            .append("g")
+        } else {
+            var g = g1.selectAll("g")
             .data(d.children)
-            .enter().
-            append("g");
+            .enter()
+            .append("g")
+        }
+        
+            // g.enter().append("g");
         
         // add class and click handler to all g's with children
         g.filter(function (d) {

@@ -122,13 +122,7 @@ CodeFlower.prototype.click = function(d) {
     d.children = d._children;
     d._children = null;
   }
-  console.log(d)
-  if (d.index > 0) {
-    displayTree(d, this.size, this.overload, flower=true);
-    d3v3.select("#chart")
-        .style("display", null)
-  }
-  
+
   this.force
     .nodes(this.nodes)
     .links(this.links)
@@ -140,6 +134,13 @@ CodeFlower.prototype.click = function(d) {
     });
 
   this.update();
+
+  if (d.index >= 0) {
+    console.log(d)
+    displayTree(d, this.size, this.overload, flower=true);
+    d3v3.select("#chart")
+        .style("display", null)
+  }
 };
 
 CodeFlower.prototype.mouseover = function(d) {
