@@ -80,7 +80,7 @@ function formatAssemblyTree(data, size=100, overload=true, type="tree", compare=
 }
 
 function formatMethods(data, size=100, overload=true) {
-    var data_list = []
+    var data_list = [];
     data.forEach(function(as) {
         var asName = as["name"];
         if (as.sections != null) {
@@ -115,10 +115,50 @@ function formatMethods(data, size=100, overload=true) {
     return data_list;
 }
 
+function formatClasses(data, size=100, overload=true) {
+    var data_list = {};
+    data.forEach(function(as) {
+        var asName = as["name"];
+        if (as.sections != null) {
+            var class_list = [];
+            as.sections.forEach(function(cl) {
+                if (cl.size >= size){
+                    class_list.push({"name": cl.name, "value": cl.size});
+                }
+                var names = [];
+                var sizes = [];
+                cl.sections.forEach(function(method) {
+                    var methodName = method.name;
+                    if (overload) {
+                        methodName = getMethodName(methodName);
+                    }
+                    var ix = names.indexOf(methodName);
+                    if (ix != -1) {
+                        sizes[ix] += +method.size;
+                    } else {
+                        names.push(methodName);
+                        sizes.push(+method.size);
+                    }
+                })
+                var method_list = [];
+                for (var i=0; i< names.length; i++) {
+                    if (sizes[i] >= size) {
+                        method_list.push({"name": names[i], "value": sizes[i]});
+                    }
+                }
+                data_list[cl.name] = method_list;
+            })
+            data_list["class"] = class_list;
+        }
+    })
+    
+    return data_list;
+}
+
 function formatComparison(data_in, data_out, size=100, overload=true) {
     var data = {}
-    data["linker_in"] = formatMethods(data_in);
-    data["linker_out"] = formatMethods(data_out);
-
+    data["linker_in"] = formatClasses(data_in);
+    data["linker_out"] = formatClasses(data_out);
     return data;
 }
+

@@ -4,6 +4,7 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+
 app {
     position: relative;
     display: flex;
@@ -370,4 +371,9 @@ app {
           padding: 5px;
           opacity: 0.8;
           font-size: 12px;
+      }
+
+
+      .btn:hover {
+        color: white;
       }

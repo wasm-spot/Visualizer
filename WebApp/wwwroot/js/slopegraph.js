@@ -9,16 +9,11 @@ function displaySlopegraph(data_in, data_out) {
 }
 
 function drawSlope(data_in, data_out, inputSize, overload) {
-    var margin = {top: 100, right: 275, bottom: 40, left: 275};
+    var margin = {top: 100, right: 150, bottom: 40, left: 150};
    
     var width = window.innerWidth - margin.left - margin.right,
         height = window.innerHeight - margin.top - margin.bottom;
         
-    var svg = d3v4.select("body").append("svg")
-        .attr("width", width + margin.left + margin.right)
-        .attr("height", height + margin.top + margin.bottom)
-      .append("g")
-        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     var url = "https://raw.githubusercontent.com/tlfrd/pay-ratios/master/data/payratio.json";
 
@@ -44,33 +39,53 @@ function drawSlope(data_in, data_out, inputSize, overload) {
         unfocusOpacity: 0.2
         }
     
-    var data = formatComparison(data_in, data_out, size=inputSize, overload=overload);
+    var totalData = formatComparison(data_in, data_out, size=inputSize, overload=overload);
+    var classData = {"linker_in": totalData.linker_in.class, "linker_out": totalData.linker_out.class};
+    drawSlopeGraph(classData);
 
-    function drawSlopeGraph(cfg, data, yScale, leftYAccessor, rightYAccessor) {
-        var slopeGraph = svg.append("g")
-            .attr("class", "slope-graph")
-            .attr("transform", "translate(" + [cfg.xOffset, cfg.yOffset] + ")");     
-    }
+    function drawSlopeGraph(data, name="mscorlib") {
+        
+        var svg = d3v4.select("body").append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+            .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+        var grandparent = svg.append("g")
+        .attr("class", "grandparent");
+        grandparent.append("rect")
+            .attr("y", -margin.top)
+            .attr("width", width) 
+            .attr("height", 30)
+            .attr("fill", '#bbbbbb');
+        var text = grandparent.append("text")
+            .attr("x", 6)
+            .attr("y", 6 - margin.top)
+            .attr("dy", ".75em")
+            .text(name)
+            .on("click", function() {
+                drawSlopeGraph(classData);
+            });
 
-    var sizes = [];
-    data.linker_in.forEach(function(d) {
-        d.state = "in";
-        sizes.push(d);
-    });
+        var sizes = [];
 
-    data.linker_out.forEach(function(d) {
-        d.state = "out";
-        sizes.push(d);
-    });
+        data.linker_in.forEach(function(d) {
+            d.state = "in";
+            sizes.push(d);
+        });
 
-    var nestedByName = d3v4.nest()
-        .key(function(d) { return d.name; })
-        .entries(sizes);
+        data.linker_out.forEach(function(d) {
+            d.state = "out";
+            sizes.push(d);
+        });
 
-    nestedByName = nestedByName.filter(function(d) {
-        return d.values.length > 1;
-    });
+        var nestedByName = d3v4.nest()
+            .key(function(d) { return d.name; })
+            .entries(sizes);
+
+        nestedByName = nestedByName.filter(function(d) {
+            return d.values.length > 1;
+        });
 
     var y1Min = d3v4.min(nestedByName, function(d) {        
         var ratio1 = d.values[0].value;
@@ -112,8 +127,9 @@ function drawSlope(data_in, data_out, inputSize, overload) {
             .attr("id", function(d, i) {
                 d.id = "group" + i;
                 d.values[0].group = this;
-                d.values[1].group = this;
+                d.values[1].group = this; 
             });
+
     var slopeLines = slopeGroups.append("line")
         .attr("class", "slope-line")
         .attr("x1", 0)
@@ -138,14 +154,11 @@ function drawSlope(data_in, data_out, inputSize, overload) {
 
     function mouseoverCircle(d) {
         var circle = d3v4.select(this)
-        console.log("over")
-
         circle.attr("r", config.radius * 1.2);
     }
 
     function mouseleaveCircle(d) {
         var circle = d3v4.select(this);
-
         circle.attr("r", config.radius);
     }
 
@@ -164,14 +177,6 @@ function drawSlope(data_in, data_out, inputSize, overload) {
         .attr("dy", 3)
         .attr("text-anchor", "end")
         .text(d => (d.values[0].value).toPrecision(3));
-
-    // leftSlopeLabels.append("text")
-    //     .attr("x", d => d.xLeftPosition)
-    //     .attr("y", d => d.yLeftPosition)
-    //     .attr("dx", -config.labelKeyOffset)
-    //     .attr("dy", 3)
-    //     .attr("text-anchor", "end")
-    //     .text(d => d.key);
 
     var rightSlopeCircle = slopeGroups.append("circle")
         .attr("class", "slope-circle")
@@ -194,14 +199,6 @@ function drawSlope(data_in, data_out, inputSize, overload) {
         .attr("dy", 3)
         .attr("text-anchor", "start")
         .text(d => (d.values[1].value).toPrecision(3));
-
-    // rightSlopeLabels.append("text")
-    //     .attr("x", d => d.xRightPosition)
-    //     .attr("y", d => d.yRightPosition)
-    //     .attr("dx", config.labelKeyOffset)
-    //     .attr("dy", 3)
-    //     .attr("text-anchor", "start")
-    //     .text(d => d.key);
 
     var titles = svg.append("g")
                     .attr("class", "title")
@@ -237,9 +234,23 @@ function drawSlope(data_in, data_out, inputSize, overload) {
         .enter().append("path")
             .attr("d", function(d) { return d ? "M" + d.join("L") + "Z" : null; })
             .on("mouseover", mouseover)
-            .on("mouseout", mouseout);
+            .on("mouseout", mouseout)
+            .on("click", show);
 
     var tooltip = d3v4.select("#tooltip");
+
+    function show(d) {
+        d3v4.select("svg").remove();
+        var name = d.data.name;
+        var newData = classData;
+        if (name in totalData.linker_in && name in totalData.linker_out) {
+            newData = {"linker_in": totalData.linker_in[name], "linker_out": totalData.linker_out[name]};
+        } else {
+            name = "mscorlib";
+        }       
+        
+        drawSlopeGraph(newData, name);
+    }
 
     function mouseover(d) {
         d3v4.select(d.data.group).attr("opacity", 1);
@@ -259,34 +270,8 @@ function drawSlope(data_in, data_out, inputSize, overload) {
 
         tooltip.style("display", "none");
     }
+    }
 
-    //  function to reposition an array selection of labels (in the y axis)
-    function relax(labels, position) {
-        again = false;
-        labels.each(function (d, i) {
-          a = this;
-          da = d3v4.select(a).datum();
-          y1 = da[position];
-          labels.each(function (d, j) {
-            b = this;
-            if (a == b) return;
-            db = d3v4.select(b).datum();
-            y2 = db[position];
-            deltaY = y1 - y2;
-  
-            if (Math.abs(deltaY) > config.labelPositioning.spacing) return;
-  
-            again = true;
-            sign = deltaY > 0 ? 1 : -1;
-            adjust = sign * config.labelPositioning.alpha;
-            da[position] = +y1 + adjust;
-            db[position] = +y2 - adjust;
-  
-            if (again) {
-              relax(labels, position);
-            }
-          })
-        })
-      }
+    
     
 } 
