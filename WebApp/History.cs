@@ -36,7 +36,7 @@ namespace History {
                 var stream = await GetRaw (path, revision.sha, repo);
                 var table = ReadTable(stream);
                 var commit = new Commit {
-                    ha = revision.sha,
+                    Sha = revision.sha,
                     Date = revision.date,
                     Values = new Dictionary<string, Dictionary<string, object>>()
                 };
