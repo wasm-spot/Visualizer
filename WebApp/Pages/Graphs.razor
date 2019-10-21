@@ -1,25 +1,44 @@
 @page "/"
+@page "/flower.html"
 @inject HttpClient Http
 @inject IJSRuntime JsRuntime;
+@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager;
+
 @using Newtonsoft.Json;
 
 
-<h1>Linker Graphs</h1>
-
-<div class="dropdown">
-  <button class="dropbtn btn">View Graphs for App</button>
-  <button @onclick="clear" class="btn btn-danger">Clear all graphs</button>
-  <div class="dropdown-content">
-    @if (apps == null) {
-        <p><em>Loading...</em></p>
-    } else {
-        @foreach (var app in apps)
-        {
-            <button @onclick="@( e => Graph(app, false) )">@app</button>
-        }
-    }
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button @onclick="clear" class="btn navbar-brand">Linker Visualizer</button>
+      <!-- <a class="navbar-brand" href="#">Linker Visualizer</a> -->
     </div>
-</div>
+    <ul class="nav navbar-nav">
+      <li class="dropdown">
+        <a class="dropdown-toggle btn" data-toggle="dropdown" href="#">Line and Area
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            @if (apps == null) {
+                <p><em>Loading...</em></p>
+            } else {
+                @foreach (var app in apps)
+                {
+                    <li><button class="dropdown-button" @onclick="@( e => Graph(app, false) )">@app</button></li>
+                }
+            }
+        </ul>
+      </li>
+      <li><button @onclick="sunburst" class="btn">Sunburst</button></li>
+      <li><button @onclick="tree" class="btn" id="tree-btn">Treemap</button></li>
+      <li><button @onclick="flower" class="btn">Code flower</button></li>
+      <li><button @onclick="slope" class="btn">Slopegraph</button></li>
+      <!-- <li><button @onclick="flame" class="btn">Flame graph</button></li> -->
+      <li><button @onclick="clear" class="btn">Clear graphs</button></li>
+    </ul>
+  </div>
+</nav>
+
+
 
 @code {  
     Dictionary<string, List<History.Info>> info;
@@ -37,6 +56,7 @@
                 data.Add(item.Library);
             }
             var json = JsonConvert.SerializeObject(data);
+            clear();
             await JsRuntime.InvokeAsync<string>("graph", json);
             await JsRuntime.InvokeAsync<string>("areaGraph", json);
         }
@@ -46,6 +66,28 @@
     private async void clear() {
         await JsRuntime.InvokeAsync<string>("clear");
         displayed = new bool[apps.Length];
+    }
+
+    private async void sunburst() {
+        
+        clear();
+        await JsRuntime.InvokeAsync<string>("sunburst");   
+    }
+
+    private async void tree() {
+        await JsRuntime.InvokeAsync<string>("tree");
+    }
+
+    private async void flower() {
+        await JsRuntime.InvokeAsync<string>("flower");
+    }
+
+    private async void slope() {
+        await JsRuntime.InvokeAsync<string>("slope");
+    }
+
+    private async void flame() {
+        await JsRuntime.InvokeAsync<string>("flame");
     }
 
     protected override async Task OnInitializedAsync() {

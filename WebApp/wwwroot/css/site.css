@@ -4,6 +4,7 @@ html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 }
 
+
 app {
     position: relative;
     display: flex;
@@ -20,10 +21,17 @@ app {
     flex: 1;
 }
 
-    .main .top-row {
-        background-color: #e6e6e6;
-        border-bottom: 1px solid #d6d5d5;
-    }
+.main .top-row {
+    background-color: #e6e6e6;
+    border-bottom: 1px solid #d6d5d5;
+}
+
+#main {
+    margin-left: 20px;
+    margin-right: 20px;
+    overflow-x: hidden;
+    height: 100%;
+}
 
 .sidebar {
     background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
@@ -169,6 +177,14 @@ app {
     border: none;
   }
   
+  button {
+      border-color: rgba(0,0,0,0);
+  }
+
+  .dropdown-button:hover {
+      background-color: #3e8e41;
+  }
+
   /* Change color of dropdown links on hover */
   .dropdown-content a:hover {background-color: #ddd;}
   
@@ -180,4 +196,184 @@ app {
   
   .btn {
       padding: 16px;
+      background-color: rgba(0,0,0,0);
+      border-color: rgba(0,0,0,0);
+      color: #9d9d9d;
   }
+
+  .node {
+    border: solid 1px white;
+    font: 9px sans-serif;
+    line-height: 12px;
+    overflow: hidden;
+    position: absolute;
+    text-indent: 2px;
+  }
+
+  .icon {
+      width: 100%;
+      height: auto;
+  }
+
+  .description {
+      vertical-align: bottom;
+  }
+
+  #chart {
+    max-width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  text {
+    pointer-events: none;
+  }
+  .grandparent text {
+    font-weight: bold;
+  }
+  rect {
+    stroke: #fff;
+    stroke-width: 1px;
+  }
+  rect.parent,
+  .grandparent rect {
+    stroke-width: 3px;
+  }
+  .grandparent:hover rect {
+    fill: grey;
+  }
+  .children rect.parent,
+  .grandparent rect {
+    cursor: pointer;
+  }
+  .children rect.child {
+    opacity: 0;
+  }
+  .children rect.parent {
+  }
+  .children:hover rect.child {
+    opacity: 1;
+    stroke-width: 1px;
+  }
+  .children:hover rect.parent {
+    opacity: 0;
+  }
+  .legend {
+    margin-bottom:8px !important;
+  }
+  .legend rect {
+    stroke-width: 0px;
+  }
+  .legend text {
+    text-anchor: middle;
+    pointer-events: auto;
+    font-size: 13px;
+    font-family: sans-serif;
+    fill: black;
+  }
+  .form-group {
+      text-align:left;
+  }
+  .textdiv {
+      font-family: "Open Sans",Helvetica,Arial,sans-serif;
+      font-size: 14px;
+      padding: 7px;
+      cursor: pointer;
+      overflow:none;
+  }
+  .textdiv .title {
+      font-size: 102%;
+      font-weight: bold;
+      margin-top: 8px;
+      font-size:11px !important;
+  }
+  .textdiv p{
+      line-height: 13px;
+      margin:0 0 4px !important;
+      padding:0px;
+      font-size:10px !important;
+  }
+
+    #visualization {
+    overflow: auto;
+    }
+
+    /* h1 {
+    font-size: 62px;
+    font-weight: 300;
+    letter-spacing: -2px;
+    line-height: 1em;
+    margin: 1em 0;
+    } */
+
+    textarea {
+    width: 98%;
+    height: 200px;
+    }
+
+    line.link {
+        fill: none;
+        stroke: #9ecae1;
+        stroke-width: 1.5px;
+    }
+
+    .btn-submit {
+        padding: 5px;
+        margin-left: 15px;
+        margin-bottom: 15px;
+        color: white;
+        background-color: green;
+    }
+
+    label {
+        margin-right: 15px; 
+    }
+
+    .title {
+        font-size: 18px;
+        font-weight: 700;
+      }
+      
+      .slope-line {
+        stroke: #333;
+        stroke-width: 2px;
+        stroke-linecap: round;
+      }
+      
+      .slope-label-left, .slope-label-right {
+        font-size: 10px;
+        cursor: default;
+        font-weight: 400;
+      }
+      
+      .label-figure {
+        font-weight: 700;
+          }
+      
+      .border-lines {
+        stroke: #999;
+        stroke-width: 1px;
+      }
+      
+      .voronoi path {
+        fill: none;
+        pointer-events: all;
+      }
+      
+      .slope-circle {
+        fill: white;
+        stroke: black;
+        stroke-width: 2px;
+      }
+
+      .tooltip {
+          position: absolute;
+          background-color: lightgray;
+          padding: 5px;
+          opacity: 0.8;
+          font-size: 12px;
+      }
+
+
+      .btn:hover {
+        color: white;
+      }

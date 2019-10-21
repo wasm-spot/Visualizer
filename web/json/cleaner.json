@@ -1,0 +1,1918 @@
+[
+  {
+    "type": "assembly",
+    "name": "WebAssembly.Bindings",
+    "size": 8610,
+    "sections": [
+      {
+        "type": "class",
+        "name": "public auto ansi beforefieldinit WebAssembly.AnyRef extends [netstandard]System.Object",
+        "size": 78,
+        "sections": [
+          {
+            "type": "method",
+            "name": "int32 get_JSHandle()",
+            "size": 7,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void set_JSHandle(int32 \u0027value\u0027)",
+            "size": 8,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(int32 js_handle)",
+            "size": 29,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(native int js_handle)",
+            "size": 34,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed WebAssembly.ConvertEnum extends [netstandard]System.Enum",
+        "size": 0,
+        "sections": []
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi beforefieldinit WebAssembly.ExportAttribute extends [netstandard]System.Attribute",
+        "size": 85,
+        "sections": [
+          {
+            "type": "method",
+            "name": "void .ctor()",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor([netstandard]System.Type contractType)",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(string contractName)",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(string contractName, [netstandard]System.Type contractType)",
+            "size": 23,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "string get_ContractName()",
+            "size": 7,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "instance [netstandard]System.Type get_ContractType()",
+            "size": 7,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "class WebAssembly.ConvertEnum get_EnumValue()",
+            "size": 7,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void set_EnumValue(class WebAssembly.ConvertEnum \u0027value\u0027)",
+            "size": 8,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "interface public abstract auto ansi WebAssembly.IJSObject",
+        "size": 0,
+        "sections": []
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi beforefieldinit WebAssembly.JSException extends [netstandard]System.Exception",
+        "size": 10,
+        "sections": [
+          {
+            "type": "method",
+            "name": "void .ctor(string msg)",
+            "size": 10,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi beforefieldinit WebAssembly.JSObject extends WebAssembly.AnyRef implements WebAssembly.IJSObject, [netstandard]System.IDisposable",
+        "size": 709,
+        "sections": [
+          {
+            "type": "method",
+            "name": "bool get_IsDisposed()",
+            "size": 7,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void set_IsDisposed(bool \u0027value\u0027)",
+            "size": 8,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor()",
+            "size": 79,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(native int js_handle)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(int32 js_handle)",
+            "size": 15,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(int32 js_handle, object raw_obj)",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "object Invoke(string \u0027method\u0027, object[] args)",
+            "size": 43,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "object GetObjectProperty(string name)",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void SetObjectProperty(string name, object \u0027value\u0027, [opt] bool createIfNotExists, [opt] bool hasOwnProperty)",
+            "size": 105,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 get_Length()",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void set_Length(int32 \u0027value\u0027)",
+            "size": 21,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "bool HasOwnProperty(string prop)",
+            "size": 27,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "bool PropertyIsEnumerable(string prop)",
+            "size": 27,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void FreeHandle()",
+            "size": 81,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "bool Equals(object obj)",
+            "size": 57,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 GetHashCode()",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void Finalize()",
+            "size": 21,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void Dispose()",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void Dispose(bool disposing)",
+            "size": 46,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "string ToString()",
+            "size": 57,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed WebAssembly.Runtime extends [netstandard]System.Object",
+        "size": 3041,
+        "sections": [
+          {
+            "type": "method",
+            "name": "string InvokeJS(string str)",
+            "size": 31,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .cctor()",
+            "size": 22,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 New\u003CT\u003E(object[] _params)",
+            "size": 56,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 New(string hostClassName, object[] _params)",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "class WebAssembly.JSObject NewJSObject([opt] class WebAssembly.JSObject js_func_ptr, object[] _params)",
+            "size": 53,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 BindJSObject(int32 js_id, [netstandard]System.Type mappedType)",
+            "size": 93,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 BindCoreCLRObject(int32 js_id, int32 gcHandle)",
+            "size": 137,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 BindJSType(int32 js_id, [netstandard]System.Type mappedType)",
+            "size": 122,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 UnBindJSObject(int32 js_id)",
+            "size": 56,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void UnBindJSObjectAndFree(int32 js_id)",
+            "size": 85,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void UnBindRawJSObjectAndFree(int32 gcHandle)",
+            "size": 184,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void FreeObject(object obj)",
+            "size": 132,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "object CreateTaskSource(int32 js_id)",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void SetTaskSourceResult([netstandard]System.Threading.Tasks.TaskCompletionSource\u00601\u003Cobject\u003E tcs, object result)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void SetTaskSourceFailure([netstandard]System.Threading.Tasks.TaskCompletionSource\u00601\u003Cobject\u003E tcs, string reason)",
+            "size": 15,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 GetTaskAndBind([netstandard]System.Threading.Tasks.TaskCompletionSource\u00601\u003Cobject\u003E tcs, int32 js_id)",
+            "size": 18,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 BindExistingObject(object raw_obj, int32 js_id)",
+            "size": 76,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 GetJSObjectId(object raw_obj)",
+            "size": 55,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "object GetMonoObject(int32 gc_handle)",
+            "size": 60,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "object BoxInt(int32 i)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "object BoxDouble(float64 d)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "object BoxBool(int32 b)",
+            "size": 18,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "bool IsSimpleArray(object a)",
+            "size": 54,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "object GetCoreType(string coreObj)",
+            "size": 31,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "string GetCallSignature(native int method_handle)",
+            "size": 386,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "object ObjectToEnum(native int method_handle, int32 parm, object obj)",
+            "size": 72,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void GenericSetupJSContinuation\u003CT\u003E([netstandard]System.Threading.Tasks.Task\u00601\u003C!!T\u003E task, class WebAssembly.JSObject cont_obj)",
+            "size": 54,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void SetupJSContinuation([netstandard]System.Threading.Tasks.Task task, class WebAssembly.JSObject cont_obj)",
+            "size": 189,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "object GetGlobalObject([opt] string str)",
+            "size": 41,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "string ObjectToString(object o)",
+            "size": 44,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "float64 GetDateValue(object dtv)",
+            "size": 149,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "static [netstandard]System.DateTime CreateDateTime(float64 ticks)",
+            "size": 21,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "static [netstandard]System.Enum EnumFromExportContract([netstandard]System.Type enumType, object \u0027value\u0027)",
+            "size": 411,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "object EnumToExportContract([netstandard]System.Enum \u0027value\u0027)",
+            "size": 213,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void StopProfile()",
+            "size": 2,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void DumpAotProfileData(uint8\u0026 buf, int32 len, string s)",
+            "size": 66,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor()",
+            "size": 8,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi beforefieldinit WebAssembly.Host.HostObject extends WebAssembly.Host.HostObjectBase",
+        "size": 16,
+        "sections": [
+          {
+            "type": "method",
+            "name": "void .ctor(string hostName, object[] _params)",
+            "size": 16,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public abstract auto ansi beforefieldinit WebAssembly.Host.HostObjectBase extends WebAssembly.JSObject implements WebAssembly.Host.IHostObject",
+        "size": 75,
+        "sections": [
+          {
+            "type": "method",
+            "name": "void .ctor(int32 js_handle)",
+            "size": 65,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(native int js_handle)",
+            "size": 10,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "interface public abstract auto ansi WebAssembly.Host.IHostObject",
+        "size": 0,
+        "sections": []
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi beforefieldinit WebAssembly.Core.Array extends WebAssembly.Core.CoreObject",
+        "size": 274,
+        "sections": [
+          {
+            "type": "method",
+            "name": "void .ctor(object[] _params)",
+            "size": 15,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(native int js_handle)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 Push(object[] elements)",
+            "size": 18,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "object Pop()",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "object Shift()",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 UnShift(object[] elements)",
+            "size": 18,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 IndexOf(object searchElement, [opt] int32 fromIndex)",
+            "size": 36,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 LastIndexOf(object searchElement)",
+            "size": 27,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 LastIndexOf(object searchElement, int32 endIndex)",
+            "size": 36,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "object get_Item(int32 i)",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void set_Item(int32 i, object \u0027value\u0027)",
+            "size": 38,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi beforefieldinit WebAssembly.Core.ArrayBuffer extends WebAssembly.Core.CoreObject",
+        "size": 165,
+        "sections": [
+          {
+            "type": "method",
+            "name": "void .ctor()",
+            "size": 19,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(int32 length)",
+            "size": 29,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(native int js_handle)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 get_ByteLength()",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "bool get_IsView()",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "class WebAssembly.Core.ArrayBuffer Slice(int32 begin)",
+            "size": 32,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "class WebAssembly.Core.ArrayBuffer Slice(int32 begin, int32 end)",
+            "size": 41,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public abstract auto ansi beforefieldinit WebAssembly.Core.CoreObject extends WebAssembly.JSObject",
+        "size": 75,
+        "sections": [
+          {
+            "type": "method",
+            "name": "void .ctor(int32 js_handle)",
+            "size": 65,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(native int js_handle)",
+            "size": 10,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi beforefieldinit WebAssembly.Core.DataView extends WebAssembly.Core.CoreObject",
+        "size": 1071,
+        "sections": [
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer)",
+            "size": 24,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer, int32 byteOffset)",
+            "size": 33,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer, int32 byteOffset, int32 byteLength)",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer)",
+            "size": 24,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer, int32 byteOffset)",
+            "size": 33,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer, int32 byteOffset, int32 byteLength)",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(native int js_handle)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 get_ByteLength()",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 get_ByteOffset()",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "class WebAssembly.Core.ArrayBuffer get_Buffer()",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "float32 GetFloat32(int32 byteOffset, [opt] bool littleEndian)",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "float64 GetFloat64(int32 byteOffset, [opt] bool littleEndian)",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int16 GetInt16(int32 byteOffset, [opt] bool littleEndian)",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 GetInt32(int32 byteOffset, [opt] bool littleEndian)",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int8 GetInt8(int32 byteOffset, [opt] bool littleEndian)",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "uint16 GetUint16(int32 byteOffset, [opt] bool littleEndian)",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "uint32 GetUint32(int32 byteOffset, [opt] bool littleEndian)",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "uint8 GetUint8(int32 byteOffset, [opt] bool littleEndian)",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void SetFloat32(int32 byteOffset, float32 \u0027value\u0027, [opt] bool littleEndian)",
+            "size": 46,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void SetFloat64(int32 byteOffset, float64 \u0027value\u0027, [opt] bool littleEndian)",
+            "size": 46,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void SetInt16(int32 byteOffset, int16 \u0027value\u0027, [opt] bool littleEndian)",
+            "size": 46,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void SetInt32(int32 byteOffset, int32 \u0027value\u0027, [opt] bool littleEndian)",
+            "size": 46,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void SetInt8(int32 byteOffset, int8 \u0027value\u0027, [opt] bool littleEndian)",
+            "size": 46,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void SetUint16(int32 byteOffset, uint16 \u0027value\u0027, [opt] bool littleEndian)",
+            "size": 46,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void SetUint32(int32 byteOffset, uint32 \u0027value\u0027, [opt] bool littleEndian)",
+            "size": 46,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void SetUint8(int32 byteOffset, uint8 \u0027value\u0027, [opt] bool littleEndian)",
+            "size": 46,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "instance !!U UnBoxValue\u003Cvaluetype .ctor ([netstandard]System.ValueType) U\u003E(object jsValue)",
+            "size": 108,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed beforefieldinit WebAssembly.Core.Float32Array extends class WebAssembly.Core.TypedArray\u00602\u003Cclass WebAssembly.Core.Float32Array,float32\u003E",
+        "size": 119,
+        "sections": [
+          {
+            "type": "method",
+            "name": "void .ctor()",
+            "size": 9,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(int32 length)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer, int32 byteOffset)",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer, int32 byteOffset, int32 length)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer, int32 byteOffset)",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer, int32 byteOffset, int32 length)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(native int js_handle)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "static [System.Memory]System.Span\u00601\u003Cfloat32\u003E op_Implicit(class WebAssembly.Core.Float32Array typedarray)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "class WebAssembly.Core.Float32Array op_Implicit([System.Memory]System.Span\u00601\u003Cfloat32\u003E span)",
+            "size": 12,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed beforefieldinit WebAssembly.Core.Float64Array extends class WebAssembly.Core.TypedArray\u00602\u003Cclass WebAssembly.Core.Float64Array,float64\u003E",
+        "size": 119,
+        "sections": [
+          {
+            "type": "method",
+            "name": "void .ctor()",
+            "size": 9,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(int32 length)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer, int32 byteOffset)",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer, int32 byteOffset, int32 length)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer, int32 byteOffset)",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer, int32 byteOffset, int32 length)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(native int js_handle)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "static [System.Memory]System.Span\u00601\u003Cfloat64\u003E op_Implicit(class WebAssembly.Core.Float64Array typedarray)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "class WebAssembly.Core.Float64Array op_Implicit([System.Memory]System.Span\u00601\u003Cfloat64\u003E span)",
+            "size": 12,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi beforefieldinit WebAssembly.Core.Function extends WebAssembly.Core.CoreObject",
+        "size": 128,
+        "sections": [
+          {
+            "type": "method",
+            "name": "void .ctor(object[] args)",
+            "size": 15,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(native int js_handle)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "object Apply([opt] object thisArg, [opt] object[] argsArray)",
+            "size": 26,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "class WebAssembly.Core.Function Bind([opt] object thisArg, [opt] object[] argsArray)",
+            "size": 31,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "object Call([opt] object thisArg, object[] argsArray)",
+            "size": 46,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed beforefieldinit WebAssembly.Core.Int16Array extends class WebAssembly.Core.TypedArray\u00602\u003Cclass WebAssembly.Core.Int16Array,int16\u003E",
+        "size": 119,
+        "sections": [
+          {
+            "type": "method",
+            "name": "void .ctor()",
+            "size": 9,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(int32 length)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer, int32 byteOffset)",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer, int32 byteOffset, int32 length)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer, int32 byteOffset)",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer, int32 byteOffset, int32 length)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(native int js_handle)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "static [System.Memory]System.Span\u00601\u003Cint16\u003E op_Implicit(class WebAssembly.Core.Int16Array typedarray)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "class WebAssembly.Core.Int16Array op_Implicit([System.Memory]System.Span\u00601\u003Cint16\u003E span)",
+            "size": 12,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed beforefieldinit WebAssembly.Core.Int32Array extends class WebAssembly.Core.TypedArray\u00602\u003Cclass WebAssembly.Core.Int32Array,int32\u003E",
+        "size": 119,
+        "sections": [
+          {
+            "type": "method",
+            "name": "void .ctor()",
+            "size": 9,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(int32 length)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer, int32 byteOffset)",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer, int32 byteOffset, int32 length)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer, int32 byteOffset)",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer, int32 byteOffset, int32 length)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(native int js_handle)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "static [System.Memory]System.Span\u00601\u003Cint32\u003E op_Implicit(class WebAssembly.Core.Int32Array typedarray)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "class WebAssembly.Core.Int32Array op_Implicit([System.Memory]System.Span\u00601\u003Cint32\u003E span)",
+            "size": 12,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed beforefieldinit WebAssembly.Core.Int8Array extends class WebAssembly.Core.TypedArray\u00602\u003Cclass WebAssembly.Core.Int8Array,int8\u003E",
+        "size": 119,
+        "sections": [
+          {
+            "type": "method",
+            "name": "void .ctor()",
+            "size": 9,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(int32 length)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer, int32 byteOffset)",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer, int32 byteOffset, int32 length)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer, int32 byteOffset)",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer, int32 byteOffset, int32 length)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(native int js_handle)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "static [System.Memory]System.Span\u00601\u003Cint8\u003E op_Implicit(class WebAssembly.Core.Int8Array typedarray)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "class WebAssembly.Core.Int8Array op_Implicit([System.Memory]System.Span\u00601\u003Cint8\u003E span)",
+            "size": 12,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi beforefieldinit WebAssembly.Core.SharedArrayBuffer extends WebAssembly.Core.CoreObject",
+        "size": 97,
+        "sections": [
+          {
+            "type": "method",
+            "name": "void .ctor(int32 length)",
+            "size": 29,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(native int js_handle)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 get_ByteLength()",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "class WebAssembly.Core.SharedArrayBuffer Slice(int32 begin, int32 end)",
+            "size": 41,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public abstract auto ansi beforefieldinit WebAssembly.Core.TypedArray\u00602\u003CT,valuetype .ctor ([netstandard]System.ValueType) U\u003E extends WebAssembly.Core.CoreObject implements WebAssembly.Core.ITypedArray, class WebAssembly.Core.ITypedArray\u00602\u003C!T,!U\u003E",
+        "size": 1715,
+        "sections": [
+          {
+            "type": "method",
+            "name": "void .ctor()",
+            "size": 19,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(int32 length)",
+            "size": 29,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer)",
+            "size": 24,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer, int32 byteOffset)",
+            "size": 33,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer, int32 byteOffset, int32 length)",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer)",
+            "size": 24,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer, int32 byteOffset)",
+            "size": 33,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer, int32 byteOffset, int32 length)",
+            "size": 42,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(native int js_handle)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "class WebAssembly.Core.TypedArrayTypeCode GetTypedArrayType()",
+            "size": 133,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 get_BytesPerElement()",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "string get_Name()",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 get_ByteLength()",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "class WebAssembly.Core.ArrayBuffer get_Buffer()",
+            "size": 17,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void Fill(!U \u0027value\u0027)",
+            "size": 28,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void Fill(!U \u0027value\u0027, int32 start)",
+            "size": 37,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void Fill(!U \u0027value\u0027, int32 start, int32 end)",
+            "size": 46,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void Set(class WebAssembly.Core.Array \u0027array\u0027)",
+            "size": 23,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void Set(class WebAssembly.Core.Array \u0027array\u0027, int32 offset)",
+            "size": 32,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void Set(class WebAssembly.Core.ITypedArray typedArray)",
+            "size": 23,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void Set(class WebAssembly.Core.ITypedArray typedArray, int32 offset)",
+            "size": 32,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "instance !T Slice()",
+            "size": 22,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "instance !T Slice(int32 begin)",
+            "size": 32,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "instance !T Slice(int32 begin, int32 end)",
+            "size": 41,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "instance !T SubArray()",
+            "size": 22,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "instance !T SubArray(int32 begin)",
+            "size": 32,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "instance !T SubArray(int32 begin, int32 end)",
+            "size": 41,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "instance [netstandard]System.Nullable\u00601\u003C!U\u003E get_Item(int32 i)",
+            "size": 48,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void set_Item(int32 i, [netstandard]System.Nullable\u00601\u003C!U\u003E \u0027value\u0027)",
+            "size": 43,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "instance [netstandard]System.Nullable\u00601\u003C!U\u003E UnBoxValue(object jsValue)",
+            "size": 100,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "instance !U[] ToArray()",
+            "size": 46,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "static !T From([System.Memory]System.ReadOnlySpan\u00601\u003C!U\u003E span)",
+            "size": 147,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 CopyTo([System.Memory]System.Span\u00601\u003C!U\u003E span)",
+            "size": 91,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 CopyFrom(void* ptrSource, int32 offset, int32 count)",
+            "size": 63,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "int32 CopyFrom([System.Memory]System.ReadOnlySpan\u00601\u003C!U\u003E span)",
+            "size": 99,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void ValidateTarget([System.Memory]System.Span\u00601\u003C!U\u003E target)",
+            "size": 45,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void ValidateSource([System.Memory]System.ReadOnlySpan\u00601\u003C!U\u003E source)",
+            "size": 45,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void ValidateFromSource([System.Memory]System.ReadOnlySpan\u00601\u003C!U\u003E source)",
+            "size": 45,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void ValidateFromSource(!U[] source, int32 offset, int32 count)",
+            "size": 75,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed WebAssembly.Core.TypedArrayTypeCode extends [netstandard]System.Enum",
+        "size": 0,
+        "sections": []
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed beforefieldinit WebAssembly.Core.Uint16Array extends class WebAssembly.Core.TypedArray\u00602\u003Cclass WebAssembly.Core.Uint16Array,uint16\u003E",
+        "size": 119,
+        "sections": [
+          {
+            "type": "method",
+            "name": "void .ctor()",
+            "size": 9,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(int32 length)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer, int32 byteOffset)",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer, int32 byteOffset, int32 length)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer, int32 byteOffset)",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer, int32 byteOffset, int32 length)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(native int js_handle)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "static [System.Memory]System.Span\u00601\u003Cuint16\u003E op_Implicit(class WebAssembly.Core.Uint16Array typedarray)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "class WebAssembly.Core.Uint16Array op_Implicit([System.Memory]System.Span\u00601\u003Cuint16\u003E span)",
+            "size": 12,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed beforefieldinit WebAssembly.Core.Uint32Array extends class WebAssembly.Core.TypedArray\u00602\u003Cclass WebAssembly.Core.Uint32Array,uint32\u003E",
+        "size": 119,
+        "sections": [
+          {
+            "type": "method",
+            "name": "void .ctor()",
+            "size": 9,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(int32 length)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer, int32 byteOffset)",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer, int32 byteOffset, int32 length)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer, int32 byteOffset)",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer, int32 byteOffset, int32 length)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(native int js_handle)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "static [System.Memory]System.Span\u00601\u003Cuint32\u003E op_Implicit(class WebAssembly.Core.Uint32Array typedarray)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "class WebAssembly.Core.Uint32Array op_Implicit([System.Memory]System.Span\u00601\u003Cuint32\u003E span)",
+            "size": 12,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed beforefieldinit WebAssembly.Core.Uint8Array extends class WebAssembly.Core.TypedArray\u00602\u003Cclass WebAssembly.Core.Uint8Array,uint8\u003E",
+        "size": 119,
+        "sections": [
+          {
+            "type": "method",
+            "name": "void .ctor()",
+            "size": 9,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(int32 length)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer, int32 byteOffset)",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer, int32 byteOffset, int32 length)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer, int32 byteOffset)",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer, int32 byteOffset, int32 length)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(native int js_handle)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "static [System.Memory]System.Span\u00601\u003Cuint8\u003E op_Implicit(class WebAssembly.Core.Uint8Array typedarray)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "class WebAssembly.Core.Uint8Array op_Implicit([System.Memory]System.Span\u00601\u003Cuint8\u003E span)",
+            "size": 12,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed beforefieldinit WebAssembly.Core.Uint8ClampedArray extends class WebAssembly.Core.TypedArray\u00602\u003Cclass WebAssembly.Core.Uint8ClampedArray,uint8\u003E",
+        "size": 119,
+        "sections": [
+          {
+            "type": "method",
+            "name": "void .ctor()",
+            "size": 9,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(int32 length)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer, int32 byteOffset)",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.ArrayBuffer buffer, int32 byteOffset, int32 length)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer, int32 byteOffset)",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(class WebAssembly.Core.SharedArrayBuffer buffer, int32 byteOffset, int32 length)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor(native int js_handle)",
+            "size": 10,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "static [System.Memory]System.Span\u00601\u003Cuint8\u003E op_Implicit(class WebAssembly.Core.Uint8ClampedArray typedarray)",
+            "size": 12,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "class WebAssembly.Core.Uint8ClampedArray op_Implicit([System.Memory]System.Span\u00601\u003Cuint8\u003E span)",
+            "size": 12,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "interface public abstract auto ansi WebAssembly.Core.ITypedArray",
+        "size": 0,
+        "sections": []
+      },
+      {
+        "type": "class",
+        "name": "interface public abstract auto ansi WebAssembly.Core.ITypedArray\u00602\u003CT,valuetype .ctor ([netstandard]System.ValueType) U\u003E",
+        "size": 0,
+        "sections": []
+      }
+    ]
+  },
+  {
+    "type": "assembly",
+    "name": "WebAssembly.Net.Http",
+    "size": 208,
+    "sections": [
+      {
+        "type": "class",
+        "name": "public auto ansi WebAssembly.Net.Http.HttpClient.WasmHttpMessageHandler extends [netstandard]System.Net.Http.HttpMessageHandler",
+        "size": 208,
+        "sections": [
+          {
+            "type": "method",
+            "name": "class WebAssembly.Net.Http.HttpClient.FetchCredentialsOption get_DefaultCredentials()",
+            "size": 6,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void set_DefaultCredentials(class WebAssembly.Net.Http.HttpClient.FetchCredentialsOption \u0027value\u0027)",
+            "size": 7,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "class WebAssembly.Net.Http.HttpClient.RequestCache get_Cache()",
+            "size": 6,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void set_Cache(class WebAssembly.Net.Http.HttpClient.RequestCache \u0027value\u0027)",
+            "size": 7,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "class WebAssembly.Net.Http.HttpClient.RequestMode get_Mode()",
+            "size": 6,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void set_Mode(class WebAssembly.Net.Http.HttpClient.RequestMode \u0027value\u0027)",
+            "size": 7,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "bool get_StreamingSupported()",
+            "size": 6,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "bool get_StreamingEnabled()",
+            "size": 6,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void set_StreamingEnabled(bool \u0027value\u0027)",
+            "size": 7,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .cctor()",
+            "size": 81,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void .ctor()",
+            "size": 16,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "class WebAssembly.Net.Http.HttpClient.WasmHttpMessageHandler GetHttpMessageHandler()",
+            "size": 11,
+            "sections": null
+          },
+          {
+            "type": "method",
+            "name": "void handlerInit()",
+            "size": 42,
+            "sections": null
+          }
+        ]
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed WebAssembly.Net.Http.HttpClient.FetchCredentialsOption extends [netstandard]System.Enum",
+        "size": 0,
+        "sections": []
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed WebAssembly.Net.Http.HttpClient.RequestCache extends [netstandard]System.Enum",
+        "size": 0,
+        "sections": []
+      },
+      {
+        "type": "class",
+        "name": "public auto ansi sealed WebAssembly.Net.Http.HttpClient.RequestMode extends [netstandard]System.Enum",
+        "size": 0,
+        "sections": []
+      }
+    ]
+  }
+]

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  </head>
+  <style>
+    body {
+    font-family: 'Rosario', sans-serif;
+    overflow: hidden;
+    }
+
+    #visualization {
+    overflow: auto;
+    }
+
+    h1 {
+    font-size: 62px;
+    font-weight: 300;
+    letter-spacing: -2px;
+    line-height: 1em;
+    margin: 1em 0;
+    }
+
+    textarea {
+    width: 98%;
+    height: 200px;
+    }
+
+    line.link {
+        fill: none;
+        stroke: #9ecae1;
+        stroke-width: 1.5px;
+    }
+  </style>
+  <body>
+      <script src="https://d3js.org/d3.v4.min.js"></script>
+      <script src="CodeFlower.js"></script>
+      <div id="visualization"></div>
+      <script>
+
+        function getMethodName(name) {
+            name = name.split("(")[0];
+            return name;
+        }
+
+        //  given json file of assembly dependencies, reformat to match format
+        //  needed for treemap visualization
+        function formatAssemblyTree(json) {
+            var request = new XMLHttpRequest();
+            request.open("GET", json, false);
+            request.send(null)
+
+            var data = JSON.parse(request.responseText);
+            var as_dict = {};
+            data.forEach(function(as) {
+                var as_name = as["name"];
+                
+                as_dict["name"] = as_name;
+                as_dict["children"] = [];
+                var classes = as["sections"];
+                if (classes != null) {
+                    classes.forEach(function(cl) {
+                        var class_dict = {};
+                        var class_name = cl["name"];
+                        class_dict["name"] = class_name;
+                        class_dict["children"] = []
+                        var methods = cl["sections"];
+                        if (methods != null) {
+                            var names = [];
+                            methods.forEach(function(method) {
+                                var methodName = getMethodName(method["name"]);
+                                var ix = names.indexOf(methodName);
+                                if (ix != -1) {
+                                    class_dict["children"][ix]["size"] += +method["size"];
+                                } else {
+                                    names.push(methodName);
+                                    class_dict["children"].push({"name": methodName, 
+                                                            "size": +method["size"]});
+                                }
+                            })
+                            as_dict["children"].push(class_dict);
+                        }
+                    })
+                    
+                }
+            })
+            return as_dict;
+        }
+
+        var jsonData = formatAssemblyTree("json/mscorlib.json");
+        var myFlower = new CodeFlower("#visualization", window.innerWidth, window.innerHeight);
+        myFlower.update(jsonData);
+        myFlower.collapseNode();
+        </script>
+
+        
+  </body>
+</html>
