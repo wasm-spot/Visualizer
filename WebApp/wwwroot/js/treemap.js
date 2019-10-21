@@ -1,11 +1,21 @@
+function getInputTree() {
+    var inputSize = document.getElementById("size").value;
+    var overload = document.getElementById("overload").checked;
+    displayTree(data, inputSize, overload);
+    window.scrollTo(0,document.body.scrollHeight);
+  }
 function displayTreemap(data) {
 
     d3v4.select("#submit")
         .on("click", function() {
-            var inputSize = document.getElementById("size").value;
-            var overload = document.getElementById("overload").checked;
-            displayTree(data, inputSize, overload);
-            window.scrollTo(0,document.body.scrollHeight);
+            getInputTree();
+        })
+    d3v4.select("#size")
+        .on("keypress", function() {
+          if (d3v4.event.keyCode == 13) {
+            d3v4.event.preventDefault();
+            getInputTree();
+          }
         })
     }
 

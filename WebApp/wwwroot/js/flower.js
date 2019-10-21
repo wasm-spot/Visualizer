@@ -186,3 +186,29 @@ CodeFlower.prototype.collapseNode = function() {
 
     return;
 };
+
+function getInputFlower() {
+  d3v3.select("svg").remove();
+  var inputSize = document.getElementById("size").value;
+  var overload = document.getElementById("overload").checked;
+  var jsonData = formatAssemblyTree(data, size=inputSize, overload=overload, type="flower");
+  var myFlower = new CodeFlower("#visualization", window.innerWidth, window.innerHeight, inputSize);
+  myFlower.update(jsonData);
+  myFlower.collapseNode();
+  window.scrollTo(0,document.body.scrollHeight);
+}
+
+function displayFlower(data) {
+  d3v3.select("#submit")
+    .on("click", function() {
+      getInputFlower();
+    })
+
+  d3v3.select("#size")
+    .on("keypress", function() {
+      if (d3v3.event.keyCode == 13) {
+        d3v4.event.preventDefault();
+        getInputFlower();
+      }
+    })
+}

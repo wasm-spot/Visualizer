@@ -51,7 +51,8 @@
             d3v4.select("#compare-label")
                 .style("display", "none");
             displayTreemap(data);
-            d3v4.select("#tree-btn").class("active");
+            d3v4.select("#tree-btn")
+                .style("class", "active");
         }
 
         window.sunburst = function() {
@@ -136,18 +137,7 @@
                 .style("display", "none");
             d3v3.select("#compare-label")
                 .style("display", "none");
-            d3v3.select("#submit")
-                .on("click", function() {
-                    d3v3.select("svg").remove();
-                    var inputSize = document.getElementById("size").value;
-                    var overload = document.getElementById("overload").checked;
-                    var jsonData = formatAssemblyTree(data, size=inputSize, overload=overload, type="flower");
-                    var myFlower = new CodeFlower("#visualization", window.innerWidth, window.innerHeight, inputSize);
-                    myFlower.update(jsonData);
-                    myFlower.collapseNode();
-                    window.scrollTo(0,document.body.scrollHeight);
-                })
-            
+            displayFlower(data);       
         }
     </script>
 

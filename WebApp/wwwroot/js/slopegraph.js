@@ -1,11 +1,23 @@
+function getInputSlope(data_in, data_out) {
+    var inputSize = document.getElementById("size").value;
+    var overload = document.getElementById("overload").checked;
+    drawSlope(data_in, data_out, inputSize, overload);
+    window.scrollTo(0,document.body.scrollHeight);
+}
+
 function displaySlopegraph(data_in, data_out) {
     d3v4.select("#submit")
         .on("click", function() {
-            var inputSize = document.getElementById("size").value;
-            var overload = document.getElementById("overload").checked;
-            drawSlope(data_in, data_out, inputSize, overload);
-            window.scrollTo(0,document.body.scrollHeight);
+            getInputSlope(data_in, data_out);
         })
+    d3v4.select("#size")
+        .on("keypress", function() {
+          if (d3v4.event.keyCode == 13) {
+            d3v4.event.preventDefault();  
+            getInputSlope(data_in, data_out);
+          }
+        })
+    
 }
 
 function drawSlope(data_in, data_out, inputSize, overload) {
@@ -14,8 +26,6 @@ function drawSlope(data_in, data_out, inputSize, overload) {
     var width = window.innerWidth - margin.left - margin.right,
         height = window.innerHeight - margin.top - margin.bottom;
         
-
-    var url = "https://raw.githubusercontent.com/tlfrd/pay-ratios/master/data/payratio.json";
 
     var y1 = d3v4.scalePow()
         .exponent(2)
@@ -44,7 +54,6 @@ function drawSlope(data_in, data_out, inputSize, overload) {
     drawSlopeGraph(classData);
 
     function drawSlopeGraph(data, name="mscorlib") {
-        
         var svg = d3v4.select("body").append("svg")
             .attr("width", width + margin.left + margin.right)
             .attr("height", height + margin.top + margin.bottom)

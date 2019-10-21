@@ -33,35 +33,26 @@ var arc = d3v4.arc()
 
 // Use d3v4.text and d3v4.csvParseRows so that we do not need to have a header
 // row, and can receive the csv as an array of arrays.
-
+function getInputSunburst() {
+  var inputSize = document.getElementById("size").value;
+  var overload = document.getElementById("overload").checked;
+  console.log("create")
+  createVisualization(data, inputSize, overload);
+}
 
 function displaySunburst(data, data_in = null) {
-    // Not ready yet
-    // if (document.getElementById("compare") == null) {
-    //     var compare = d3v4.select("#fields")
-    //         .append("p")
-    //     compare.append("label").text("Compare")
-    //         .attr("id", "compare-label")
-    //     compare.append("input")
-    //         .attr("id", "compare")
-    //         .attr("type", "checkbox")
-    // } else {
-    //     d3v4.select("#compare")
-    //         .style("display", null);
-    //     d3v4.select("#compare-label")
-    //         .style("display", null);
-    // }
     
     d3v4.select("#submit")
         .on("click", function() {
-            var inputSize = document.getElementById("size").value;
-            var overload = document.getElementById("overload").checked;
-            //var compare = document.getElementById("compare").checked;
-            createVisualization(data, inputSize, overload);
-            // if (compare && data_in != null) {
-            //     console.log("compare")
-            //     createVisualization(data_in, inputSize, overload, compare="in");
-            // }
+            getInputSunburst();
+        })
+    
+    d3v4.select("#size")
+        .on("keypress", function() {
+          if (d3v4.event.keyCode == 13) {
+            d3v4.event.preventDefault();
+            getInputSunburst();
+          }
         })
 }
 
