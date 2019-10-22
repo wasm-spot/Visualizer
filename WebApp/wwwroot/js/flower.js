@@ -207,7 +207,7 @@ function displayFlower(data) {
   d3v3.select("#size")
     .on("keypress", function() {
       if (d3v3.event.keyCode == 13) {
-        d3v4.event.preventDefault();
+        d3v3.event.preventDefault();
         getInputFlower();
       }
     })
