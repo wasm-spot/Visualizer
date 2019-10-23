@@ -138,8 +138,6 @@ CodeFlower.prototype.click = function(d) {
   if (d.index >= 0) {
     console.log(d)
     displayTree(d, this.size, this.overload, flower=true);
-    d3v3.select("#chart")
-        .style("display", null)
   }
 };
 

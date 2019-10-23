@@ -11,4 +11,4 @@ WebApp/.vscode/*
 *obj/*
 WebApp/bin/*
 WebApp/obj/*
-WebApp/publish/*
+WebApp/out/*

@@ -113,6 +113,10 @@
                 .style("display", "none");
             d3v4.select("#chart")
                 .style("display", "none");
+            d3v4.select("#chart-title")
+                .html("");
+            d3v4.select("#description")
+                .html("");
         }
 
         window.onload = function() {
@@ -142,6 +146,8 @@
     </script>
 
     <div id="main">
+        <h1 id="chart-title"></h1>
+        <div id="description"></div>
         <div id="options">
             <form>
                 <p>

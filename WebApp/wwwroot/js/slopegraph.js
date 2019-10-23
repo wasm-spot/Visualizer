@@ -17,6 +17,9 @@ function displaySlopegraph(data_in, data_out) {
             getInputSlope(data_in, data_out);
           }
         })
+    d3v4.select("#chart-title").html("Slopegraph")
+    // d3v4.select("#description")
+    //     .html("The slope graph visualizes the size differences ")
     
 }
 

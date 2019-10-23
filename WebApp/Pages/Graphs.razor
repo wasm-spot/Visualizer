@@ -1,5 +1,4 @@
 @page "/"
-@page "/flower.html"
 @inject HttpClient Http
 @inject IJSRuntime JsRuntime;
 @inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager;
@@ -91,6 +90,7 @@
     }
 
     protected override async Task OnInitializedAsync() {
+        Console.WriteLine("Hello");
         info = await History.LibraryTable.LoadHistory();
         apps = info.Keys.ToArray();
         displayed = new bool[apps.Length];
