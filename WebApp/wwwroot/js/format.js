@@ -9,7 +9,7 @@ function getMethodName(name, sunburst=false) {
 
 //  given json file of assembly dependencies, reformat to match format
 //  needed for treemap visualization
-function formatAssemblyTree(data, size=100, overload=true, type="tree", compare=null) {
+function formatAssemblyTree(data, size=100, overload=true, type="tree") {
     var as_dict = {};
     if (type == "sunburst") {
         var csv_str = "";
@@ -54,9 +54,6 @@ function formatAssemblyTree(data, size=100, overload=true, type="tree", compare=
                                                         "size": sizes[i]});
                             } else if (type == "sunburst") {
                                 var name = names[i];
-                                if (compare != null) {
-                                    name = name + " (" + compare + ")";
-                                }
                                 var line = as_name + "-" + class_name + "-" + name + "," + sizes[i] + "\n";
                                 csv_str += line;
                             } 
@@ -73,7 +70,6 @@ function formatAssemblyTree(data, size=100, overload=true, type="tree", compare=
         }
     })
     if (type == "sunburst") {
-        console.log(csv_str)
         return csv_str;
     }
     return as_dict;

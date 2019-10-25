@@ -18,9 +18,9 @@ var colors = {
 };
 
 // Total size of all segments; we set this later, after loading the data.
-var totalSize = 0; 
+var totalSize = 0, inTotalSize = 0; 
 
-var vis;
+var vis, in_vis;
 
 var partition = d3v4.partition()
     .size([2 * Math.PI, radius * radius]);
@@ -36,124 +36,171 @@ var arc = d3v4.arc()
 function getInputSunburst() {
   var inputSize = document.getElementById("size").value;
   var overload = document.getElementById("overload").checked;
-  console.log("create")
-  createVisualization(data, inputSize, overload);
+  createVisualization(data, inputSize, overload, data_in=data_in, state="in");
 }
 
 function displaySunburst(data, data_in = null) {
-    
+    d3v4.select("#chart-title").html("Sunburst")
+    d3v4.select("#description")
+      .html("A sunburst diagram visualizes the relative size and hierarchy of \
+            classes and methods in a library. Hover over each sector for more \
+            information.")
     d3v4.select("#submit")
-        .on("click", function() {
-            getInputSunburst();
-        })
+      .on("click", function() {
+          getInputSunburst();
+      })
     
     d3v4.select("#size")
-        .on("keypress", function() {
-          if (d3v4.event.keyCode == 13) {
-            d3v4.event.preventDefault();
-            getInputSunburst();
-          }
-        })
+      .on("keypress", function() {
+        if (d3v4.event.keyCode == 13) {
+          d3v4.event.preventDefault();
+          getInputSunburst();
+        }
+      })
 }
 
-// Main function to draw and set up the visualization, once we have the data.
-function createVisualization(data, inputSize, overload, compare=null) {
-    d3v4.select("#sunburst").remove();
-    var assembly = formatAssemblyTree(data, inputSize, overload, type="sunburst", compare=compare);
-    var csv = d3v4.csvParseRows(assembly);
+function createCsv(data, inputSize, overload, state) {
+  var assembly = formatAssemblyTree(data, inputSize, overload, type="sunburst")
+  var csv = d3v4.csvParseRows(assembly);
 
+  var names = csv.map(function(value, index) { return value[0]; })
+  names = names.map(function(value, index) { return value.split("-")})
+  names = [].concat(...names)
+  var json = buildHierarchy(csv, state);
 
-    var names = csv.map(function(value, index) { return value[0]; })
-    names = names.map(function(value, index) { return value.split("-")})
-    names = [].concat(...names)
-    var json = buildHierarchy(csv);
-
-    height = window.innerHeight * 0.8;
-    width = window.innerHeight * 0.6;
-    vis = d3v4.select("#chart").append("svg:svg")
-        .attr("id", "sunburst")
-        .attr("width", width)
-        .attr("height", height)
-        .style("margin-left", 100)
-        .append("svg:g")
-        .attr("id", "container")
-        .attr("transform", "translate(" + width / 2 + "," + window.innerHeight * 0.35 + ")");
   colors = d3v4.scaleOrdinal()
     .domain(names)
     .range(d3v4.schemeCategory20c)
+
+  return json;
+}
+
+function createSunburst(json, state="in") {
+  var sun = d3v4.select("#chart").append("svg:svg")
+    .attr("id", "sunburst")
+    .attr("width", width)
+    .attr("height", height)
+    .style("margin-left", 100)
+    .append("svg:g")
+    .attr("id", "container")
+    .attr("transform", "translate(" + width / 2 + "," + window.innerHeight * 0.35 + ")");
+
+  sun.append("svg:circle")
+    .attr("r", radius)
+    .style("opacity", 0);
+
+  var text = sun.append("text")
+                .attr("class", "sunburst-title")
+                .attr("transform", "translate(-30, 0)");
+    
+
+  var root = d3v4.hierarchy(json)
+    .sum(function(d) { return d.size; })
+    .sort(function(a, b) { return b.value - a.value; }); 
+
+  var nodes = partition(root).descendants()
+    .filter(function(d) {
+        return (d.x1 - d.x0 > 0.005); // 0.005 radians = 0.29 degrees
+    });
+
+  var path = sun.data([json]).selectAll("path")
+    .data(nodes)
+    .enter().append("svg:path")
+    .attr("display", function(d) { return d.depth ? null : "none"; })
+    .attr("d", arc)
+    .attr("id", state)
+    .attr("fill-rule", "evenodd")
+    .style("fill", function(d) { return colors(d.data.name); })
+    .style("opacity", 1)
+    .on("mouseover", mouseover);
+
+    d3v4.selectAll("#container").on("mouseleave", mouseleave);
+
+    if (state === "in") {
+      inTotalSize = path.datum().value;
+      in_vis = sun;
+      text.text("Linker input")
+    } else {
+      totalSize = path.datum().value;
+      vis = sun;
+      text.text("Linker output")
+    }
+}
+
+// Main function to draw and set up the visualization, once we have the data.
+function createVisualization(data, inputSize, overload, data_in) {
+    d3v4.selectAll("#sunburst").remove();
+    var json = createCsv(data, inputSize, overload, "out");
+    var in_json = createCsv(data_in, inputSize, overload, "in");
+
+    height = window.innerHeight * 0.8;
+    width = window.innerHeight * 0.6;
+
+  
+
   // Basic setup of page elements.
   initializeBreadcrumbTrail();
-  drawLegend(names);
-  d3v4.select("#togglelegend").on("click", toggleLegend);
 
-  // Bounding circle underneath the sunburst, to make it easier to detect
-  // when the mouse leaves the parent g.
-  vis.append("svg:circle")
-      .attr("r", radius)
-      .style("opacity", 0);
-
-  // Turn the data into a d3v4 hierarchy and calculate the sums.
-  var root = d3v4.hierarchy(json)
-      .sum(function(d) { return d.size; })
-      .sort(function(a, b) { return b.value - a.value; });
-  
-  // For efficiency, filter nodes to keep only those large enough to see.
-  var nodes = partition(root).descendants()
-      .filter(function(d) {
-          return (d.x1 - d.x0 > 0.005); // 0.005 radians = 0.29 degrees
-      });
-
-  var path = vis.data([json]).selectAll("path")
-      .data(nodes)
-      .enter().append("svg:path")
-      .attr("display", function(d) { return d.depth ? null : "none"; })
-      .attr("d", arc)
-      .attr("fill-rule", "evenodd")
-      .style("fill", function(d) { return colors(d.data.name); })
-      .style("opacity", 1)
-      .on("mouseover", mouseover);
-
-  // Add the mouseleave handler to the bounding circle.
-  d3v4.select("#container").on("mouseleave", mouseleave);
-
-  // Get total size of the tree = value of root node from partition.
-  totalSize = path.datum().value;
+  createSunburst(in_json, state="in");
+  createSunburst(json, state="out");
  };
 
 // Fade all but the current sequence, and show it in the breadcrumb trail.
 function mouseover(d) {
-
-  var percentage = (100 * d.value / totalSize).toPrecision(3);
+  console.log(d)
+  var state = d.data.state;
+  var total = totalSize;
+  if (state == "in") {
+    total = inTotalSize;
+  }
+  var percentage = (100 * d.value / total).toPrecision(3);
   var percentageString = percentage + "%";
   if (percentage < 0.1) {
     percentageString = "< 0.1%";
   }
+  
+  // Fade all the segments.
+  d3v4.selectAll("path")
+      .style("opacity", 0.3);
 
-  d3v4.select("#percentage")
-      .text(percentageString);
-
-  d3v4.select("#explanation")
-      .style("visibility", "");
+  
 
   var sequenceArray = d.ancestors().reverse();
   sequenceArray.shift(); // remove root node from the array
   updateBreadcrumbs(sequenceArray, percentageString);
 
-  // Fade all the segments.
-  d3v4.selectAll("path")
-      .style("opacity", 0.3);
-
-  // Then highlight only those that are an ancestor of the current segment.
-  vis.selectAll("path")
+  if (state === "out") {
+    d3v4.select("#explanation")
+      .style("display", "inline-block")
+      .style("visibility", "");
+    d3v4.select("#out-size")
+      .text(d.value);
+    d3v4.select("#percentage")
+      .text(percentageString);
+    
+    vis.selectAll("path")
       .filter(function(node) {
                 return (sequenceArray.indexOf(node) >= 0);
               })
       .style("opacity", 1);
+  } else {
+    d3v4.select("#in-explanation")
+      .style("display", "inline-block")
+      .style("visibility", "");
+    d3v4.select("#in-size")
+      .text(d.value);
+    d3v4.select("#in-percentage")
+      .text(percentageString);
+    in_vis.selectAll("path")
+      .filter(function(node) {
+                return (sequenceArray.indexOf(node) >= 0);
+              })
+      .style("opacity", 1);
+  }
 }
 
 // Restore everything to full opacity when moving off the visualization.
 function mouseleave(d) {
-
   // Hide the breadcrumb trail
   d3v4.select("#trail")
       .style("visibility", "hidden");
@@ -164,14 +211,17 @@ function mouseleave(d) {
   // Transition each segment to full opacity and then reactivate it.
   d3v4.selectAll("path")
       .transition()
-      .duration(1000)
+      .duration(800)
       .style("opacity", 1)
       .on("end", function() {
               d3v4.select(this).on("mouseover", mouseover);
             });
-
   d3v4.select("#explanation")
-      .style("visibility", "hidden");
+    .style("visibility", "hidden");
+
+  d3v4.select("#in-explanation")
+    .style("visibility", "hidden");
+  
 }
 
 function initializeBreadcrumbTrail() {
@@ -254,59 +304,12 @@ function updateBreadcrumbs(nodeArray, percentageString) {
 
 }
 
-function drawLegend(names) {
-  // Dimensions of legend item: width, height, spacing, radius of rounded rect.
-  var li = {
-    w: 400, h: 30, s: 3, r: 3
-  };
-  var legend_colors = names.reduce(function(obj, x) {
-      obj[x] = colors(x);
-      return obj;
-  }, {})
-  
-  var legend = d3v4.select("#legend").append("svg:svg")
-      .attr("width", li.w)
-      .attr("height", d3v4.keys(legend_colors).length * (li.h + li.s));
-
-  var g = legend.selectAll("g")
-      .data(d3v4.entries(legend_colors))
-      .enter().append("svg:g")
-      .attr("transform", function(d, i) {
-              return "translate(0," + i * (li.h + li.s) + ")";
-           });
-
-  g.append("svg:rect")
-      .attr("rx", li.r)
-      .attr("ry", li.r)
-      .attr("width", li.w/2-10)
-      .attr("height", li.h)
-      .style("position", "relative")
-      .style("display", "block")
-      .style("fill", function(d) { return d.value; });
-
-  g.append("svg:text")
-      .attr("x", li.w / 2)
-      .attr("y", li.h / 2)
-      .attr("dy", "0.35em")
-      .attr("text-anchor", "middle")
-      .text(function(d) { return d.key; });
-}
-
-function toggleLegend() {
-  var legend = d3v4.select("#legend");
-  if (legend.style("visibility") == "hidden") {
-    legend.style("visibility", "");
-  } else {
-    legend.style("visibility", "hidden");
-  }
-}
-
 // Take a 2-column CSV and transform it into a hierarchical structure suitable
 // for a partition layout. The first column is a sequence of step names, from
 // root to leaf, separated by hyphens. The second column is a count of how 
 // often that sequence occurred.
-function buildHierarchy(csv) {
-  var root = {"name": "root", "children": []};
+function buildHierarchy(csv, state) {
+  var root = {"name": "root", "state": state, "children": []};
   for (var i = 0; i < csv.length; i++) {
     var sequence = csv[i][0];
     var size = +csv[i][1];
@@ -331,13 +334,13 @@ function buildHierarchy(csv) {
  	}
   // If we don't already have a child node for this branch, create it.
  	if (!foundChild) {
- 	  childNode = {"name": nodeName, "children": []};
+ 	  childNode = {"name": nodeName, "state": state, "children": []};
  	  children.push(childNode);
  	}
  	currentNode = childNode;
       } else {
  	// Reached the end of the sequence; create a leaf node.
- 	childNode = {"name": nodeName, "size": size};
+ 	childNode = {"name": nodeName, "state": state, "size": size};
  	children.push(childNode);
       }
     }

@@ -197,6 +197,11 @@ function getInputFlower() {
 }
 
 function displayFlower(data) {
+  d3v3.select("#chart-title").html("Code flower")
+  d3v4.select("#description")
+      .html("The code flower visualizes dependencies using an interactive tree. \
+            The radius of each node is proportional to its size. Click on a node \
+            to see its children.")
   d3v3.select("#submit")
     .on("click", function() {
       getInputFlower();

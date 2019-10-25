@@ -11,6 +11,15 @@ app {
     flex-direction: column;
 }
 
+form {
+  display: inline-flex;
+}
+
+form p {
+  margin-left: 10px;
+  margin-top: 15px;
+}
+
 .top-row {
     height: 3.5rem;
     display: flex;
@@ -342,10 +351,10 @@ app {
 
     .btn-submit {
         padding: 5px;
-        margin-left: 15px;
-        margin-bottom: 15px;
-        color: white;
+        margin: 10px 15px 15px 30px;
+        color: white !important;
         background-color: green;
+        font-size: 14px;
     }
 
     label {
@@ -397,9 +406,10 @@ app {
           font-size: 12px;
       }
 
-
-      
-
 #chart-title {
+  text-align: center;
+}
+
+#description {
   text-align: center;
 }

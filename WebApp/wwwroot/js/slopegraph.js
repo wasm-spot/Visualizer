@@ -18,8 +18,10 @@ function displaySlopegraph(data_in, data_out) {
           }
         })
     d3v4.select("#chart-title").html("Slopegraph")
-    // d3v4.select("#description")
-    //     .html("The slope graph visualizes the size differences ")
+    d3v4.select("#description")
+        .html("The slope graph visualizes the differences in size between classes \
+            and methods before and after linker optimization. Hover over each line \
+            for more detail and click on a line representing a class to view its methods.")
     
 }
 
@@ -28,7 +30,8 @@ function drawSlope(data_in, data_out, inputSize, overload) {
    
     var width = window.innerWidth - margin.left - margin.right,
         height = window.innerHeight - margin.top - margin.bottom;
-        
+    
+    var color = d3v4.scaleOrdinal().range(d3v4.schemeCategory20c);
 
     var y1 = d3v4.scalePow()
         .exponent(2)
@@ -248,6 +251,7 @@ function drawSlope(data_in, data_out, inputSize, overload) {
             .on("mouseover", mouseover)
             .on("mouseout", mouseout)
             .on("click", show);
+
 
     var tooltip = d3v4.select("#tooltip");
 

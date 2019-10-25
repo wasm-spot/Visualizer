@@ -17,6 +17,11 @@ function displayTreemap(data) {
             getInputTree();
           }
         })
+    d3v4.select("#chart-title").html("Dependency treemap")
+    d3v4.select("#description").html("A dependency treemap visualizes the \
+                            relative size and hierarchy of classes and methods \
+                            in a library. Click each class block to zoom in and view \
+                            its methods.")
     }
 
     function displayTree(data, inputSize, overload, flower=false) {

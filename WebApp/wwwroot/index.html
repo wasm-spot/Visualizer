@@ -62,7 +62,7 @@
             d3v4.select("#chart")
                 .style("display", null);
             d3v4.select("#explanation")
-                .style("display", "block");
+                .style("display", null);
             d3v4.select("#sequence")
                 .style("display", null);
             
@@ -163,12 +163,21 @@
         </div>
         <div id="sequence"></div>
         <div id="chart">
-            
+            <div class="explanation-container">
+                <div class="explanation" id="in-explanation" style="visibility: hidden;">
+                        <span class="size" id="in-size"></span> =<br/>
+                        <span class="percentage" id="in-percentage"></span><br/>
+                        of overall size
+                </div>
 
-            <div id="explanation" style="visibility: hidden;">
-            <span id="percentage"></span><br/>
-            of overall size
+                <div class="explanation" id="explanation" style="visibility: hidden;">
+                <span class="size" id="out-size"></span> =<br/>
+                <span class="percentage" id="percentage"></span><br/>
+                of overall size
+                </div>
             </div>
+
+            
         </div>
     </div>
       <div id="visualization"></div>
