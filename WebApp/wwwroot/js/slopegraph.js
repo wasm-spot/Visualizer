@@ -1,4 +1,5 @@
 function getInputSlope(data_in, data_out) {
+    d3v4.selectAll("svg").remove();
     var inputSize = document.getElementById("size").value;
     var overload = document.getElementById("overload").checked;
     drawSlope(data_in, data_out, inputSize, overload);

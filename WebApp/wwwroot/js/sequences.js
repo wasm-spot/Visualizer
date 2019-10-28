@@ -89,6 +89,8 @@ function createSunburst(json, state="in") {
     .attr("r", radius)
     .style("opacity", 0);
 
+  d3v4.selectAll(".explanation").style("width", width + "px");
+
   var text = sun.append("text")
                 .attr("class", "sunburst-title")
                 .attr("transform", "translate(-30, 0)");

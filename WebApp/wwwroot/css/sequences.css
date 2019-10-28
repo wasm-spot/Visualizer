@@ -27,8 +27,8 @@
 
 .explanation {
   position: relative;
-  width: 49%;
   display: inline-block;
+  margin-left: 100px;
   text-align: center;
   color: #666;
   z-index: -1;
