@@ -217,33 +217,28 @@
     protected override async Task OnInitializedAsync() {
         displayType = "";
         sunburst_str = "";
-        var watch = Stopwatch.StartNew();
-        List<Task> tasks = new List<Task>();
-        tasks.Add(getData("json/mscorlib.json", "out"));
-        tasks.Add(getData("json/mscorlib-in.json", "in"));
-        tasks.Add(LoadHistory());
-        await Task.WhenAll(tasks);
-        watch.Stop();
-        Console.WriteLine("get data" + watch.ElapsedMilliseconds);
+         
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if (firstRender) {
+            var watch = Stopwatch.StartNew();
+            List<Task> tasks = new List<Task>();
+            tasks.Add(getData("json/mscorlib.json", "out"));
+            tasks.Add(getData("json/mscorlib-in.json", "in"));
+            await Task.WhenAny(tasks);
+            await LoadHistory();
+            apps = info.Keys.ToArray();  
+            watch.Stop();
+            Console.WriteLine("get data " + watch.ElapsedMilliseconds);
+        }
         
-        apps = info.Keys.ToArray();   
     }
 
     public class FormatData{
         public string name { get; set; }
         public int size { get; set; }
         public List<FormatData> children { get; set; }
-    }
-
-    public class Info
-    {
-        public Dictionary<string, object> Library { get; set; }
-    }
-
-    public class Commit {
-        public string Sha { get; set; }
-        public DateTimeOffset Date { get; set; }
-        public Dictionary<string, Dictionary<string, object>> Values { get; set; }
     }
 
 }
