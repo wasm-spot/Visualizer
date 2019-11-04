@@ -11,18 +11,18 @@ using Newtonsoft.Json;
 
 namespace History {
     
-    class Info
+    public class Info
     {
         public Dictionary<string, object> Library { get; set; }
     }
 
-    class Commit {
+    public class Commit {
         public string Sha { get; set; }
         public DateTimeOffset Date { get; set; }
         public Dictionary<string, Dictionary<string, object>> Values { get; set; }
     }
 
-    class LibraryTable {
+    public class LibraryTable {
         static HttpClient client = new HttpClient();
         
         public static async Task<Dictionary<string, List<Info>>> LoadHistory()

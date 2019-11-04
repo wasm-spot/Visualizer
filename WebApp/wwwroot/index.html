@@ -23,16 +23,6 @@
     <script>
         var d3v4 = window.d3;
         window.d3 = null;
-        var request = new XMLHttpRequest();
-        request.open("GET", "json/mscorlib.json", false);
-        request.send(null)
-        var data = JSON.parse(request.responseText);
-
-        request.open("GET", "json/mscorlib-in.json", false);
-        request.send(null)
-
-        var data_in = JSON.parse(request.responseText);
-        // var data_out = data;
     </script>
     <script src="js/sequences.js"></script>
     <script src="js/format.js"></script>

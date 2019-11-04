@@ -8,6 +8,7 @@
 @using System.Text.RegularExpressions;
 @using BlazorInputFile;
 @using System.Text.Json.Serialization;
+@using System.Diagnostics;
 
 <nav class="navbar navbar-inverse">
   <div class="container-fluid">
@@ -123,9 +124,13 @@
         await JsRuntime.InvokeAsync<string>("slope");
     }
 
-    private async Task<List<FormatData>> getData(string path) {
-        var data = await Http.GetJsonAsync<List<FormatData>>(path);
-        return data;
+    private async Task getData(string path, string state="in") {
+        var json_data = await Http.GetJsonAsync<List<FormatData>>(path);
+        if (state == "in") {
+            in_data = new FormatData {name="All", children=json_data};
+        } else {
+            data = new FormatData {name="All", children=json_data};   
+        }
     }
 
     private string getClassName(string className) {
@@ -180,19 +185,6 @@
         }
     }
 
-
-    protected override async Task OnInitializedAsync() {
-        displayType = "";
-        sunburst_str = "";
-        await JsRuntime.InvokeAsync<string>("clear");
-        data = new FormatData {name="All", children=await getData("json/mscorlib.json")};   
-        in_data = new FormatData {name="All", children=await getData("json/mscorlib-in.json")};
-        if (apps == null) {
-            info = await History.LibraryTable.LoadHistory();
-            apps = info.Keys.ToArray();   
-        } 
-    }
-
     private async Task explanationDisplay(string type) {
         displayType = type;
         await JsRuntime.InvokeAsync<string>("display", type);
@@ -218,10 +210,41 @@
         }
     }
 
+    private async Task LoadHistory() {
+        info = await History.LibraryTable.LoadHistory();
+    }
+
+    protected override async Task OnInitializedAsync() {
+        displayType = "";
+        sunburst_str = "";
+        var watch = Stopwatch.StartNew();
+        List<Task> tasks = new List<Task>();
+        tasks.Add(getData("json/mscorlib.json", "out"));
+        tasks.Add(getData("json/mscorlib-in.json", "in"));
+        tasks.Add(LoadHistory());
+        await Task.WhenAll(tasks);
+        watch.Stop();
+        Console.WriteLine("get data" + watch.ElapsedMilliseconds);
+        
+        apps = info.Keys.ToArray();   
+    }
+
     public class FormatData{
         public string name { get; set; }
         public int size { get; set; }
         public List<FormatData> children { get; set; }
     }
+
+    public class Info
+    {
+        public Dictionary<string, object> Library { get; set; }
+    }
+
+    public class Commit {
+        public string Sha { get; set; }
+        public DateTimeOffset Date { get; set; }
+        public Dictionary<string, Dictionary<string, object>> Values { get; set; }
+    }
+
 }
 
