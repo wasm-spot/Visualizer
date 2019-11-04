@@ -2,9 +2,12 @@
 @inject HttpClient Http
 @inject IJSRuntime JsRuntime;
 @inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager;
-
 @using Newtonsoft.Json;
-
+@using Newtonsoft.Json.Linq;
+@using System.Linq;
+@using System.Text.RegularExpressions;
+@using BlazorInputFile;
+@using System.Text.Json.Serialization;
 
 <nav class="navbar navbar-inverse">
   <div class="container-fluid">
@@ -22,77 +25,203 @@
             } else {
                 @foreach (var app in apps)
                 {
-                    <li><button class="dropdown-button" @onclick="@( e => Graph(app, false) )">@app</button></li>
+                    <li><button class="dropdown-button" @onclick="@( e => Graph(app) )">@app</button></li>
                 }
             }
         </ul>
       </li>
-      <li><button @onclick="sunburst" class="btn">Sunburst</button></li>
-      <li><button @onclick="tree" class="btn" id="tree-btn">Treemap</button></li>
-      <li><button @onclick="flower" class="btn">Code flower</button></li>
-      <li><button @onclick="slope" class="btn">Slopegraph</button></li>
-      <!-- <li><button @onclick="flame" class="btn">Flame graph</button></li> -->
+      <li><button @onclick="@( e => explanationDisplay("sunburst") )" class="btn">Sunburst</button></li>
+      <li><button @onclick="@( e => explanationDisplay("tree") )" class="btn" id="tree-btn">Treemap</button></li>
+      <li><button @onclick="@( e => explanationDisplay("flower") )" class="btn">Code flower</button></li>
+      <!-- <li><button @onclick="@( e => explanationDisplay("slope") )" class="btn">Slopegraph</button></li> -->
       <li><button @onclick="clear" class="btn">Clear graphs</button></li>
     </ul>
   </div>
 </nav>
 
+<div id="options">
+    <form>
+        <p>
+            <label>Only view methods greater than this size: </label>
+            <input @bind="inputSize" id="size"/>
+        </p>
+        <p id="fields">
+            <label>Merge overloaded methods</label>
+            <input @bind="overload" id="overload" type="checkbox"/>
+        </p>
+        <button id="submit" type="button" class="btn btn-submit" @onclick="@( e => display(@displayType) )">display</button>
+    </form>
+</div>
 
+<InputFile id="inputfile" OnChange="HandleFileSelected" />
+@if (file != null)
+{
+    <p>Name: @file.Name</p>
+    <p>Size in bytes: @file.Size</p>
+    <p>Last modified date: @file.LastModified.ToShortDateString()</p>
+    <p>Content type: @file.Type</p>
+}
 
 @code {  
     Dictionary<string, List<History.Info>> info;
     string[] apps;
-    bool[] displayed;
+    FormatData data;
+    FormatData in_data;
+    string sunburst_str;
+    string sunburst_in_str;
+    string dataJson;
+    private int inputSize { get; set; }
+    private bool overload { get; set; }
+    private int currentSize;
+    private bool currentOverload;
+    string displayType;
+    IFileListEntry file;
 
-    private async Task Graph(string app, bool area) {
-        int index = Array.IndexOf(apps, app);
-        if (!displayed[index]) {
-            displayed[index] = true;
-            List<Dictionary<string, object>> data = new List<Dictionary<string, object>>();
-        
-            List<History.Info> infoPizza = info[app];
-            foreach (var item in infoPizza) {
-                data.Add(item.Library);
-            }
-            var json = JsonConvert.SerializeObject(data);
-            clear();
-            await JsRuntime.InvokeAsync<string>("graph", json);
-            await JsRuntime.InvokeAsync<string>("areaGraph", json);
+    async Task HandleFileSelected(IFileListEntry[] files)
+    {
+        file = files.FirstOrDefault();
+        string json_str = await ReadFile();
+        var json_file = (List<FormatData>)JsonConvert.DeserializeObject(json_str, typeof(List<FormatData>));
+        Console.WriteLine(json_file);
+        if (json_file != null) {
+            data.children = json_file;
+            await display(displayType, true);
         }
+    }   
+
+    async Task<string> ReadFile() {
+        using (var reader = new System.IO.StreamReader(file.Data)) {
+            var result = await reader.ReadToEndAsync();
+            return result;
+        }
+    }
+
+    private async Task Graph(string app) {
         
+        List<Dictionary<string, object>> data = new List<Dictionary<string, object>>();
+    
+        List<History.Info> infoPizza = info[app];
+        foreach (var item in infoPizza) {
+            data.Add(item.Library);
+        }
+        var json = JsonConvert.SerializeObject(data);
+        clear();
+        await JsRuntime.InvokeAsync<string>("graph", json);
+        await JsRuntime.InvokeAsync<string>("areaGraph", json);
     }
 
     private async void clear() {
         await JsRuntime.InvokeAsync<string>("clear");
-        displayed = new bool[apps.Length];
     }
 
     private async void sunburst() {
-        
         clear();
         await JsRuntime.InvokeAsync<string>("sunburst");   
-    }
-
-    private async void tree() {
-        await JsRuntime.InvokeAsync<string>("tree");
-    }
-
-    private async void flower() {
-        await JsRuntime.InvokeAsync<string>("flower");
     }
 
     private async void slope() {
         await JsRuntime.InvokeAsync<string>("slope");
     }
 
-    private async void flame() {
-        await JsRuntime.InvokeAsync<string>("flame");
+    private async Task<List<FormatData>> getData(string path) {
+        var data = await Http.GetJsonAsync<List<FormatData>>(path);
+        return data;
     }
 
+    private string getClassName(string className) {
+        int index = Regex.Match(className, @"\p{Lu}").Index;
+        className = className.Substring(index, className.Length-index);
+        return className;
+    }
+
+    private string getMethodName(string name) {
+        char[] separator = {'('};
+        name = name.Split(separator)[0];
+        return name;
+    }
+
+    private void formatData(FormatData data, int size=100, bool overload=true, string state="out") {
+        string csv_str = "";
+        foreach(var item in data.children) {
+            string as_name = item.name;
+            item.size = 0;
+            if (item.children != null) {
+                foreach(var cl in item.children) {
+                    string class_name = getClassName(cl.name);
+                    cl.size = 0;                    
+                    if (cl.children != null) {
+                        var children = cl.children;
+                        if (overload) {
+                            children = children.Select((d, i) => 
+                                            new FormatData{name=getMethodName(d.name), size=d.size}).ToList();
+                            children = children.GroupBy(d => d.name)
+                                            .Select((d, i) => new FormatData
+                                            {
+                                                name=d.Key,
+                                                size=d.Sum(da => da.size)
+                                            }).ToList();
+                        }
+                        children = children.Where(d => d.size > size).ToList();
+                        cl.children = children;
+                        string begin = "All" + "-" + as_name + "-" + class_name + "-";
+                        children.ForEach(d => {
+                            csv_str += begin + d.name + "," + d.size + "\n";
+                        });
+                    }
+                        
+                }    
+            }
+        }
+        if (state == "out") {
+            sunburst_str = csv_str;
+            dataJson = JsonConvert.SerializeObject(data);
+        } else if (state == "in") {
+            sunburst_in_str = csv_str;
+        }
+    }
+
+
     protected override async Task OnInitializedAsync() {
-        Console.WriteLine("Hello");
-        info = await History.LibraryTable.LoadHistory();
-        apps = info.Keys.ToArray();
-        displayed = new bool[apps.Length];
+        displayType = "";
+        sunburst_str = "";
+        await JsRuntime.InvokeAsync<string>("clear");
+        data = new FormatData {name="All", children=await getData("json/mscorlib.json")};   
+        in_data = new FormatData {name="All", children=await getData("json/mscorlib-in.json")};
+        if (apps == null) {
+            info = await History.LibraryTable.LoadHistory();
+            apps = info.Keys.ToArray();   
+        } 
+    }
+
+    private async Task explanationDisplay(string type) {
+        displayType = type;
+        await JsRuntime.InvokeAsync<string>("display", type);
+    }
+
+    private async Task display(string type, bool new_file=false) {
+        displayType = type;
+        if (inputSize != currentSize || overload != currentOverload || new_file) {
+            formatData(data, inputSize, overload, "out");
+            formatData(in_data, inputSize, overload, "in");
+            currentSize = inputSize;
+            currentOverload = overload;
+        }
+        
+        if (type == "tree") {
+            var js = dataJson.Replace("size", "value");
+            await JsRuntime.InvokeAsync<string>("tree", js);
+        } else if (type == "sunburst") {
+            await JsRuntime.InvokeAsync<string>("sunburst", sunburst_str, sunburst_in_str);
+        } 
+        else {
+            await JsRuntime.InvokeAsync<string>(type, dataJson);
+        }
+    }
+
+    public class FormatData{
+        public string name { get; set; }
+        public int size { get; set; }
+        public List<FormatData> children { get; set; }
     }
 }
+

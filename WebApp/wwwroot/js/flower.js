@@ -5,6 +5,9 @@ var CodeFlower = function(selector, w, h, size) {
   this.size = size;
   this.overload = true;
 
+  this.color = d3v4.scaleOrdinal().range(d3v4.schemeCategory20c);
+
+
   d3v3.select(selector).selectAll("svg").remove();
 
   this.svg = d3v3.select(selector).append("svg:svg")
@@ -25,6 +28,7 @@ var CodeFlower = function(selector, w, h, size) {
 };
 
 CodeFlower.prototype.update = function(json) {
+  console.log(json)
   if (json) this.json = json;
   this.json.fixed = true;
   this.json.x = this.w / 2;
@@ -75,9 +79,7 @@ CodeFlower.prototype.update = function(json) {
     .attr("class", "node")
     .classed('directory', function(d) { return (d._children || d.children) ? 1 : 0; })
     .attr("r", function(d) { return d.children ? 3.5 : Math.pow(d.size, 2/5) || 1; })
-    .style("fill", function color(d) {
-      return "hsl(" + parseInt(360 / total * d.id, 10) + ",90%,70%)";
-    })
+    .style("fill", (d) => {return this.color(d.id)} )
     .call(this.force.drag)
     .on("click", this.click.bind(this))
     .on("mouseover", this.mouseover.bind(this))
@@ -185,33 +187,38 @@ CodeFlower.prototype.collapseNode = function() {
     return;
 };
 
-function getInputFlower() {
+function displayFlower(dataJson) {
   d3v3.select("svg").remove();
   var inputSize = document.getElementById("size").value;
   var overload = document.getElementById("overload").checked;
-  var jsonData = formatAssemblyTree(data, size=inputSize, overload=overload, type="flower");
+  var jsonData = JSON.parse(dataJson);
   var myFlower = new CodeFlower("#visualization", window.innerWidth, window.innerHeight, inputSize);
   myFlower.update(jsonData);
   myFlower.collapseNode();
   window.scrollTo(0,document.body.scrollHeight);
+  
+
+  // d3v3.select("#size")
+  //   .on("keypress", function() {
+  //     if (d3v3.event.keyCode == 13) {
+  //       d3v3.event.preventDefault();
+  //       getInputFlower();
+  //     }
+  //   })
 }
 
-function displayFlower(data) {
-  d3v3.select("#chart-title").html("Code flower")
+function flowerDisplay() {
+  d3v3.select("#chart-title").html("Code flower");
   d3v4.select("#description")
       .html("The code flower visualizes dependencies using an interactive tree. \
             The radius of each node is proportional to its size. Click on a node \
-            to see its children.")
-  d3v3.select("#submit")
-    .on("click", function() {
-      getInputFlower();
-    })
-
-  d3v3.select("#size")
-    .on("keypress", function() {
-      if (d3v3.event.keyCode == 13) {
-        d3v3.event.preventDefault();
-        getInputFlower();
-      }
-    })
+            to see its children.");
+  d3v3.select("#options")
+      .style("display", null);
+  d3v3.select("#visualization")
+      .style("display", null);
+  d3v3.selectAll("#compare")
+      .style("display", "none");
+  d3v3.select("#compare-label")
+      .style("display", "none");
 }

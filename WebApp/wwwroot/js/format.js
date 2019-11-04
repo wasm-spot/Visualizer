@@ -1,11 +1,25 @@
-function getMethodName(name, sunburst=false) {
+function getMethodName(name, type="sunburst") {
     name = name.split("(")[0];
-    if (!sunburst) {
+    if (type == "sunburst") {
         name = name.replace(" ", "\n");
+        name = "Removed," + name; 
     }
     return name;
 }
 
+function getClassName(className) {
+    var name = className.split(" ");
+    if (name.includes("extends")) {
+        if (name.includes("implements")) {
+            name = name.slice(name.length-5, name.length);
+        } else {
+            name = name.slice(name.length-3, name.length);
+        }
+        
+        className = name.join(" ");
+    }
+    return className;
+}
 
 //  given json file of assembly dependencies, reformat to match format
 //  needed for treemap visualization
@@ -22,7 +36,7 @@ function formatAssemblyTree(data, size=100, overload=true, type="tree") {
         if (classes != null) {
             classes.forEach(function(cl) {
                 var class_dict = {};
-                var class_name = cl["name"];
+                var class_name = getClassName(cl["name"]);
                 var methods = cl["sections"];
                 if (methods != null) {
                     var names = [];
@@ -30,7 +44,7 @@ function formatAssemblyTree(data, size=100, overload=true, type="tree") {
                     methods.forEach(function(method) {
                         var methodName = method["name"];
                         if (overload) {
-                            methodName = getMethodName(methodName, type=="sunburst");
+                            methodName = getMethodName(methodName, type=type);
                         }
                         var ix = names.indexOf(methodName);
                         if (ix != -1) {
@@ -45,11 +59,11 @@ function formatAssemblyTree(data, size=100, overload=true, type="tree") {
                             if (class_dict["children"] == null) {
                                 class_dict["children"] = [];
                                 class_dict["name"] = class_name;
-                            }
-                            if (type == "tree" || type == "flame") {
+                            } else if (type == "tree") {
                                 class_dict["children"].push({"name": names[i], 
-                                                    "value": sizes[i]});
-                            } else if (type == "flower") {
+                                                        "value": sizes[i]});
+                            }
+                            else if (type == "flower") {
                                 class_dict["children"].push({"name": names[i], 
                                                         "size": sizes[i]});
                             } else if (type == "sunburst") {

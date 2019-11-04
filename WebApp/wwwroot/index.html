@@ -16,6 +16,7 @@
     <app>Loading...</app>
     
     <script src="_framework/blazor.webassembly.js"></script>
+    <script src="_content/BlazorInputFile/inputfile.js"></script>
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/gh/spiermar/d3-flame-graph@2.0.3/dist/d3-flamegraph.min.js"></script>
@@ -27,11 +28,11 @@
         request.send(null)
         var data = JSON.parse(request.responseText);
 
-        request.open("GET", "json/linker-in-mscorlib.json", false);
+        request.open("GET", "json/mscorlib-in.json", false);
         request.send(null)
 
         var data_in = JSON.parse(request.responseText);
-        var data_out = data;
+        // var data_out = data;
     </script>
     <script src="js/sequences.js"></script>
     <script src="js/format.js"></script>
@@ -40,33 +41,12 @@
     <script src="js/slopegraph.js"></script>
     <script src="js/flame.js"></script>
     <script>
-        window.tree = function () {
-            clear();
-            d3v4.select("#options")
-                .style("display", null);
-            d3v4.select("#chart")
-                .style("display", null);
-            d3v4.select("#compare")
-                .style("display", "none");
-            d3v4.select("#compare-label")
-                .style("display", "none");
-            displayTreemap(data);
-            d3v4.select("#tree-btn")
-                .style("class", "active");
+        window.tree = function (dataJson) {
+            displayTreemap(dataJson);
         }
 
-        window.sunburst = function() {
-            clear();
-            d3v4.select("#options")
-                .style("display", null);
-            d3v4.select("#chart")
-                .style("display", null);
-            d3v4.select("#explanation")
-                .style("display", null);
-            d3v4.select("#sequence")
-                .style("display", null);
-            
-            displaySunburst(data, data_in);
+        window.sunburst = function(dataJson, dataJson_in) {
+            displaySunburst(dataJson, dataJson_in);
         }
 
         window.graph = function(json) {
@@ -86,13 +66,6 @@
             d3v4.select("#options")
                 .style("display", null);
             displaySlopegraph(data_in, data_out);
-        }
-
-        window.flame = function(json) {
-            clear();
-            d3v4.select("#chart")
-                .style("display", null);
-            displayFlameGraph(data);
         }
 
         window.clear = function(){
@@ -130,18 +103,19 @@
     <script>
         var d3v3 = window.d3;
         window.d3 = null;
-        window.flower = function() {
+        window.flower = function(dataJson) {            
+            displayFlower(dataJson);       
+        }
+
+        window.display = function(type) {
             clear();
-            //TODO: move this to flower.js
-            d3v3.select("#options")
-                .style("display", null);
-            d3v3.select("#visualization")
-                .style("display", null);
-            d3v3.selectAll("#compare")
-                .style("display", "none");
-            d3v3.select("#compare-label")
-                .style("display", "none");
-            displayFlower(data);       
+            if (type == "tree") {
+                treeDisplay();
+            } else if (type == "sunburst") {
+                sunburstDisplay();
+            } else if (type == "flower") {
+                flowerDisplay();
+            }
         }
     </script>
 

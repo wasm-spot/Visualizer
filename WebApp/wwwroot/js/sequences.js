@@ -31,43 +31,44 @@ var arc = d3v4.arc()
     .innerRadius(function(d) { return Math.sqrt(d.y0); })
     .outerRadius(function(d) { return Math.sqrt(d.y1); });
 
-// Use d3v4.text and d3v4.csvParseRows so that we do not need to have a header
-// row, and can receive the csv as an array of arrays.
-function getInputSunburst() {
-  var inputSize = document.getElementById("size").value;
-  var overload = document.getElementById("overload").checked;
-  createVisualization(data, inputSize, overload, data_in=data_in, state="in");
+function sunburstDisplay() {
+  d3v4.select("#options")
+      .style("display", null);
+  d3v4.select("#chart")
+      .style("display", null);
+  d3v4.select("#explanation")
+      .style("display", null);
+  d3v4.select("#sequence")
+      .style("display", null);
+  d3v4.select("#chart-title").html("Sunburst")
+  d3v4.select("#description")
+    .html("A sunburst diagram visualizes the relative size and hierarchy of \
+          classes and methods in a library. Hover over each sector for more \
+          information.")
+  // d3v4.select("#size")
+  //   .on("keypress", function() {
+  //     if (d3v4.event.keyCode == 13) {
+  //       d3v4.event.preventDefault();
+  //       displaySunburst();
+  //     }
+  //   })
 }
 
-function displaySunburst(data, data_in = null) {
-    d3v4.select("#chart-title").html("Sunburst")
-    d3v4.select("#description")
-      .html("A sunburst diagram visualizes the relative size and hierarchy of \
-            classes and methods in a library. Hover over each sector for more \
-            information.")
-    d3v4.select("#submit")
-      .on("click", function() {
-          getInputSunburst();
-      })
-    
-    d3v4.select("#size")
-      .on("keypress", function() {
-        if (d3v4.event.keyCode == 13) {
-          d3v4.event.preventDefault();
-          getInputSunburst();
-        }
-      })
+function displaySunburst(dataJson, dataJson_in) {
+  var inputSize = document.getElementById("size").value;
+  var overload = document.getElementById("overload").checked;
+  createVisualization(dataJson, inputSize, overload, data_in=dataJson_in, state="in");
 }
 
 function createCsv(data, inputSize, overload, state) {
-  var assembly = formatAssemblyTree(data, inputSize, overload, type="sunburst")
-  var csv = d3v4.csvParseRows(assembly);
+  // var assembly = formatAssemblyTree(data, inputSize, overload, type="sunburst");
+
+  var csv = d3v4.csvParseRows(data);
 
   var names = csv.map(function(value, index) { return value[0]; })
   names = names.map(function(value, index) { return value.split("-")})
   names = [].concat(...names)
   var json = buildHierarchy(csv, state);
-
   colors = d3v4.scaleOrdinal()
     .domain(names)
     .range(d3v4.schemeCategory20c)
@@ -75,7 +76,21 @@ function createCsv(data, inputSize, overload, state) {
   return json;
 }
 
-function createSunburst(json, state="in") {
+function createRoot(json, in_root=null) {
+  var root = d3v4.hierarchy(json)
+    .sum(function(d) { return d.size; })
+    .sort(function(a, b) { return b.value - a.value; }); 
+  
+  console.log(root)
+
+  if (in_root != null) {
+
+  }
+
+  return root;
+}
+
+function createSunburst(json ,root, state="in") {
   var sun = d3v4.select("#chart").append("svg:svg")
     .attr("id", "sunburst")
     .attr("width", width)
@@ -94,11 +109,6 @@ function createSunburst(json, state="in") {
   var text = sun.append("text")
                 .attr("class", "sunburst-title")
                 .attr("transform", "translate(-30, 0)");
-    
-
-  var root = d3v4.hierarchy(json)
-    .sum(function(d) { return d.size; })
-    .sort(function(a, b) { return b.value - a.value; }); 
 
   var nodes = partition(root).descendants()
     .filter(function(d) {
@@ -132,24 +142,23 @@ function createSunburst(json, state="in") {
 // Main function to draw and set up the visualization, once we have the data.
 function createVisualization(data, inputSize, overload, data_in) {
     d3v4.selectAll("#sunburst").remove();
-    var json = createCsv(data, inputSize, overload, "out");
     var in_json = createCsv(data_in, inputSize, overload, "in");
+    var json = createCsv(data, inputSize, overload, "out", in_root=in_root);
+    var in_root = createRoot(in_json);
+    var root = createRoot(json, in_root);
 
     height = window.innerHeight * 0.8;
     width = window.innerHeight * 0.6;
 
-  
-
   // Basic setup of page elements.
   initializeBreadcrumbTrail();
 
-  createSunburst(in_json, state="in");
-  createSunburst(json, state="out");
+  createSunburst(in_json, in_root, state="in");
+  createSunburst(json, root, state="out");
  };
 
 // Fade all but the current sequence, and show it in the breadcrumb trail.
 function mouseover(d) {
-  console.log(d)
   var state = d.data.state;
   var total = totalSize;
   if (state == "in") {
