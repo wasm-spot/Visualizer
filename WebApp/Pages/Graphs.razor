@@ -1,67 +1,73 @@
 @page "/"
 @inject HttpClient Http
 @inject IJSRuntime JsRuntime;
-@inject Microsoft.AspNetCore.Components.NavigationManager NavigationManager;
 @using Newtonsoft.Json;
 @using Newtonsoft.Json.Linq;
 @using System.Linq;
 @using System.Text.RegularExpressions;
 @using BlazorInputFile;
-@using System.Text.Json.Serialization;
 @using System.Diagnostics;
+@using System.IO;
+@using System.Net.Http
 
-<nav class="navbar navbar-inverse">
-  <div class="container-fluid">
-    <div class="navbar-header">
-      <button @onclick="clear" class="btn navbar-brand">Linker Visualizer</button>
-      <!-- <a class="navbar-brand" href="#">Linker Visualizer</a> -->
-    </div>
-    <ul class="nav navbar-nav">
-      <li class="dropdown">
-        <a class="dropdown-toggle btn" data-toggle="dropdown" href="#">Line and Area
-        <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-            @if (apps == null) {
-                <p><em>Loading...</em></p>
-            } else {
-                @foreach (var app in apps)
-                {
-                    <li><button class="dropdown-button" @onclick="@( e => Graph(app) )">@app</button></li>
+
+@if (apps == null){
+    <div class="loader"></div>
+} else{
+    <nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+        <button @onclick="clear" class="btn navbar-brand">Linker Visualizer</button>
+        <!-- <a class="navbar-brand" href="#">Linker Visualizer</a> -->
+        </div>
+        <ul class="nav navbar-nav">
+        <li class="dropdown">
+            <a class="dropdown-toggle btn" data-toggle="dropdown" href="#">Line and Area
+            <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+                @if (apps == null) {
+                    <p><em>Loading...</em></p>
+                } else {
+                    @foreach (var app in apps)
+                    {
+                        <li><button class="dropdown-button" @onclick="@( e => Graph(app) )">@app</button></li>
+                    }
                 }
-            }
+            </ul>
+        </li>
+        <li><button @onclick="@( e => explanationDisplay("sunburst") )" class="btn">Sunburst</button></li>
+        <li><button @onclick="@( e => explanationDisplay("tree") )" class="btn" id="tree-btn">Treemap</button></li>
+        <li><button @onclick="@( e => explanationDisplay("flower") )" class="btn">Code flower</button></li>
+        <!-- <li><button @onclick="@( e => explanationDisplay("slope") )" class="btn">Slopegraph</button></li> -->
+        <li><button @onclick="clear" class="btn">Clear graphs</button></li>
         </ul>
-      </li>
-      <li><button @onclick="@( e => explanationDisplay("sunburst") )" class="btn">Sunburst</button></li>
-      <li><button @onclick="@( e => explanationDisplay("tree") )" class="btn" id="tree-btn">Treemap</button></li>
-      <li><button @onclick="@( e => explanationDisplay("flower") )" class="btn">Code flower</button></li>
-      <!-- <li><button @onclick="@( e => explanationDisplay("slope") )" class="btn">Slopegraph</button></li> -->
-      <li><button @onclick="clear" class="btn">Clear graphs</button></li>
-    </ul>
-  </div>
-</nav>
+    </div>
+    </nav>
 
-<div id="options">
-    <form>
-        <p>
-            <label>Only view methods greater than this size: </label>
-            <input @bind="inputSize" id="size"/>
-        </p>
-        <p id="fields">
-            <label>Merge overloaded methods</label>
-            <input @bind="overload" id="overload" type="checkbox"/>
-        </p>
-        <button id="submit" type="button" class="btn btn-submit" @onclick="@( e => display(@displayType) )">display</button>
-    </form>
-</div>
+    <div id="options">
+        <form>
+            <p>
+                <label>Only view methods greater than this size: </label>
+                <input @bind="inputSize" id="size"/>
+            </p>
+            <p id="fields">
+                <label>Merge overloaded methods</label>
+                <input @bind="overload" id="overload" type="checkbox"/>
+            </p>
+            <button id="submit" type="button" class="btn btn-submit" @onclick="@( e => display(@displayType) )">display</button>
+        </form>
+    </div>
 
-<InputFile id="inputfile" OnChange="HandleFileSelected" />
-@if (file != null)
-{
-    <p>Name: @file.Name</p>
-    <p>Size in bytes: @file.Size</p>
-    <p>Last modified date: @file.LastModified.ToShortDateString()</p>
-    <p>Content type: @file.Type</p>
+    <InputFile id="inputfile" OnChange="HandleFileSelected" />
+    @if (file != null)
+    {
+        <p>Name: @file.Name</p>
+        <p>Size in bytes: @file.Size</p>
+        <p>Last modified date: @file.LastModified.ToShortDateString()</p>
+        <p>Content type: @file.Type</p>
+    }
 }
+
 
 @code {  
     Dictionary<string, List<History.Info>> info;
@@ -106,17 +112,15 @@
             data.Add(item.Library);
         }
         var json = JsonConvert.SerializeObject(data);
-        clear();
         await JsRuntime.InvokeAsync<string>("graph", json);
         await JsRuntime.InvokeAsync<string>("areaGraph", json);
     }
 
-    private async void clear() {
+    private async Task clear() {
         await JsRuntime.InvokeAsync<string>("clear");
     }
 
     private async void sunburst() {
-        clear();
         await JsRuntime.InvokeAsync<string>("sunburst");   
     }
 
@@ -125,12 +129,23 @@
     }
 
     private async Task getData(string path, string state="in") {
-        var json_data = await Http.GetJsonAsync<List<FormatData>>(path);
-        if (state == "in") {
-            in_data = new FormatData {name="All", children=json_data};
-        } else {
-            data = new FormatData {name="All", children=json_data};   
+        var watch = Stopwatch.StartNew();
+        using(HttpResponseMessage response = await Http.GetAsync(path, HttpCompletionOption.ResponseHeadersRead))
+        using (Stream streamToReadFrom = await response.Content.ReadAsStreamAsync()) {
+            using (var reader = new StreamReader(streamToReadFrom)) {
+                var json_str = await reader.ReadToEndAsync();
+                var json_data = (List<FormatData>)JsonConvert.DeserializeObject(json_str, typeof(List<FormatData>));
+                if (state == "in") {
+                    in_data = new FormatData {name="All", children=json_data};
+                } else {
+                    data = new FormatData {name="All", children=json_data};   
+                }
+                watch.Stop();
+                Console.WriteLine("get data " + state + " " + watch.ElapsedMilliseconds);
+            }
         }
+        //var json_data = await Http.GetJsonAsync<List<FormatData>>(path);
+        
     }
 
     private string getClassName(string className) {
@@ -211,35 +226,32 @@
     }
 
     private async Task LoadHistory() {
-        info = await History.LibraryTable.LoadHistory();
+        Console.WriteLine("load history start");
+        Task<Dictionary<string, List<History.Info>>> history = History.LibraryTable.LoadHistory();
+        info = await history;
     }
 
     protected override async Task OnInitializedAsync() {
         displayType = "";
         sunburst_str = "";
-         
+        var watch = Stopwatch.StartNew();
+        List<Task> tasks = new List<Task>();
+        tasks.Add(LoadHistory());
+        tasks.Add(getData("json/mscorlib-in.json", "in"));
+        tasks.Add(getData("json/mscorlib.json", "out"));
+        tasks.Add(clear());
+        await Task.WhenAll(tasks);
+        apps = info.Keys.ToArray();  
+        watch.Stop();
+        Console.WriteLine("get data " + watch.ElapsedMilliseconds);
     }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender) {
-        if (firstRender) {
-            var watch = Stopwatch.StartNew();
-            List<Task> tasks = new List<Task>();
-            tasks.Add(getData("json/mscorlib.json", "out"));
-            tasks.Add(getData("json/mscorlib-in.json", "in"));
-            await Task.WhenAny(tasks);
-            await LoadHistory();
-            apps = info.Keys.ToArray();  
-            watch.Stop();
-            Console.WriteLine("get data " + watch.ElapsedMilliseconds);
-        }
-        
-    }
-
+    
     public class FormatData{
         public string name { get; set; }
         public int size { get; set; }
         public List<FormatData> children { get; set; }
     }
+    
 
 }
 

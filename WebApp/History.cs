@@ -8,6 +8,7 @@ using System.Linq;
 using CsvHelper;
 using CsvHelper.Configuration.Attributes;
 using Newtonsoft.Json;
+using System.Diagnostics;
 
 namespace History {
     
@@ -24,7 +25,6 @@ namespace History {
 
     public class LibraryTable {
         static HttpClient client = new HttpClient();
-        
         public static async Task<Dictionary<string, List<Info>>> LoadHistory()
         {
             string path = "mcs/tools/linker/wasm-linked-size.csv";
@@ -32,6 +32,7 @@ namespace History {
             var items = new Dictionary<string, Commit> ();
             var allApps = new Dictionary<string, List<Info>> ();
             var commits = await GetCommits (path, repo);
+            
             foreach(var revision in commits) {
                 var stream = await GetRaw (path, revision.sha, repo);
                 var table = ReadTable(stream);
@@ -79,10 +80,7 @@ namespace History {
         public static async Task<(string sha, DateTimeOffset date) []> GetCommits(string path, string repo)
         {
             try {
-                client.DefaultRequestHeaders.Add("Accept", "*/*");
-                client.DefaultRequestHeaders.Add("User-Agent", "curl/7.54.0");
-
-                var data = await client.GetStringAsync ( new Uri ($"https://api.github.com/repos/{repo}/commits?path={path}"));
+                string data = String.Empty;
                 var obj = new [] {
                     new {
                         sha = "",
@@ -94,7 +92,23 @@ namespace History {
                     }
                 };
 
-                return JsonConvert.DeserializeAnonymousType (data, obj).Select (o => ValueTuple.Create (o.sha, o.commit.author.date)).ToArray();
+                client.DefaultRequestHeaders.Add("Accept", "*/*");
+                client.DefaultRequestHeaders.Add("User-Agent", "curl/7.54.0");
+                var watch = Stopwatch.StartNew();
+
+                using(HttpResponseMessage response = await client.GetAsync(new Uri ($"https://api.github.com/repos/{repo}/commits?path={path}"), HttpCompletionOption.ResponseHeadersRead))
+                using (Stream streamToReadFrom = await response.Content.ReadAsStreamAsync()) {
+                    using (var reader = new StreamReader(streamToReadFrom)) {
+                        data = await reader.ReadToEndAsync();
+                    }
+                }
+                
+                watch.Stop();
+                Console.WriteLine("get commits " + watch.ElapsedMilliseconds);
+                var json = JsonConvert.DeserializeAnonymousType (data, obj).Select (o => ValueTuple.Create (o.sha, o.commit.author.date)).ToArray();
+                Console.WriteLine(json.Length);
+                Console.WriteLine(json[0]);
+                return json;              
             } catch (Exception e) {
                 Console.WriteLine(e.ToString());
                 return Array.Empty<(string sha, DateTimeOffset date)>();
