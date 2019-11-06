@@ -14,9 +14,21 @@ In the WebApp/ folder, run:
 
 Go to localhost:5001
 
-# To view sunburst visualization:
-In the web/ folder, run:
+Data is in the `WebApp/wwwroot/json/` directory, and should be a json of the format:
 
-`python -m http.server`
-
-Go to localhost:8000/sunburst.html
+```
+[
+    {
+        "name": assembly name,
+        "size": #,
+        "sections": [
+            {
+                "name": class name,
+                "size": #,
+                "sections": [
+                    {
+                        "name": method name,
+                        "size": #,
+                        "sections": null
+                        ...
+```
