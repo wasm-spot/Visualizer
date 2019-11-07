@@ -11,62 +11,59 @@
 @using System.Net.Http
 
 
-@if (apps == null){
-    <div class="loader"></div>
-} else{
-    <nav class="navbar navbar-inverse">
-    <div class="container-fluid">
-        <div class="navbar-header">
-        <button @onclick="clear" class="btn navbar-brand">Linker Visualizer</button>
-        <!-- <a class="navbar-brand" href="#">Linker Visualizer</a> -->
-        </div>
-        <ul class="nav navbar-nav">
-        <li class="dropdown">
-            <a class="dropdown-toggle btn" data-toggle="dropdown" href="#">Line and Area
-            <span class="caret"></span></a>
-            <ul class="dropdown-menu">
-                @if (apps == null) {
-                    <p><em>Loading...</em></p>
-                } else {
-                    @foreach (var app in apps)
-                    {
-                        <li><button class="dropdown-button" @onclick="@( e => Graph(app) )">@app</button></li>
-                    }
+<nav class="navbar navbar-inverse">
+<div class="container-fluid">
+    <div class="navbar-header">
+    <button @onclick="clear" class="btn navbar-brand">Linker Visualizer</button>
+    <!-- <a class="navbar-brand" href="#">Linker Visualizer</a> -->
+    </div>
+    <ul class="nav navbar-nav">
+    <li class="dropdown">
+        <a class="dropdown-toggle btn" data-toggle="dropdown" href="#">Line and Area
+        <span class="caret"></span></a>
+        <ul class="dropdown-menu">
+            @if (apps == null) {
+                <p><em>Loading...</em></p>
+            } else {
+                @foreach (var app in apps)
+                {
+                    <li><button class="dropdown-button" @onclick="@( e => Graph(app) )">@app</button></li>
                 }
-            </ul>
-        </li>
-        <li><button @onclick="@( e => explanationDisplay("sunburst") )" class="btn">Sunburst</button></li>
-        <li><button @onclick="@( e => explanationDisplay("tree") )" class="btn" id="tree-btn">Treemap</button></li>
-        <li><button @onclick="@( e => explanationDisplay("flower") )" class="btn">Code flower</button></li>
-        <!-- <li><button @onclick="@( e => explanationDisplay("slope") )" class="btn">Slopegraph</button></li> -->
-        <li><button @onclick="clear" class="btn">Clear graphs</button></li>
+            }
         </ul>
-    </div>
-    </nav>
+    </li>
+    <li><button @onclick="@( e => explanationDisplay("sunburst") )" class="btn">Sunburst</button></li>
+    <li><button @onclick="@( e => explanationDisplay("tree") )" class="btn" id="tree-btn">Treemap</button></li>
+    <li><button @onclick="@( e => explanationDisplay("flower") )" class="btn">Code flower</button></li>
+    <!-- <li><button @onclick="@( e => explanationDisplay("slope") )" class="btn">Slopegraph</button></li> -->
+    <li><button @onclick="clear" class="btn">Clear graphs</button></li>
+    </ul>
+</div>
+</nav>
 
-    <div id="options">
-        <form>
-            <p>
-                <label>Only view methods greater than this size: </label>
-                <input @bind="inputSize" id="size"/>
-            </p>
-            <p id="fields">
-                <label>Merge overloaded methods</label>
-                <input @bind="overload" id="overload" type="checkbox"/>
-            </p>
-            <button id="submit" type="button" class="btn btn-submit" @onclick="@( e => display(@displayType) )">display</button>
-        </form>
-    </div>
+<div id="options">
+    <form>
+        <p>
+            <label>Only view methods greater than this size: </label>
+            <input @bind="inputSize" id="size"/>
+        </p>
+        <p id="fields">
+            <label>Merge overloaded methods</label>
+            <input @bind="overload" id="overload" type="checkbox"/>
+        </p>
+        <button id="submit" type="button" class="btn btn-submit" @onclick="@( e => display(@displayType) )">display</button>
+    </form>
+</div>
 
-    <InputFile id="inputfile" OnChange="HandleFileSelected" />
-    @if (file != null)
-    {
-        <p>Name: @file.Name</p>
-        <p>Size in bytes: @file.Size</p>
-        <p>Last modified date: @file.LastModified.ToShortDateString()</p>
-        <p>Content type: @file.Type</p>
-    }
+<InputFile id="inputfile" OnChange="HandleFileSelected" />
+@if (file != null)
+{
+    <p>Name: @file.Name</p>
+    <p>Size in bytes: @file.Size</p>
+    <p>Last modified date: @file.LastModified.ToShortDateString()</p>
+    <p>Content type: @file.Type</p>
 }
+
 
 
 @code {  
@@ -74,6 +71,7 @@
     string[] apps;
     FormatData data;
     FormatData in_data;
+    FormatData temp_data;
     string sunburst_str;
     string sunburst_in_str;
     string dataJson;
@@ -131,14 +129,15 @@
     private async Task getData(string path, string state="in") {
         var watch = Stopwatch.StartNew();
         using(HttpResponseMessage response = await Http.GetAsync(path, HttpCompletionOption.ResponseHeadersRead))
-        using (Stream streamToReadFrom = await response.Content.ReadAsStreamAsync()) {
-            using (var reader = new StreamReader(streamToReadFrom)) {
+        using (Stream streamToReadFrom = await response.Content.ReadAsStreamAsync()) 
+        using (BufferedStream bs = new BufferedStream(streamToReadFrom)){
+            using (var reader = new StreamReader(bs)) {
                 var json_str = await reader.ReadToEndAsync();
                 var json_data = (List<FormatData>)JsonConvert.DeserializeObject(json_str, typeof(List<FormatData>));
                 if (state == "in") {
                     in_data = new FormatData {name="All", children=json_data};
                 } else {
-                    data = new FormatData {name="All", children=json_data};   
+                    data = new FormatData {name="All", children=json_data}; 
                 }
                 watch.Stop();
                 Console.WriteLine("get data " + state + " " + watch.ElapsedMilliseconds);
@@ -151,6 +150,7 @@
     private string getClassName(string className) {
         int index = Regex.Match(className, @"\p{Lu}").Index;
         className = className.Substring(index, className.Length-index);
+        className = className.Replace(",", "");
         return className;
     }
 
@@ -161,15 +161,19 @@
     }
 
     private void formatData(FormatData data, int size=100, bool overload=true, string state="out") {
+        temp_data = new FormatData {name=data.name, 
+                                            size=data.size, 
+                                            children=new List<FormatData>()};
         string csv_str = "";
         foreach(var item in data.children) {
             string as_name = item.name;
-            item.size = 0;
+            FormatData as_data = new FormatData{name=as_name, size=0, children=new List<FormatData>()};
             if (item.children != null) {
-                foreach(var cl in item.children) {
-                    string class_name = getClassName(cl.name);
-                    cl.size = 0;                    
-                    if (cl.children != null) {
+                foreach(var cl in item.children) {    
+                    cl.name = getClassName(cl.name);
+                    string class_name = cl.name;
+                    FormatData class_data = new FormatData{name=class_name, children=new List<FormatData>()};            
+                    if (cl.children.Count() > 0 && cl.size > 0) {
                         var children = cl.children;
                         if (overload) {
                             children = children.Select((d, i) => 
@@ -182,22 +186,32 @@
                                             }).ToList();
                         }
                         children = children.Where(d => d.size > size).ToList();
-                        cl.children = children;
+                        class_data.children = children;
                         string begin = "All" + "-" + as_name + "-" + class_name + "-";
                         children.ForEach(d => {
                             csv_str += begin + d.name + "," + d.size + "\n";
                         });
                     }
                         
-                }    
+                    if (class_data.children.Count() > 0 && state == "out") {
+                        as_data.children.Add(class_data); 
+                    }
+                    
+                }
             }
+            if (state == "out") {
+                temp_data.children.Add(as_data);
+            }
+            
         }
+        
         if (state == "out") {
             sunburst_str = csv_str;
-            dataJson = JsonConvert.SerializeObject(data);
+            dataJson = JsonConvert.SerializeObject(temp_data);
         } else if (state == "in") {
             sunburst_in_str = csv_str;
         }
+        temp_data = null;
     }
 
     private async Task explanationDisplay(string type) {
@@ -209,7 +223,9 @@
         displayType = type;
         if (inputSize != currentSize || overload != currentOverload || new_file) {
             formatData(data, inputSize, overload, "out");
-            formatData(in_data, inputSize, overload, "in");
+            if (displayType == "sunburst") {
+                formatData(in_data, inputSize, overload, "in");
+            }
             currentSize = inputSize;
             currentOverload = overload;
         }
@@ -250,6 +266,14 @@
         public string name { get; set; }
         public int size { get; set; }
         public List<FormatData> children { get; set; }
+
+        public FormatData Copy() {
+            FormatData other = (FormatData) this.MemberwiseClone();
+            other.name = String.Copy(name);
+            other.size = size;
+            other.children = new List<FormatData>(children);
+            return other;
+        }
     }
     
 

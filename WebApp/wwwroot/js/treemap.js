@@ -40,7 +40,7 @@ function displayTree(dataJson, inputSize, overload, flower=false) {
         formatNumber = d3v4.format(","),
         transitioning;
     var data;
-    var color = d3v4.scaleOrdinal().range(d3v4.schemeCategory20c);
+    
     if (!flower) {
         d3v4.select("svg").remove();
         data = JSON.parse(dataJson);
@@ -180,11 +180,13 @@ function display(d) {
         });
     g.selectAll("rect.parent")
         .attr("fill", function(d) {
+            // return getRandomColor(d.data.name);
             return color(d.data.name);
         });
     
     g.selectAll("rect.child")
         .attr("fill", function(d) {
+            // return getRandomColor(d.parent.data.name);
             return color(d.parent.data.name);
         });
     
@@ -200,6 +202,13 @@ function display(d) {
                 '<p>' + formatNumber(d.value) + '</p>'
             ;
         })
+        // .style("color", function(d) {
+        //     if (checkLuma(getRandomColor(d.data.name))) {
+        //         return "#000000";
+        //     } else {
+        //         return "#ffffff";
+        //     }
+        // })
         .attr("class", "textdiv"); //textdiv class allows us to style the text easily with CSS
 
     function transition(d) {

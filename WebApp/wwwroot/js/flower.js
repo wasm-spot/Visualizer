@@ -5,7 +5,7 @@ var CodeFlower = function(selector, w, h, size) {
   this.size = size;
   this.overload = true;
 
-  this.color = d3v4.scaleOrdinal().range(d3v4.schemeCategory20c);
+  // this.color = d3v4.scaleOrdinal().range(d3v4.schemeCategory20c);
 
 
   d3v3.select(selector).selectAll("svg").remove();
@@ -28,7 +28,6 @@ var CodeFlower = function(selector, w, h, size) {
 };
 
 CodeFlower.prototype.update = function(json) {
-  console.log(json)
   if (json) this.json = json;
   this.json.fixed = true;
   this.json.x = this.w / 2;
@@ -79,7 +78,9 @@ CodeFlower.prototype.update = function(json) {
     .attr("class", "node")
     .classed('directory', function(d) { return (d._children || d.children) ? 1 : 0; })
     .attr("r", function(d) { return d.children ? 3.5 : Math.pow(d.size, 2/5) || 1; })
-    .style("fill", (d) => {return this.color(d.id)} )
+    .style("fill", (d) => {
+      return color(d.name)} 
+    )
     .call(this.force.drag)
     .on("click", this.click.bind(this))
     .on("mouseover", this.mouseover.bind(this))

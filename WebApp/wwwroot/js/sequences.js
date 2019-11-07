@@ -57,6 +57,7 @@ function sunburstDisplay() {
 function displaySunburst(dataJson, dataJson_in) {
   var inputSize = document.getElementById("size").value;
   var overload = document.getElementById("overload").checked;
+  console.log(dataJson);
   createVisualization(dataJson, inputSize, overload, data_in=dataJson_in, state="in");
 }
 
@@ -69,9 +70,9 @@ function createCsv(data, inputSize, overload, state) {
   names = names.map(function(value, index) { return value.split("-")})
   names = [].concat(...names)
   var json = buildHierarchy(csv, state);
-  colors = d3v4.scaleOrdinal()
-    .domain(names)
-    .range(d3v4.schemeCategory20c)
+  // colors = d3v4.scaleOrdinal()
+  //   .domain(names)
+  //   .range(d3v4.schemeCategory20c)
 
   return json;
 }
@@ -122,7 +123,7 @@ function createSunburst(json ,root, state="in") {
     .attr("d", arc)
     .attr("id", state)
     .attr("fill-rule", "evenodd")
-    .style("fill", function(d) { return colors(d.data.name); })
+    .style("fill", function(d) { return color(d.data.name); })
     .style("opacity", 1)
     .on("mouseover", mouseover);
 
@@ -238,7 +239,7 @@ function mouseleave(d) {
 function initializeBreadcrumbTrail() {
   // Add the svg area.
   var trail = d3v4.select("#sequence").append("svg:svg")
-      .attr("width", b.w*3 + 100)
+      .attr("width", window.innerWidth)
       .attr("height", 100)
       .attr("margin", 20)
       .attr("id", "trail");
@@ -278,7 +279,7 @@ function updateBreadcrumbs(nodeArray, percentageString) {
 
   entering.append("svg:polygon")
       .attr("points", breadcrumbPoints)
-      .style("fill", function(d) { return colors(d.data.name); });
+      .style("fill", function(d) { return color(d.data.name); });
 
   entering.append("svg:text")
       .attr("class", "bread")

@@ -32,10 +32,10 @@ namespace History {
             var items = new Dictionary<string, Commit> ();
             var allApps = new Dictionary<string, List<Info>> ();
             var commits = await GetCommits (path, repo);
-            
+            var watch = Stopwatch.StartNew();
             foreach(var revision in commits) {
-                var stream = await GetRaw (path, revision.sha, repo);
-                var table = ReadTable(stream);
+                var table = await GetRaw (path, revision.sha, repo);
+                //var table = ReadTable(stream);
                 var commit = new Commit {
                     Sha = revision.sha,
                     Date = revision.date,
@@ -51,6 +51,8 @@ namespace History {
                 }
                 items[revision.sha] = commit;
             }
+            watch.Stop();
+            Console.WriteLine("other history " + watch.ElapsedMilliseconds);
             return FormatCsv(items.Values);
         }
 
@@ -72,10 +74,19 @@ namespace History {
             return apps;
         }
 
-        public static Task<Stream> GetRaw (string path, string sha, string repo)
+        public static async Task<DataTable> GetRaw (string path, string sha, string repo)
         {
             var location = new Uri($"https://raw.githubusercontent.com/{repo}/{sha}/{path}");
-            return client.GetStreamAsync(location);
+            using (HttpResponseMessage response = await client.GetAsync(location, HttpCompletionOption.ResponseHeadersRead))
+            using (Stream stream = await response.Content.ReadAsStreamAsync()) 
+            using (BufferedStream bs = new BufferedStream(stream)){
+                // using (var reader = new StreamReader(stream)) {
+                //     var data = await reader.ReadToEndAsync();
+                    return ReadTable(bs);
+                // }
+                
+            }
+            //return await client.GetStreamAsync(location);
         }
         public static async Task<(string sha, DateTimeOffset date) []> GetCommits(string path, string repo)
         {
@@ -98,16 +109,15 @@ namespace History {
 
                 using(HttpResponseMessage response = await client.GetAsync(new Uri ($"https://api.github.com/repos/{repo}/commits?path={path}"), HttpCompletionOption.ResponseHeadersRead))
                 using (Stream streamToReadFrom = await response.Content.ReadAsStreamAsync()) {
-                    using (var reader = new StreamReader(streamToReadFrom)) {
+                using (var bs = new BufferedStream(streamToReadFrom)) 
+                    using (var reader = new StreamReader(bs)){
                         data = await reader.ReadToEndAsync();
                     }
                 }
-                
+                // var data = await client.GetStringAsync ( new Uri ($"https://api.github.com/repos/{repo}/commits?path={path}"));
                 watch.Stop();
                 Console.WriteLine("get commits " + watch.ElapsedMilliseconds);
                 var json = JsonConvert.DeserializeAnonymousType (data, obj).Select (o => ValueTuple.Create (o.sha, o.commit.author.date)).ToArray();
-                Console.WriteLine(json.Length);
-                Console.WriteLine(json[0]);
                 return json;              
             } catch (Exception e) {
                 Console.WriteLine(e.ToString());

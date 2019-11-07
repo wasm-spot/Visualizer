@@ -23,7 +23,7 @@ function getClassName(className) {
 
 //  given json file of assembly dependencies, reformat to match format
 //  needed for treemap visualization
-function formatAssemblyTree(data, size=100, overload=true, type="tree") {
+function filterJson(data, size=100, overload=true, type="tree") {
     var as_dict = {};
     if (type == "sunburst") {
         var csv_str = "";
