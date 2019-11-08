@@ -8,7 +8,8 @@
 @using BlazorInputFile;
 @using System.Diagnostics;
 @using System.IO;
-@using System.Net.Http
+@using System.Net.Http;
+@using System.Text;
 
 
 <nav class="navbar navbar-inverse">
@@ -127,24 +128,28 @@
     }
 
     private async Task getData(string path, string state="in") {
+        StringBuilder json_str = new StringBuilder();
         var watch = Stopwatch.StartNew();
         using(HttpResponseMessage response = await Http.GetAsync(path, HttpCompletionOption.ResponseHeadersRead))
         using (Stream streamToReadFrom = await response.Content.ReadAsStreamAsync()) 
         using (BufferedStream bs = new BufferedStream(streamToReadFrom)){
             using (var reader = new StreamReader(bs)) {
-                var json_str = await reader.ReadToEndAsync();
-                var json_data = (List<FormatData>)JsonConvert.DeserializeObject(json_str, typeof(List<FormatData>));
-                if (state == "in") {
-                    in_data = new FormatData {name="All", children=json_data};
-                } else {
-                    data = new FormatData {name="All", children=json_data}; 
+                
+                string s;
+                while ((s = reader.ReadLine()) != null) {
+                    json_str.Append(s);
                 }
-                watch.Stop();
-                Console.WriteLine("get data " + state + " " + watch.ElapsedMilliseconds);
+                
             }
         }
-        //var json_data = await Http.GetJsonAsync<List<FormatData>>(path);
-        
+        var json_data = (List<FormatData>)JsonConvert.DeserializeObject(json_str.ToString(), typeof(List<FormatData>));
+        if (state == "in") {
+            in_data = new FormatData {name="All", children=json_data};
+        } else {
+            data = new FormatData {name="All", children=json_data}; 
+        }
+        watch.Stop();
+        Console.WriteLine("get data " + state + " " + watch.ElapsedMilliseconds);
     }
 
     private string getClassName(string className) {
@@ -164,16 +169,16 @@
         temp_data = new FormatData {name=data.name, 
                                             size=data.size, 
                                             children=new List<FormatData>()};
-        string csv_str = "";
+        StringBuilder csv_str = new StringBuilder();
         foreach(var item in data.children) {
             string as_name = item.name;
-            FormatData as_data = new FormatData{name=as_name, size=0, children=new List<FormatData>()};
+            FormatData as_data = new FormatData{name=as_name, size=0};
             if (item.children != null) {
                 foreach(var cl in item.children) {    
                     cl.name = getClassName(cl.name);
                     string class_name = cl.name;
-                    FormatData class_data = new FormatData{name=class_name, children=new List<FormatData>()};            
-                    if (cl.children.Count() > 0 && cl.size > 0) {
+                    FormatData class_data = new FormatData{name=class_name, children=null};            
+                    if (cl.children != null && cl.size > 0) {
                         var children = cl.children;
                         if (overload) {
                             children = children.Select((d, i) => 
@@ -189,11 +194,17 @@
                         class_data.children = children;
                         string begin = "All" + "-" + as_name + "-" + class_name + "-";
                         children.ForEach(d => {
-                            csv_str += begin + d.name + "," + d.size + "\n";
+                            csv_str.Append(begin + d.name + "," + d.size + "\n");
                         });
                     }
                         
-                    if (class_data.children.Count() > 0 && state == "out") {
+                    if (class_data.children != null && 
+                        class_data.children.Count() > 0 && 
+                        state == "out") {
+                        Console.WriteLine(class_data.children.Count());
+                        if (as_data.children == null) {
+                            as_data.children = new List<FormatData>();
+                        }
                         as_data.children.Add(class_data); 
                     }
                     
@@ -206,10 +217,10 @@
         }
         
         if (state == "out") {
-            sunburst_str = csv_str;
+            sunburst_str = csv_str.ToString();
             dataJson = JsonConvert.SerializeObject(temp_data);
         } else if (state == "in") {
-            sunburst_in_str = csv_str;
+            sunburst_in_str = csv_str.ToString();
         }
         temp_data = null;
     }

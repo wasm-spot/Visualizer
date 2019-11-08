@@ -9,6 +9,7 @@ using CsvHelper;
 using CsvHelper.Configuration.Attributes;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using System.Text;
 
 namespace History {
     
@@ -91,7 +92,6 @@ namespace History {
         public static async Task<(string sha, DateTimeOffset date) []> GetCommits(string path, string repo)
         {
             try {
-                string data = String.Empty;
                 var obj = new [] {
                     new {
                         sha = "",
@@ -106,18 +106,20 @@ namespace History {
                 client.DefaultRequestHeaders.Add("Accept", "*/*");
                 client.DefaultRequestHeaders.Add("User-Agent", "curl/7.54.0");
                 var watch = Stopwatch.StartNew();
-
+                StringBuilder data = new StringBuilder();
                 using(HttpResponseMessage response = await client.GetAsync(new Uri ($"https://api.github.com/repos/{repo}/commits?path={path}"), HttpCompletionOption.ResponseHeadersRead))
                 using (Stream streamToReadFrom = await response.Content.ReadAsStreamAsync()) {
                 using (var bs = new BufferedStream(streamToReadFrom)) 
                     using (var reader = new StreamReader(bs)){
-                        data = await reader.ReadToEndAsync();
+                        string s;
+                        while ((s = reader.ReadLine()) != null) {
+                            data.Append(s);
+                        }
                     }
                 }
-                // var data = await client.GetStringAsync ( new Uri ($"https://api.github.com/repos/{repo}/commits?path={path}"));
                 watch.Stop();
                 Console.WriteLine("get commits " + watch.ElapsedMilliseconds);
-                var json = JsonConvert.DeserializeAnonymousType (data, obj).Select (o => ValueTuple.Create (o.sha, o.commit.author.date)).ToArray();
+                var json = JsonConvert.DeserializeAnonymousType (data.ToString(), obj).Select (o => ValueTuple.Create (o.sha, o.commit.author.date)).ToArray();
                 return json;              
             } catch (Exception e) {
                 Console.WriteLine(e.ToString());

@@ -42,6 +42,8 @@ function displayLineGraph(json) {
             d[l] = +d[l];
         })
     });
+    
+    console.log(data);
 
     lib.forEach(function(l) {
         line = d3v4.line()

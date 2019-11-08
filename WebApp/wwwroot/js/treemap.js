@@ -120,9 +120,9 @@ treemap(root
     })
 );
 console.log(root)
-display(root);
+display(root, flower);
 
-function display(d) {
+function display(d, flower=false) {
     // write text into grandparent
     // and activate click's handler
     grandparent
@@ -202,13 +202,13 @@ function display(d) {
                 '<p>' + formatNumber(d.value) + '</p>'
             ;
         })
-        // .style("color", function(d) {
-        //     if (checkLuma(getRandomColor(d.data.name))) {
-        //         return "#000000";
-        //     } else {
-        //         return "#ffffff";
-        //     }
-        // })
+        .style("font-size", function(d) {
+            if (flower) {
+                return "8px";
+            } else {
+                return "11px";
+            }
+        })
         .attr("class", "textdiv"); //textdiv class allows us to style the text easily with CSS
 
     function transition(d) {
