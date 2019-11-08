@@ -1,6 +1,6 @@
 // Dimensions of sunburst.
 var width = window.innerWidth * 0.3;
-var height = window.innerHeight * 0.8;
+var height = window.innerHeight * 0.7;
 var radius = Math.min(width, height) / 2;
 
 // Breadcrumb dimensions: width, height, spacing, width of tip/tail.
@@ -89,20 +89,17 @@ function createRoot(json, in_root=null) {
 }
 
 function createSunburst(json ,root, state="in") {
-  var sun = d3v4.select("#chart").append("svg:svg")
-    .attr("id", "sunburst")
+  var id = "#sunburst-" + state;
+  var sun = d3v4.select(id).append("svg:svg")
     .attr("width", width)
     .attr("height", height)
-    .style("margin-left", 100)
     .append("svg:g")
-    .attr("id", "container")
+    .attr("id", "sunburst")
     .attr("transform", "translate(" + width / 2 + "," + window.innerHeight * 0.35 + ")");
-
+  console.log(d3v4.select("#sunburst-out"));
   sun.append("svg:circle")
     .attr("r", radius)
     .style("opacity", 0);
-
-  d3v4.selectAll(".explanation").style("width", width + "px");
 
   var text = sun.append("text")
                 .attr("class", "sunburst-title")
@@ -124,7 +121,7 @@ function createSunburst(json ,root, state="in") {
     .style("opacity", 1)
     .on("mouseover", mouseover);
 
-    d3v4.selectAll("#container").on("mouseleave", mouseleave);
+    d3v4.selectAll("#sunburst").on("mouseleave", mouseleave);
 
     if (state === "in") {
       inTotalSize = path.datum().value;

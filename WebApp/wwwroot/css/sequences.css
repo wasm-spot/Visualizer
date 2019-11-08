@@ -23,13 +23,12 @@
 .explanation-container {
   margin-top: 60px;
   margin-bottom: 50px;
-  margin-left: 100px;
 }
 
 .explanation {
   position: relative;
-  display: inline-block;
-  margin-left: 100px;
+  display: inline-flex;
+  width: 45%;
   text-align: center;
   color: #666;
   z-index: -1;
@@ -43,11 +42,24 @@
   font-size: 18px;
 }
 
-#sunburst {
-  margin-top: -100px;
-}
+/* #sunburst {
+  margin-top: -80px;
+} */
 
 .sunburst-title {
   font-size: 18px;
   text-align: right;
+}
+
+.sunburst {
+  width: 45%;
+  position: relative;
+  display: inline-flex;
+}
+
+#sunburst-container {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: -80px;
 }

@@ -54,16 +54,18 @@
         </p>
         <button id="submit" type="button" class="btn btn-submit" @onclick="@( e => display(@displayType) )">display</button>
     </form>
+
+    <InputFile id="inputfile" OnChange="HandleFileSelected" />
+    @if (file != null)
+    {
+        <p>Name: @file.Name</p>
+        <p>Size in bytes: @file.Size</p>
+        <p>Last modified date: @file.LastModified.ToShortDateString()</p>
+        <p>Content type: @file.Type</p>
+    }
 </div>
 
-<InputFile id="inputfile" OnChange="HandleFileSelected" />
-@if (file != null)
-{
-    <p>Name: @file.Name</p>
-    <p>Size in bytes: @file.Size</p>
-    <p>Last modified date: @file.LastModified.ToShortDateString()</p>
-    <p>Content type: @file.Type</p>
-}
+
 
 
 
