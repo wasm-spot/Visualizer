@@ -1,5 +1,5 @@
 // Dimensions of sunburst.
-var width = window.innerHeight * 0.5;
+var width = window.innerWidth * 0.35;
 var height = window.innerHeight * 0.8;
 var radius = Math.min(width, height) / 2;
 
@@ -59,10 +59,10 @@ function displaySunburst(dataJson, dataJson_in) {
   var overload = document.getElementById("overload").checked;
   console.log(dataJson);
   createVisualization(dataJson, inputSize, overload, data_in=dataJson_in, state="in");
+  window.scrollTo(0,document.body.scrollHeight*0.9);
 }
 
 function createCsv(data, inputSize, overload, state) {
-  // var assembly = formatAssemblyTree(data, inputSize, overload, type="sunburst");
 
   var csv = d3v4.csvParseRows(data);
 
@@ -70,9 +70,6 @@ function createCsv(data, inputSize, overload, state) {
   names = names.map(function(value, index) { return value.split("-")})
   names = [].concat(...names)
   var json = buildHierarchy(csv, state);
-  // colors = d3v4.scaleOrdinal()
-  //   .domain(names)
-  //   .range(d3v4.schemeCategory20c)
 
   return json;
 }
@@ -284,10 +281,17 @@ function updateBreadcrumbs(nodeArray, percentageString) {
   entering.append("svg:text")
       .attr("class", "bread")
       .attr("x", (b.w + b.t) / 2)
-      .attr("y", b.h / 2)
+      .attr("y", function(d) {
+        var mult = 0.5;
+        if (d.data.name.length > 50 && d.data.name.length < 100) mult = 0.3;
+        else if (d.data.name.length > 100) mult = 0.2
+        return b.h * mult;
+      })
       .attr("dy", "0.35em")
       .attr("text-anchor", "middle")
-      .text(function(d) { return d.data.name; })
+      .text(function(d) { 
+        return d.data.name; 
+      })
       .selectAll(".bread text")
         .call(wrap, b.w-50);
     

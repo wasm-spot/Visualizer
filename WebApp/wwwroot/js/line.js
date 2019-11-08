@@ -6,8 +6,7 @@ function displayLineGraph(json) {
     d3v4.select("#chart-title").html("Line and stacked area graphs")
     var margin = {top: 120, right: 280, bottom: 150, left: 170},
     width = window.innerWidth - margin.left - margin.right,
-    height = window.innerHeight - margin.top - margin.bottom,
-    radius = 6;
+    height = window.innerHeight - margin.top - margin.bottom;
 
     var data = JSON.parse(json);
 
