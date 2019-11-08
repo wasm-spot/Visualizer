@@ -1,11 +1,11 @@
 // Dimensions of sunburst.
-var width = window.innerWidth * 0.35;
+var width = window.innerWidth * 0.3;
 var height = window.innerHeight * 0.8;
 var radius = Math.min(width, height) / 2;
 
 // Breadcrumb dimensions: width, height, spacing, width of tip/tail.
 var b = {
-  w: 400, h: 100, s: 3, t: 10
+  w: window.innerWidth*0.2, h: window.innerHeight*0.13, s: 3, t: 10
 };
 
 // Mapping of step names to colors.
@@ -237,7 +237,7 @@ function initializeBreadcrumbTrail() {
   // Add the svg area.
   var trail = d3v4.select("#sequence").append("svg:svg")
       .attr("width", window.innerWidth)
-      .attr("height", 100)
+      .attr("height", window.innerHeight*0.15)
       .attr("margin", 20)
       .attr("id", "trail");
   // Add the label at the end, for the percentage.
@@ -292,6 +292,7 @@ function updateBreadcrumbs(nodeArray, percentageString) {
       .text(function(d) { 
         return d.data.name; 
       })
+      .style("font-size", "12px")
       .selectAll(".bread text")
         .call(wrap, b.w-50);
     
