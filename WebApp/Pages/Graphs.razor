@@ -56,6 +56,10 @@
     </form>
 
     <InputFile id="inputfile" OnChange="HandleFileSelected" />
+    @if(displayType == "sunburst") {
+        <label>Change Linker input</label>
+        <input @bind="sunburst_in" type="checkbox"/>
+    }
     @if (file != null)
     {
         <p>Name: @file.Name</p>
@@ -80,6 +84,7 @@
     string dataJson;
     private int inputSize { get; set; }
     private bool overload { get; set; }
+    private bool sunburst_in { get; set; }
     private int currentSize;
     private bool currentOverload;
     string displayType;
@@ -92,7 +97,11 @@
         var json_file = (List<FormatData>)JsonConvert.DeserializeObject(json_str, typeof(List<FormatData>));
         Console.WriteLine(json_file);
         if (json_file != null) {
-            data.children = json_file;
+            if (sunburst_in) {
+                in_data.children = json_file;
+            } else {    
+                data.children = json_file;
+            }
             await display(displayType, true);
         }
     }   
@@ -114,7 +123,7 @@
         }
         var json = JsonConvert.SerializeObject(data);
         await JsRuntime.InvokeAsync<string>("graph", json);
-        await JsRuntime.InvokeAsync<string>("areaGraph", json);
+        //await JsRuntime.InvokeAsync<string>("areaGraph", json);
     }
 
     private async Task clear() {

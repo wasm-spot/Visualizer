@@ -2,13 +2,28 @@ var parseTime = d3v4.timeParse("%Y-%m-%dT%I:%M:%S.0000000+00:00");
 var formatTime = d3v4.timeFormat("%Y-%m-%d");
 var dayRange = d3v4.timeDay;
 
-function displayLineGraph(json) {
+function displayGraph(json) {
+    var data = JSON.parse(json);
+    var lib = Object.keys(data[0]).filter(function(value, index, arr) {
+        return value != "Date" && index != 0;
+    })
+    var dict_data = {};
+    data.forEach(function(d) {
+        d["Date"] = parseTime(d["Date"]);
+        lib.forEach(function(l) {
+            d[l] = +d[l];
+        })
+    });
+
+    displayLineGraph(data, lib);
+    displayAreaGraph(data, lib);
+}
+
+function displayLineGraph(data, lib) {
     d3v4.select("#chart-title").html("Line and stacked area graphs")
     var margin = {top: 120, right: 280, bottom: 150, left: 170},
     width = window.innerWidth - margin.left - margin.right,
     height = window.innerHeight - margin.top - margin.bottom;
-
-    var data = JSON.parse(json);
 
     var x = d3v4.scaleTime().range([0, width]);
     var y = d3v4.scaleLinear().range([height, 0]);
@@ -24,23 +39,12 @@ function displayLineGraph(json) {
     var yAxis = d3v4.axisLeft(y);
 
     var lines = [];
-    
-    var lib = Object.keys(data[0]).filter(function(value, index, arr) {
-        return value != "Date" && index != 0;
-    })
 
     var color = d3v4.scaleOrdinal()
         .domain(lib)
         .range(d3v4.schemeCategory10)
 
     title = Object.keys(data[0])[0];
- 
-    data.forEach(function(d) {
-        d["Date"] = parseTime(d["Date"]);
-        lib.forEach(function(l) {
-            d[l] = +d[l];
-        })
-    });
     
     console.log(data);
 
@@ -224,13 +228,10 @@ function displayLineGraph(json) {
             .on("mouseleave", noHighlight)
 }
 
-function displayAreaGraph (json) { 
+function displayAreaGraph (data, lib) { 
     var margin = {top: 120, right: 280, bottom: 150, left: 170},
     width = window.innerWidth - margin.left - margin.right,
-    height = window.innerHeight - margin.top - margin.bottom,
-    radius = 6;
-    
-    var data = JSON.parse(json);
+    height = window.innerHeight - margin.top - margin.bottom;    
 
     var x = d3v4.scaleTime().range([0, width]);
     var y = d3v4.scaleLinear().range([height, 0]);
@@ -245,21 +246,11 @@ function displayAreaGraph (json) {
     var xAxis = d3v4.axisBottom(x);
     var yAxis = d3v4.axisLeft(y);
 
-    var lib = Object.keys(data[0]).filter(function(value, index, arr) {
-        return value != "Date" && index != 0;
-    })
     title = Object.keys(data[0])[0];
 
     var color = d3v4.scaleOrdinal()
         .domain(lib)
         .range(d3v4.schemeCategory10)
-
-    data.forEach(function(d) {
-        d["Date"] = parseTime(d["Date"]);
-        lib.forEach(function(l) {
-            d[l] = +d[l];
-        })
-    });
 
     var stackedData = d3v4.stack()
         .keys(lib)
