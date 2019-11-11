@@ -93,10 +93,9 @@ function createSunburst(json ,root, state="in") {
   var sun = d3v4.select(id).append("svg:svg")
     .attr("width", width)
     .attr("height", height)
-    .append("svg:g")
     .attr("id", "sunburst")
+    .append("svg:g")
     .attr("transform", "translate(" + width / 2 + "," + window.innerHeight * 0.35 + ")");
-  console.log(d3v4.select("#sunburst-out"));
   sun.append("svg:circle")
     .attr("r", radius)
     .style("opacity", 0);
