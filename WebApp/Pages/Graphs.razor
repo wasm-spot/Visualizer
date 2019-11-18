@@ -11,36 +11,56 @@
 @using System.Net.Http;
 @using System.Text;
 
+<!-- Sidebar toggle -->
+<button type="button" id="sidebarCollapse" class="btn btn-info" @onclick="@toggle">
+    <i class="fas fa-align-left"></i>
+    <span>Toggle Sidebar</span>
+</button>
 
-<nav class="navbar navbar-inverse">
-<div class="container-fluid">
-    <div class="navbar-header">
-    <button @onclick="clear" class="btn navbar-brand">Linker Visualizer</button>
-    <!-- <a class="navbar-brand" href="#">Linker Visualizer</a> -->
+  
+
+<!-- Sidebar -->
+<nav id="sidebar" class="active">
+    <div id="dismiss">
+        <button @onclick="@collapse" style="background-color:rgb(0,0,0,0);">
+            <i class="fas fa-arrow-left"></i>
+        </button>
     </div>
-    <ul class="nav navbar-nav">
-    <li class="dropdown">
-        <a class="dropdown-toggle btn" data-toggle="dropdown" href="#">Line and Area
-        <span class="caret"></span></a>
-        <ul class="dropdown-menu">
-            @if (apps == null) {
-                <p><em>Loading...</em></p>
-            } else {
-                @foreach (var app in apps)
-                {
-                    <li><button class="dropdown-button" @onclick="@( e => Graph(app) )">@app</button></li>
+    <div class="sidebar-header">
+        <h3>Linker Visualizer</h3>
+    </div>
+
+    <ul class="list-unstyled components">
+        <li class="active">
+            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Line and Area</a>
+            <ul class="collapse list-unstyled" id="homeSubmenu">
+                @if (apps == null) {
+                    <p><em>Loading...</em></p>
+                } else {
+                    @foreach (var app in apps)
+                    {
+                        <li><a @onclick="@( e => Graph(app) )">@app</a></li>
+                    }
                 }
-            }
-        </ul>
-    </li>
-    <li><button @onclick="@( e => explanationDisplay("sunburst") )" class="btn">Sunburst</button></li>
-    <li><button @onclick="@( e => explanationDisplay("tree") )" class="btn" id="tree-btn">Treemap</button></li>
-    <li><button @onclick="@( e => explanationDisplay("flower") )" class="btn">Code flower</button></li>
-    <!-- <li><button @onclick="@( e => explanationDisplay("slope") )" class="btn">Slopegraph</button></li> -->
-    <li><button @onclick="clear" class="btn">Clear graphs</button></li>
+            </ul>
+        </li>
+        <li>
+            <a @onclick="@( e => explanationDisplay("sunburst") )">Sunburst</a>
+        </li>
+        
+        <li>
+            <a @onclick="@( e => explanationDisplay("tree") )" id="tree-btn">Treemap</a>
+        </li>
+        <li>
+            <a @onclick="@( e => explanationDisplay("flower") )">Code flower</a>
+        </li>
+        <li>
+            <a @onclick="clear">Clear graphs</a>
+            </li>
     </ul>
-</div>
 </nav>
+
+<div class="overlay"></div>
 
 <div id="options" style="display:none;">
     <form>
@@ -71,8 +91,6 @@
 
 
 
-
-
 @code {  
     Dictionary<string, List<History.Info>> info;
     string[] apps;
@@ -95,7 +113,6 @@
         file = files.FirstOrDefault();
         string json_str = await ReadFile();
         var json_file = (List<FormatData>)JsonConvert.DeserializeObject(json_str, typeof(List<FormatData>));
-        Console.WriteLine(json_file);
         if (json_file != null) {
             if (sunburst_in) {
                 in_data.children = json_file;
@@ -128,6 +145,14 @@
 
     private async Task clear() {
         await JsRuntime.InvokeAsync<string>("clear");
+    }
+
+    private async Task toggle() {
+        await JsRuntime.InvokeAsync<string>("toggle");
+    }
+
+    private async Task collapse() {
+        await JsRuntime.InvokeAsync<string>("collapse");
     }
 
     private async void sunburst() {
@@ -212,7 +237,6 @@
                     if (class_data.children != null && 
                         class_data.children.Count() > 0 && 
                         state == "out") {
-                        Console.WriteLine(class_data.children.Count());
                         if (as_data.children == null) {
                             as_data.children = new List<FormatData>();
                         }

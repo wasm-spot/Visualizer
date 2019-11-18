@@ -25,40 +25,143 @@ form p {
     align-items: center;
 }
 
-.main {
-    flex: 1;
-}
-
 .main .top-row {
+    position: fixed;
     background-color: #e6e6e6;
     border-bottom: 1px solid #d6d5d5;
+}
+
+#options { 
+  width: 100%;
+  position: fixed;
+  top: 10%;
 }
 
 #main {
     margin-left: 20px;
     margin-right: 20px;
     overflow-x: hidden;
-    height: 100%;
+    width: 80%;
+    position: relative;
+    left: 20%;
 }
 
-.sidebar {
-    background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+
+button, button:hover, button:focus {
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.3s;
 }
 
-.sidebar .top-row {
-    background-color: rgba(0,0,0,0.4);
+a, a:hover, a:focus {
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.3s;
 }
 
-.sidebar .navbar-brand {
-    font-size: 1.1rem;
-    font-weight: bold;
+.collapse {
+  background-color: rgb(0,0,0,0);
 }
 
-.sidebar .oi {
-    width: 2rem;
-    font-size: 1.1rem;
-    vertical-align: text-top;
-    top: -2px;
+#sidebar {
+  min-width: 250px;
+  max-width: 250px;
+  min-height: 100vh;
+  background: #7386D5;
+  color: #fff;
+  transition: all 0.3s;
+}
+
+#sidebar .sidebar-header {
+  padding: 20px;
+  background: #6d7fcc;
+}
+
+#sidebar ul.components {
+  padding: 20px 0;
+  border-bottom: 1px solid #47748b;
+}
+
+#sidebar ul p {
+  color: #fff;
+  padding: 10px;
+}
+
+#sidebar ul li a {
+  padding: 10px;
+  font-size: 1.1em;
+  display: block;
+}
+#sidebar ul li a:hover {
+  color: #7386D5;
+  background: #fff;
+}
+
+#sidebar ul li.active > a, a[aria-expanded="true"] {
+  color: #fff;
+  background: #6d7fcc;
+}
+
+.overlay {
+  display: none;
+  position: fixed;
+  /* full screen */
+  width: 100vw;
+  height: 100vh;
+  /* transparent black */
+  background: rgba(0, 0, 0, 0.7);
+  /* middle layer, i.e. appears below the sidebar */
+  z-index: 998;
+  opacity: 0;
+  /* animate the transition */
+  transition: all 0.5s ease-in-out;
+  z-index: 9999;
+  position: fixed;
+}
+/* display .overlay when it has the .active class */
+.overlay.active {
+  display: block;
+  opacity: 1;
+}
+
+#dismiss {
+  width: 35px;
+  height: 35px;
+  position: relative;
+  /* top right corner of the sidebar */
+  top: 10px;
+  right: -200px;
+}
+
+ul ul a {
+  font-size: 0.9em !important;
+  padding-left: 30px !important;
+  background: #6d7fcc;
+}
+
+#sidebar.active {
+  margin-left: -250px;
+}
+
+a[data-toggle="collapse"] {
+  position: relative;
+}
+
+.dropdown-toggle::after {
+  display: block;
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+}
+
+@media (max-width: 768px) {
+  #sidebar {
+      margin-left: -250px;
+  }
+  #sidebar.active {
+      margin-left: 0;
+  }
 }
 
 .nav {
