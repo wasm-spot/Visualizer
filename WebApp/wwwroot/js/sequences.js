@@ -32,37 +32,26 @@ var arc = d3v4.arc()
     .outerRadius(function(d) { return Math.sqrt(d.y1); });
 
 function sunburstDisplay() {
-  d3v4.select("#options")
-      .style("display", null);
   d3v4.select("#chart")
       .style("display", null);
   d3v4.select("#explanation")
       .style("display", null);
   d3v4.select("#sequence")
       .style("display", null);
-  d3v4.select("#chart-title").html("Sunburst")
-  d3v4.select("#description")
+  d3v4.select("#sunburst-title").html("Sunburst")
+  d3v4.select("#sunburst-description")
     .html("A sunburst diagram visualizes the relative size and hierarchy of \
           classes and methods in a library. Hover over each sector for more \
           information.")
-  // d3v4.select("#size")
-  //   .on("keypress", function() {
-  //     if (d3v4.event.keyCode == 13) {
-  //       d3v4.event.preventDefault();
-  //       displaySunburst();
-  //     }
-  //   })
 }
 
 function displaySunburst(dataJson, dataJson_in) {
-  var inputSize = document.getElementById("size").value;
-  var overload = document.getElementById("overload").checked;
-  console.log(dataJson);
-  createVisualization(dataJson, inputSize, overload, data_in=dataJson_in, state="in");
+  sunburstDisplay();
+  createVisualization(dataJson, data_in=dataJson_in, state="in");
   window.scrollTo(0,document.body.scrollHeight*0.9);
 }
 
-function createCsv(data, inputSize, overload, state) {
+function createCsv(data, state) {
 
   var csv = d3v4.csvParseRows(data);
 
@@ -134,10 +123,10 @@ function createSunburst(json ,root, state="in") {
 }
 
 // Main function to draw and set up the visualization, once we have the data.
-function createVisualization(data, inputSize, overload, data_in) {
+function createVisualization(data, data_in) {
     d3v4.selectAll("#sunburst").remove();
-    var in_json = createCsv(data_in, inputSize, overload, "in");
-    var json = createCsv(data, inputSize, overload, "out", in_root=in_root);
+    var in_json = createCsv(data_in, "in");
+    var json = createCsv(data,  "out", in_root=in_root);
     var in_root = createRoot(in_json);
     var root = createRoot(json, in_root);
 

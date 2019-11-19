@@ -1,40 +1,23 @@
 function treeDisplay() {
-    d3v4.select("#options")
-        .style("display", null);
-    d3v4.select("#chart")
-        .style("display", null);
-    d3v4.select("#compare")
-        .style("display", "none");
-    d3v4.select("#compare-label")
-        .style("display", "none");
-    d3v4.select("#tree-btn")
-        .style("class", "active");
-    d3v4.select("#chart-title").html("Dependency treemap");
-    d3v4.select("#description").html("A dependency treemap visualizes the \
+    d3v4.select("#tree-title").html("Dependency treemap");
+    d3v4.select("#tree-description").html("A dependency treemap visualizes the \
                             relative size and hierarchy of classes and methods \
                             in a library. Click each class block to zoom in and view \
                             its methods.");
-    // d3v4.select("#size")
-    //     .on("keypress", function() {
-    //         if (d3v4.event.keyCode == 13) {
-    //         d3v4.event.preventDefault();
-    //         displayTreemap(dataJson);
-    //         }
-    //     });
 }
 
-function displayTreemap(dataJson) {
-    var inputSize = document.getElementById("size").value;
-    var overload = document.getElementById("overload").checked;
-    displayTree(dataJson, inputSize, overload);
+function displayTreemap(dataJson, dataJson_in) {
+    treeDisplay();
+    
+    displayTree(dataJson_in, flower=false, state="in");
+    displayTree(dataJson, flower=false, state="out");
     window.scrollTo(0,document.body.scrollHeight);
 }
 
-function displayTree(dataJson, inputSize, overload, flower=false) {
-    var el_id = 'chart';
-    var obj = document.getElementById(el_id);
-    var margin = {top: 30, right: 100, bottom: window.innerHeight*0.1, left: 100},
-        width = window.innerWidth -25,
+function displayTree(dataJson, flower=false, state="in") {
+    var el_id = state + '-tree';
+    var margin = {top: 30, right: 30, bottom: 30, left: 10},
+        width = window.innerWidth * 0.46,
         grandparent_width = width,
         height = window.innerHeight - margin.top - margin.bottom,
         formatNumber = d3v4.format(","),
@@ -42,7 +25,6 @@ function displayTree(dataJson, inputSize, overload, flower=false) {
     var data;
     
     if (!flower) {
-        d3v4.select("svg").remove();
         data = JSON.parse(dataJson);
     } else {
         width *= 0.8;
@@ -70,7 +52,7 @@ if (flower) {
     .attr("id", "flower-tree")
     .attr("width", width)
     .attr("height", height)
-    .style("margin-left", -margin.left + "px")
+    .style("margin-left", margin.left + "px")
     .style("margin-right", -margin.right + "px")
     .style("position", "absolute")
     .style("left", 0)
@@ -78,16 +60,17 @@ if (flower) {
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .style("shape-rendering", "crispEdges");
 } else{
+    d3v4.select("#" + el_id + "-title").html("Linker " + state + "put");
     var svg = d3v4.select('#'+el_id).append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.bottom + margin.top)
-    .style("margin-left", -margin.left + "px")
+    .style("margin-left", margin.left + "px")
     .style("margin-right", -margin.right + "px")
+    .style("margin-top", margin.top + "px")
     .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .style("shape-rendering", "crispEdges");
 }
-
 
 var grandparent = svg.append("g")
         .attr("class", "grandparent");
@@ -104,8 +87,7 @@ grandparent.append("text")
 if (flower) {
     grandparent.style("font-size", "10px");
 }
-console.log(data)
-// if (data.children == null) data.children = data._children;
+
 var root = d3v4.hierarchy(data);
 treemap(root
     .sum(function (d) {
@@ -123,13 +105,15 @@ console.log(root)
 display(root, flower);
 
 function display(d, flower=false) {
+    
     // write text into grandparent
     // and activate click's handler
     grandparent
         .datum(d.parent)
         .on("click", transition)
         .select("text")
-        .text(name(d));
+        .text(name(d))
+        .style("font-size", "12px");
     // grandparent color
     grandparent
         .datum(d.parent)

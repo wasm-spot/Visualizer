@@ -3,11 +3,17 @@ var formatTime = d3v4.timeFormat("%Y-%m-%d");
 var dayRange = d3v4.timeDay;
 
 function displayGraph(json) {
+    d3v4.select("#line").select("svg").remove();
+    d3v4.select("#area").select("svg").remove();
     var data = JSON.parse(json);
     var lib = Object.keys(data[0]).filter(function(value, index, arr) {
         return value != "Date" && index != 0;
     })
-    var dict_data = {};
+    
+    lib.forEach(function (l) {
+        var sum = data
+    })
+
     data.forEach(function(d) {
         d["Date"] = parseTime(d["Date"]);
         lib.forEach(function(l) {
@@ -20,7 +26,6 @@ function displayGraph(json) {
 }
 
 function displayLineGraph(data, lib) {
-    d3v4.select("#chart-title").html("Line and stacked area graphs")
     var margin = {top: 120, right: 280, bottom: 150, left: 170},
     width = window.innerWidth - margin.left - margin.right,
     height = window.innerHeight - margin.top - margin.bottom;
@@ -28,7 +33,7 @@ function displayLineGraph(data, lib) {
     var x = d3v4.scaleTime().range([0, width]);
     var y = d3v4.scaleLinear().range([height, 0]);
 
-    var svg = d3v4.select("body").append("svg")
+    var svg = d3v4.select("#line").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
     .append("g")
@@ -236,7 +241,7 @@ function displayAreaGraph (data, lib) {
     var x = d3v4.scaleTime().range([0, width]);
     var y = d3v4.scaleLinear().range([height, 0]);
 
-    var svg = d3v4.select("body").append("svg")
+    var svg = d3v4.select("#area").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
     .append("g")

@@ -1,6 +1,9 @@
 #sequence {
-  width: 80%;
+  width: 100%;
   height: 10%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin-bottom: 1.5%;
+  padding: 0.7%;
 }
 
 #legend {
@@ -27,11 +30,12 @@
 
 .explanation {
   position: relative;
-  display: inline-flex;
-  width: 45%;
+  /* display: inline-flex; */
   text-align: center;
   color: #666;
   z-index: -1;
+  margin-top: 15px;
+  margin-left: 10px;
 }
 
 .percentage {
@@ -42,24 +46,25 @@
   font-size: 18px;
 }
 
-/* #sunburst {
-  margin-top: -80px;
-} */
-
 .sunburst-title {
   font-size: 18px;
   text-align: right;
 }
 
-.sunburst {
-  width: 45%;
+#sunburst-in {
+  margin-right: 0.7%;
+}
+
+.viz-container {
+  width: 49%;
   position: relative;
   display: inline-flex;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
 #sunburst-container {
-  width: 90%;
+  width: 100%;
   margin-left: auto;
   margin-right: auto;
-  margin-top: -80px;
+  margin-bottom: 5%;
 }

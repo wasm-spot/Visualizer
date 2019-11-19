@@ -20,7 +20,7 @@
   
 
 <!-- Sidebar -->
-<nav id="sidebar" class="active">
+<!-- <nav id="sidebar" class="active">
     <div id="dismiss">
         <button @onclick="@collapse" style="background-color:rgb(0,0,0,0);">
             <i class="fas fa-arrow-left"></i>
@@ -58,11 +58,9 @@
             <a @onclick="clear">Clear graphs</a>
             </li>
     </ul>
-</nav>
+</nav> -->
 
-<div class="overlay"></div>
-
-<div id="options" style="display:none;">
+<!-- <div id="options" style="display:none;">
     <form>
         <p>
             <label>Only view methods greater than this size: </label>
@@ -87,6 +85,67 @@
         <p>Last modified date: @file.LastModified.ToShortDateString()</p>
         <p>Content type: @file.Type</p>
     }
+</div> -->
+
+<div id="chart">
+            
+    <div id="sunburst-container">
+        <h2 class="chart-title" id="sunburst-title"></h2>
+        <div class="description" id="sunburst-description"></div>
+        <div id="sequence"></div>
+
+        <div class="viz-container" id="sunburst-in">
+            <div class="explanation" id="in-explanation" style="visibility: hidden;">
+                    <span class="size" id="in-size"></span> =<br/>
+                    <span class="percentage" id="in-percentage"></span><br/>
+                    of overall size
+                    @if (dataJson == null) {
+                        <p><em>Loading...</em></p>
+                    }
+            </div>
+        </div>
+            
+        <div class="viz-container" id="sunburst-out">
+            <div class="explanation" id="explanation" style="visibility: hidden;">
+                <span class="size" id="out-size"></span> =<br/>
+                <span class="percentage" id="percentage"></span><br/>
+                of overall size
+            </div>
+        </div>
+    </div>
+    <div id="treemap-container">
+        <h2 class="chart-title" id="tree-title"></h2>
+        <div class="description" id="tree-description"></div>
+        <div class="viz-container" id="in-tree">
+            <div class="menu"></div>
+        </div>
+        <div class="viz-container" id="out-tree"></div>
+    </div>
+
+    @if (apps != null) {
+        <div id="line-container">
+            <h2 class="chart-title" id="line-title">Line and Stacked Area graphs</h2>
+            <li class="dropdown">
+                <a class="dropdown-toggle btn" data-toggle="dropdown" href="#">Tests 
+                 <span class="caret"></span></a>
+
+                <ul class="dropdown-menu">
+                    @if (apps == null) {
+                        <p><em>Loading...</em></p>
+                    } else {
+                        @foreach (var app in apps)
+                        {
+                            <li><a class="dropdown-button" @onclick="@( e => Graph(app) )">@app</a></li>
+                        }
+                    }
+                </ul>
+            </li>
+            <div class="line-viz" id="line"></div>
+            <div class="line-viz" id="area"></div>
+        </div>
+    }
+    
+    
 </div>
 
 
@@ -100,6 +159,7 @@
     string sunburst_str;
     string sunburst_in_str;
     string dataJson;
+    string dataJson_in;
     private int inputSize { get; set; }
     private bool overload { get; set; }
     private bool sunburst_in { get; set; }
@@ -180,9 +240,9 @@
         }
         var json_data = (List<FormatData>)JsonConvert.DeserializeObject(json_str.ToString(), typeof(List<FormatData>));
         if (state == "in") {
-            in_data = new FormatData {name="All", children=json_data};
+            in_data = new FormatData {name="All (in)", children=json_data};
         } else {
-            data = new FormatData {name="All", children=json_data}; 
+            data = new FormatData {name="All (out)", children=json_data}; 
         }
         watch.Stop();
         Console.WriteLine("get data " + state + " " + watch.ElapsedMilliseconds);
@@ -201,7 +261,7 @@
         return name;
     }
 
-    private void formatData(FormatData data, int size=100, bool overload=true, string state="out") {
+    private void formatData(FormatData data, int size, bool overload, string state) {
         temp_data = new FormatData {name=data.name, 
                                             size=data.size, 
                                             children=new List<FormatData>()};
@@ -226,17 +286,18 @@
                                                 size=d.Sum(da => da.size)
                                             }).ToList();
                         }
-                        children = children.Where(d => d.size > size).ToList();
-                        class_data.children = children;
-                        string begin = "All" + "-" + as_name + "-" + class_name + "-";
+                        var child_2 = children.Where(d => d.size > size).ToList();
+                        children = child_2;
+                        class_data.children = child_2;
+                        string begin = "All" + " (" + state+ ")" + "-" + as_name + "-" + class_name + "-";
                         children.ForEach(d => {
-                            csv_str.Append(begin + d.name + "," + d.size + "\n");
+                            string name = d.name.Replace(",", "");
+                            csv_str.Append(begin + name + "," + d.size + "\n");
                         });
                     }
                         
                     if (class_data.children != null && 
-                        class_data.children.Count() > 0 && 
-                        state == "out") {
+                        class_data.children.Count() > 0) {
                         if (as_data.children == null) {
                             as_data.children = new List<FormatData>();
                         }
@@ -245,16 +306,14 @@
                     
                 }
             }
-            if (state == "out") {
-                temp_data.children.Add(as_data);
-            }
-            
+            temp_data.children.Add(as_data);
         }
         
         if (state == "out") {
             sunburst_str = csv_str.ToString();
             dataJson = JsonConvert.SerializeObject(temp_data);
         } else if (state == "in") {
+            dataJson_in = JsonConvert.SerializeObject(temp_data);
             sunburst_in_str = csv_str.ToString();
         }
         temp_data = null;
@@ -296,6 +355,10 @@
     protected override async Task OnInitializedAsync() {
         displayType = "";
         sunburst_str = "";
+        sunburst_in_str = "";
+        inputSize = 300;
+        overload = false;
+
         var watch = Stopwatch.StartNew();
         List<Task> tasks = new List<Task>();
         tasks.Add(LoadHistory());
@@ -306,6 +369,12 @@
         apps = info.Keys.ToArray();  
         watch.Stop();
         Console.WriteLine("get data " + watch.ElapsedMilliseconds);
+        formatData(data, inputSize, overload, "out");
+        formatData(in_data, inputSize, overload, "in");
+        var tree = dataJson.Replace("size", "value");
+        var tree_in = dataJson_in.Replace("size", "value");
+        await JsRuntime.InvokeAsync<string>("displayAll", sunburst_str, sunburst_in_str, dataJson,
+                                            dataJson_in, tree, tree_in);
     }
     
     public class FormatData{
