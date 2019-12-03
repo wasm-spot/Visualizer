@@ -1,0 +1,56 @@
+Loading dependency tree from: linker-dependencies.xml.gz
+Analyzing assemblies ...............
+Warning: duplicated type 'System.Buffers.ArrayPool`1' scope 'System.Buffers.dll'
+System.ArgumentException: An item with the same key has already been added. Key: TypeDef:System.Buffers.ArrayPool`1
+  at System.Collections.Generic.Dictionary`2[TKey,TValue].TryInsert (TKey key, TValue value, System.Collections.Generic.InsertionBehavior behavior) [0x0015a] in <7a62ef3b49f14d16b21221b9b5a4792c>:0 
+  at System.Collections.Generic.Dictionary`2[TKey,TValue].Add (TKey key, TValue value) [0x00000] in <7a62ef3b49f14d16b21221b9b5a4792c>:0 
+  at LinkerAnalyzer.Core.SpaceAnalyzer.ProcessType (Mono.Cecil.TypeDefinition type) [0x000a9] in <76f80eb8ff45420ba12865ee7c13013e>:0 
+....
+Warning: duplicated type 'Mono.Security.Cryptography.RSAManaged/KeyGeneratedEventHandler' scope 'Mono.Security.dll'
+System.ArgumentException: An item with the same key has already been added. Key: TypeDef:Mono.Security.Cryptography.RSAManaged/KeyGeneratedEventHandler
+  at System.Collections.Generic.Dictionary`2[TKey,TValue].TryInsert (TKey key, TValue value, System.Collections.Generic.InsertionBehavior behavior) [0x0015a] in <7a62ef3b49f14d16b21221b9b5a4792c>:0 
+  at System.Collections.Generic.Dictionary`2[TKey,TValue].Add (TKey key, TValue value) [0x00000] in <7a62ef3b49f14d16b21221b9b5a4792c>:0 
+  at LinkerAnalyzer.Core.SpaceAnalyzer.ProcessType (Mono.Cecil.TypeDefinition type) [0x000a9] in <76f80eb8ff45420ba12865ee7c13013e>:0 
+
+Warning: duplicated type 'Mono.Math.BigInteger/Sign' scope 'Mono.Security.dll'
+System.ArgumentException: An item with the same key has already been added. Key: TypeDef:Mono.Math.BigInteger/Sign
+  at System.Collections.Generic.Dictionary`2[TKey,TValue].TryInsert (TKey key, TValue value, System.Collections.Generic.InsertionBehavior behavior) [0x0015a] in <7a62ef3b49f14d16b21221b9b5a4792c>:0 
+  at System.Collections.Generic.Dictionary`2[TKey,TValue].Add (TKey key, TValue value) [0x00000] in <7a62ef3b49f14d16b21221b9b5a4792c>:0 
+  at LinkerAnalyzer.Core.SpaceAnalyzer.ProcessType (Mono.Cecil.TypeDefinition type) [0x000a9] in <76f80eb8ff45420ba12865ee7c13013e>:0 
+.......
+Warning: duplicated type 'System.Numerics.Vector`1' scope 'System.Numerics.Vectors.dll'
+System.ArgumentException: An item with the same key has already been added. Key: TypeDef:System.Numerics.Vector`1
+  at System.Collections.Generic.Dictionary`2[TKey,TValue].TryInsert (TKey key, TValue value, System.Collections.Generic.InsertionBehavior behavior) [0x0015a] in <7a62ef3b49f14d16b21221b9b5a4792c>:0 
+  at System.Collections.Generic.Dictionary`2[TKey,TValue].Add (TKey key, TValue value) [0x00000] in <7a62ef3b49f14d16b21221b9b5a4792c>:0 
+  at LinkerAnalyzer.Core.SpaceAnalyzer.ProcessType (Mono.Cecil.TypeDefinition type) [0x000a9] in <76f80eb8ff45420ba12865ee7c13013e>:0 
+
+Warning: duplicated type 'System.Numerics.Vector' scope 'System.Numerics.Vectors.dll'
+System.ArgumentException: An item with the same key has already been added. Key: TypeDef:System.Numerics.Vector
+  at System.Collections.Generic.Dictionary`2[TKey,TValue].TryInsert (TKey key, TValue value, System.Collections.Generic.InsertionBehavior behavior) [0x0015a] in <7a62ef3b49f14d16b21221b9b5a4792c>:0 
+  at System.Collections.Generic.Dictionary`2[TKey,TValue].Add (TKey key, TValue value) [0x00000] in <7a62ef3b49f14d16b21221b9b5a4792c>:0 
+  at LinkerAnalyzer.Core.SpaceAnalyzer.ProcessType (Mono.Cecil.TypeDefinition type) [0x000a9] in <76f80eb8ff45420ba12865ee7c13013e>:0 
+...
+Warning: duplicated type 'System.MemoryExtensions' scope 'System.Memory.dll'
+System.ArgumentException: An item with the same key has already been added. Key: TypeDef:System.MemoryExtensions
+  at System.Collections.Generic.Dictionary`2[TKey,TValue].TryInsert (TKey key, TValue value, System.Collections.Generic.InsertionBehavior behavior) [0x0015a] in <7a62ef3b49f14d16b21221b9b5a4792c>:0 
+  at System.Collections.Generic.Dictionary`2[TKey,TValue].Add (TKey key, TValue value) [0x00000] in <7a62ef3b49f14d16b21221b9b5a4792c>:0 
+  at LinkerAnalyzer.Core.SpaceAnalyzer.ProcessType (Mono.Cecil.TypeDefinition type) [0x000a9] in <76f80eb8ff45420ba12865ee7c13013e>:0 
+
+Warning: duplicated type 'System.ReadOnlySpan`1' scope 'System.Memory.dll'
+System.ArgumentException: An item with the same key has already been added. Key: TypeDef:System.ReadOnlySpan`1
+  at System.Collections.Generic.Dictionary`2[TKey,TValue].TryInsert (TKey key, TValue value, System.Collections.Generic.InsertionBehavior behavior) [0x0015a] in <7a62ef3b49f14d16b21221b9b5a4792c>:0 
+  at System.Collections.Generic.Dictionary`2[TKey,TValue].Add (TKey key, TValue value) [0x00000] in <7a62ef3b49f14d16b21221b9b5a4792c>:0 
+  at LinkerAnalyzer.Core.SpaceAnalyzer.ProcessType (Mono.Cecil.TypeDefinition type) [0x000a9] in <76f80eb8ff45420ba12865ee7c13013e>:0 
+
+Warning: duplicated type 'System.Span`1' scope 'System.Memory.dll'
+System.ArgumentException: An item with the same key has already been added. Key: TypeDef:System.Span`1
+  at System.Collections.Generic.Dictionary`2[TKey,TValue].TryInsert (TKey key, TValue value, System.Collections.Generic.InsertionBehavior behavior) [0x0015a] in <7a62ef3b49f14d16b21221b9b5a4792c>:0 
+  at System.Collections.Generic.Dictionary`2[TKey,TValue].Add (TKey key, TValue value) [0x00000] in <7a62ef3b49f14d16b21221b9b5a4792c>:0 
+  at LinkerAnalyzer.Core.SpaceAnalyzer.ProcessType (Mono.Cecil.TypeDefinition type) [0x000a9] in <76f80eb8ff45420ba12865ee7c13013e>:0 
+
+Warning: duplicated type 'System.Runtime.InteropServices.MemoryMarshal' scope 'System.Memory.dll'
+System.ArgumentException: An item with the same key has already been added. Key: TypeDef:System.Runtime.InteropServices.MemoryMarshal
+  at System.Collections.Generic.Dictionary`2[TKey,TValue].TryInsert (TKey key, TValue value, System.Collections.Generic.InsertionBehavior behavior) [0x0015a] in <7a62ef3b49f14d16b21221b9b5a4792c>:0 
+  at System.Collections.Generic.Dictionary`2[TKey,TValue].Add (TKey key, TValue value) [0x00000] in <7a62ef3b49f14d16b21221b9b5a4792c>:0 
+  at LinkerAnalyzer.Core.SpaceAnalyzer.ProcessType (Mono.Cecil.TypeDefinition type) [0x000a9] in <76f80eb8ff45420ba12865ee7c13013e>:0 
+

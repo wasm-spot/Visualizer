@@ -12,10 +12,10 @@
 @using System.Text;
 
 <!-- Sidebar toggle -->
-<button type="button" id="sidebarCollapse" class="btn btn-info" @onclick="@toggle">
+<!-- <button type="button" id="sidebarCollapse" class="btn btn-info" @onclick="@toggle">
     <i class="fas fa-align-left"></i>
     <span>Toggle Sidebar</span>
-</button>
+</button> -->
 
   
 
@@ -86,6 +86,22 @@
         <p>Content type: @file.Type</p>
     }
 </div> -->
+<div id="landing">
+    <h1 class="landing-title">Linker Visualizer</h1>
+    <div id="options">
+        <form>
+            <p>
+                <label>Only view methods greater than this size: </label>
+                <input @bind="inputSize" id="size"/>
+            </p>
+            <p id="fields">
+                <label>Merge overloaded methods</label>
+                <input @bind="overload" id="overload" type="checkbox"/>
+            </p>
+            <button id="submit" type="button" class="btn btn-submit" @onclick="@( e => display(@displayType) )">display</button>
+        </form>
+    </div>
+</div>
 
 <div id="chart">
             
@@ -200,7 +216,6 @@
         }
         var json = JsonConvert.SerializeObject(data);
         await JsRuntime.InvokeAsync<string>("graph", json);
-        //await JsRuntime.InvokeAsync<string>("areaGraph", json);
     }
 
     private async Task clear() {
@@ -353,6 +368,7 @@
     }
 
     protected override async Task OnInitializedAsync() {
+        
         displayType = "";
         sunburst_str = "";
         sunburst_in_str = "";
@@ -363,7 +379,7 @@
         List<Task> tasks = new List<Task>();
         tasks.Add(LoadHistory());
         tasks.Add(getData("json/mscorlib-in.json", "in"));
-        tasks.Add(getData("json/mscorlib.json", "out"));
+        tasks.Add(getData("json/data.json", "out"));
         tasks.Add(clear());
         await Task.WhenAll(tasks);
         apps = info.Keys.ToArray();  

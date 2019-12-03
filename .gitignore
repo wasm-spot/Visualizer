@@ -1,7 +1,7 @@
 *.ipynb_checkpoints/
 *.bin/
 .npmignore
-
+out/*
 *.eslintrc*
 *.cache
 *.DS_STORE

@@ -1,6 +1,6 @@
 // Dimensions of sunburst.
 var width = window.innerWidth * 0.3;
-var height = window.innerHeight * 0.7;
+var height = window.innerHeight * 0.6;
 var radius = Math.min(width, height) / 2;
 
 // Breadcrumb dimensions: width, height, spacing, width of tip/tail.
@@ -9,13 +9,7 @@ var b = {
 };
 
 // Mapping of step names to colors.
-var colors = {
-  "assembly": "#5687d1",
-  "class": "#7b615c",
-  "method": "#de783b",
-  "account": "#6ab975",
-  "other": "#a173d1",
-};
+var colors;
 
 // Total size of all segments; we set this later, after loading the data.
 var totalSize = 0, inTotalSize = 0; 

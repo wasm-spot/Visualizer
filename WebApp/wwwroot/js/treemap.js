@@ -17,7 +17,7 @@ function displayTreemap(dataJson, dataJson_in) {
 function displayTree(dataJson, flower=false, state="in") {
     var el_id = state + '-tree';
     var margin = {top: 30, right: 30, bottom: 30, left: 10},
-        width = window.innerWidth * 0.46,
+        width = window.innerWidth * 0.44,
         grandparent_width = width,
         height = window.innerHeight - margin.top - margin.bottom,
         formatNumber = d3v4.format(","),
