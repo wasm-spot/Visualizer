@@ -6,23 +6,36 @@ function treeDisplay() {
                             its methods.");
 }
 
-function displayTreemap(dataJson, dataJson_in) {
+function displayTreemap(dataJson, dataJson_in, compare) {
     treeDisplay();
     
-    displayTree(dataJson_in, flower=false, state="in");
-    displayTree(dataJson, flower=false, state="out");
+    displayTree(dataJson_in, flower=false, state="in", compare=compare);
+    if (compare) {
+        d3v4.select("#in-tree")
+            .style("margin-right", "0.7%")
+            .style("width", "49%");
+        displayTree(dataJson, flower=false, state="out", compare=compare);
+    } else {
+        d3v4.select("#in-tree").style("width", "95%")
+    }
+    
     window.scrollTo(0,document.body.scrollHeight);
 }
 
-function displayTree(dataJson, flower=false, state="in") {
+function displayTree(dataJson, flower=false, state="in", compare=false) {
     var el_id = state + '-tree';
     var margin = {top: 30, right: 30, bottom: 30, left: 10},
-        width = window.innerWidth * 0.44,
+        width = window.innerWidth * 0.9,
         grandparent_width = width,
         height = window.innerHeight - margin.top - margin.bottom,
         formatNumber = d3v4.format(","),
         transitioning;
     var data;
+
+    if (compare) {
+        width *= 0.5;
+        grandparent_width *= 0.5;
+    } 
     
     if (!flower) {
         data = JSON.parse(dataJson);
@@ -67,6 +80,7 @@ if (flower) {
     .style("margin-left", margin.left + "px")
     .style("margin-right", -margin.right + "px")
     .style("margin-top", margin.top + "px")
+    .attr("id", "treemap")
     .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .style("shape-rendering", "crispEdges");

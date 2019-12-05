@@ -16,7 +16,7 @@ app {
 }
 
 form {
-  display: inline-flex;
+  display: block;
 }
 
 form p {
@@ -39,8 +39,6 @@ form p {
 
 #options { 
   width: 100%;
-  position: absolute;
-  top: 5%;
   text-align: center;
   z-index: 999999;
 }
@@ -253,10 +251,10 @@ ul ul a {
         top: 0;
     }
 
-    .main > div {
+    /* .main > div {
         padding-left: 2rem !important;
         padding-right: 1.5rem !important;
-    }
+    } */
 
     .navbar-toggler {
         display: none;
@@ -360,8 +358,8 @@ button {
   max-width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  display: none;
 }
+
 text {
   pointer-events: none;
 }
@@ -441,6 +439,9 @@ overflow: auto;
 }
 
 #treemap-container {
+  width: 98%;
+  margin-left: auto;
+  margin-right: auto;
   margin-bottom: 1.5%;
 }
 
@@ -451,7 +452,7 @@ overflow: auto;
 }
 
 #in-tree {
-  margin-right: 0.7%;
+  width: 95%;
 }
 
 textarea {
@@ -540,5 +541,41 @@ label {
   position: fixed;
   width: 100%;
   top: 50%;
-  left: 50%;
+}
+
+.landing-title {
+  text-align: center;
+}
+
+@-webkit-keyframes fadeInUp {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    -webkit-transform: translate3d(0, 100%, 0);
+    transform: translate3d(0, 100%, 0);
+  }
+
+  to {
+    opacity: 1;
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.fadeInUp {
+  -webkit-animation-name: fadeInUp;
+  animation-name: fadeInUp;
 }

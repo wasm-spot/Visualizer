@@ -11,6 +11,12 @@
 @using System.Net.Http;
 @using System.Text;
 
+<nav>
+    <ul class="nav navbar-nav">
+        <li><button @onclick="reset" class="btn">Reset</button></li>
+    </ul>
+</nav>
+
 <!-- Sidebar toggle -->
 <!-- <button type="button" id="sidebarCollapse" class="btn btn-info" @onclick="@toggle">
     <i class="fas fa-align-left"></i>
@@ -86,7 +92,7 @@
         <p>Content type: @file.Type</p>
     }
 </div> -->
-<div id="landing">
+<div id="landing" class="fadeInUp">
     <h1 class="landing-title">Linker Visualizer</h1>
     <div id="options">
         <form>
@@ -95,15 +101,40 @@
                 <input @bind="inputSize" id="size"/>
             </p>
             <p id="fields">
-                <label>Merge overloaded methods</label>
                 <input @bind="overload" id="overload" type="checkbox"/>
+                <label>Merge overloaded methods</label>
+
+                <input @bind="compare" id="compare" type="checkbox"/>
+                <label>Compare two data sources</label>
             </p>
-            <button id="submit" type="button" class="btn btn-submit" @onclick="@( e => display(@displayType) )">display</button>
+
+            <label>Upload your own data file</label>
+            <InputFile id="inputfile" OnChange="@( e => HandleFileSelected(file, "in") )" />
+            @if (file != null)
+            {
+                <p>Name: @file.Name</p>
+                <p>Size in bytes: @file.Size</p>
+                <p>Last modified date: @file.LastModified.ToShortDateString()</p>
+                <p>Content type: @file.Type</p>
+            }
+
+            @if(compare) {
+                <label>Upload another own data file</label>
+                <InputFile id="inputfile" OnChange="@( e => HandleFileSelected(file, "out") )" />
+                @if (file != null)
+                {
+                    <p>Name: @file.Name</p>
+                    <p>Size in bytes: @file.Size</p>
+                    <p>Last modified date: @file.LastModified.ToShortDateString()</p>
+                    <p>Content type: @file.Type</p>
+                }
+            }
+            <button id="submit" type="button" class="btn btn-submit" @onclick="display">display</button>
         </form>
     </div>
 </div>
 
-<div id="chart">
+<div id="chart" style="display: none;">
             
     <div id="sunburst-container">
         <h2 class="chart-title" id="sunburst-title"></h2>
@@ -120,22 +151,30 @@
                     }
             </div>
         </div>
-            
-        <div class="viz-container" id="sunburst-out">
-            <div class="explanation" id="explanation" style="visibility: hidden;">
-                <span class="size" id="out-size"></span> =<br/>
-                <span class="percentage" id="percentage"></span><br/>
-                of overall size
+        
+        
+            <div class="viz-container" id="sunburst-out">
+                <div class="explanation" id="explanation" style="visibility: hidden;">
+                    <span class="size" id="out-size"></span> =<br/>
+                    <span class="percentage" id="percentage"></span><br/>
+                    of overall size
+                </div>
             </div>
-        </div>
+        
+        
     </div>
     <div id="treemap-container">
         <h2 class="chart-title" id="tree-title"></h2>
         <div class="description" id="tree-description"></div>
+
         <div class="viz-container" id="in-tree">
             <div class="menu"></div>
         </div>
-        <div class="viz-container" id="out-tree"></div>
+
+        
+            <div class="viz-container" id="out-tree"></div>
+        
+        
     </div>
 
     @if (apps != null) {
@@ -178,24 +217,25 @@
     string dataJson_in;
     private int inputSize { get; set; }
     private bool overload { get; set; }
+    private bool compare { get; set; }
     private bool sunburst_in { get; set; }
     private int currentSize;
     private bool currentOverload;
     string displayType;
     IFileListEntry file;
 
-    async Task HandleFileSelected(IFileListEntry[] files)
+    async Task HandleFileSelected(IFileListEntry files, string state="in")
     {
-        file = files.FirstOrDefault();
+        //file = files.FirstOrDefault();
+        file = files;
         string json_str = await ReadFile();
         var json_file = (List<FormatData>)JsonConvert.DeserializeObject(json_str, typeof(List<FormatData>));
         if (json_file != null) {
-            if (sunburst_in) {
+            if (state == "in") {
                 in_data.children = json_file;
-            } else {    
+            } else {
                 data.children = json_file;
             }
-            await display(displayType, true);
         }
     }   
 
@@ -222,8 +262,12 @@
         await JsRuntime.InvokeAsync<string>("clear");
     }
 
+    private async Task reset() {
+        await JsRuntime.InvokeAsync<string>("reset");
+    }
+
     private async Task toggle() {
-        await JsRuntime.InvokeAsync<string>("toggle");
+        await JsRuntime.InvokeAsync<string>("display");
     }
 
     private async Task collapse() {
@@ -339,26 +383,13 @@
         await JsRuntime.InvokeAsync<string>("display", type);
     }
 
-    private async Task display(string type, bool new_file=false) {
-        displayType = type;
-        if (inputSize != currentSize || overload != currentOverload || new_file) {
-            formatData(data, inputSize, overload, "out");
-            if (displayType == "sunburst") {
-                formatData(in_data, inputSize, overload, "in");
-            }
-            currentSize = inputSize;
-            currentOverload = overload;
-        }
-        
-        if (type == "tree") {
-            var js = dataJson.Replace("size", "value");
-            await JsRuntime.InvokeAsync<string>("tree", js);
-        } else if (type == "sunburst") {
-            await JsRuntime.InvokeAsync<string>("sunburst", sunburst_str, sunburst_in_str);
-        } 
-        else {
-            await JsRuntime.InvokeAsync<string>(type, dataJson);
-        }
+    private async Task display() {
+        formatData(data, inputSize, overload, "out");
+        formatData(in_data, inputSize, overload, "in");
+        var tree = dataJson.Replace("size", "value");
+        var tree_in = dataJson_in.Replace("size", "value");
+        await JsRuntime.InvokeAsync<string>("displayAll", sunburst_str, sunburst_in_str, dataJson,
+                                            dataJson_in, tree, tree_in, compare);
     }
 
     private async Task LoadHistory() {
@@ -378,19 +409,13 @@
         var watch = Stopwatch.StartNew();
         List<Task> tasks = new List<Task>();
         tasks.Add(LoadHistory());
-        tasks.Add(getData("json/mscorlib-in.json", "in"));
-        tasks.Add(getData("json/data.json", "out"));
+        tasks.Add(getData("json/data.json", "in"));
+        tasks.Add(getData("json/mscorlib.json", "out"));
         tasks.Add(clear());
         await Task.WhenAll(tasks);
         apps = info.Keys.ToArray();  
         watch.Stop();
-        Console.WriteLine("get data " + watch.ElapsedMilliseconds);
-        formatData(data, inputSize, overload, "out");
-        formatData(in_data, inputSize, overload, "in");
-        var tree = dataJson.Replace("size", "value");
-        var tree_in = dataJson_in.Replace("size", "value");
-        await JsRuntime.InvokeAsync<string>("displayAll", sunburst_str, sunburst_in_str, dataJson,
-                                            dataJson_in, tree, tree_in);
+        Console.WriteLine("get data " + watch.ElapsedMilliseconds);        
     }
     
     public class FormatData{

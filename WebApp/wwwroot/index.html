@@ -37,9 +37,23 @@
     <script src="js/flame.js"></script>
     <script src="js/color.js"></script>
     <script>
-        window.displayAll = function(csv_str, csv_in_str, dataJson, dataJson_in, tree, tree_in) {
-            displaySunburst(csv_str, csv_in_str);
-            displayTreemap(tree, tree_in);
+        window.displayAll = function(csv_str, csv_in_str, dataJson, dataJson_in, tree, tree_in, compare) {
+            d3v4.selectAll("svg").remove();
+            d3v4.selectAll("#landing")
+                .style("position", "relative")
+                .style("top", 0)
+                .style("margin-bottom", "10px");
+            console.log(d3v4.select("#chart"))
+            d3v4.selectAll("#chart").style("display", "null");
+            if (compare) {
+                d3v4.selectAll(".viz-container").style("display", "inline-block");
+            } else {
+                d3v4.selectAll(".viz-container").style("display", "block");
+                d3v4.select("#sunburst-in").style("margin-right", "auto");
+                d3v4.select("#in-tree").style("margin-right", "auto");
+            }
+            displaySunburst(csv_str, csv_in_str, compare);
+            displayTreemap(tree, tree_in, compare);
         }
 
         window.tree = function (dataJson) {
@@ -63,6 +77,13 @@
             d3v4.select("#options")
                 .style("display", null);
             displaySlopegraph(data_in, data_out);
+        }
+
+        window.reset = function() {
+            d3v4.selectAll("#landing").style("position", "fixed")
+                .style("margin-bottom", 0)
+                .style("top", "50%");
+            d3v4.selectAll("#chart").style("display", "none");
         }
 
         window.clear = function(){

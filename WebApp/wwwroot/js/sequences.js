@@ -2,6 +2,7 @@
 var width = window.innerWidth * 0.3;
 var height = window.innerHeight * 0.6;
 var radius = Math.min(width, height) / 2;
+var margin_left = width * 0.2;
 
 // Breadcrumb dimensions: width, height, spacing, width of tip/tail.
 var b = {
@@ -39,9 +40,9 @@ function sunburstDisplay() {
           information.")
 }
 
-function displaySunburst(dataJson, dataJson_in) {
+function displaySunburst(dataJson, dataJson_in, compare) {
   sunburstDisplay();
-  createVisualization(dataJson, data_in=dataJson_in, state="in");
+  createVisualization(dataJson, data_in=dataJson_in, compare);
   window.scrollTo(0,document.body.scrollHeight*0.9);
 }
 
@@ -76,6 +77,7 @@ function createSunburst(json ,root, state="in") {
   var sun = d3v4.select(id).append("svg:svg")
     .attr("width", width)
     .attr("height", height)
+    .style("margin-left", margin_left + "px")
     .attr("id", "sunburst")
     .append("svg:g")
     .attr("transform", "translate(" + width / 2 + "," + window.innerHeight * 0.35 + ")");
@@ -117,7 +119,7 @@ function createSunburst(json ,root, state="in") {
 }
 
 // Main function to draw and set up the visualization, once we have the data.
-function createVisualization(data, data_in) {
+function createVisualization(data, data_in, compare) {
     d3v4.selectAll("#sunburst").remove();
     var in_json = createCsv(data_in, "in");
     var json = createCsv(data,  "out", in_root=in_root);
@@ -131,7 +133,10 @@ function createVisualization(data, data_in) {
   initializeBreadcrumbTrail();
 
   createSunburst(in_json, in_root, state="in");
-  createSunburst(json, root, state="out");
+  if (compare) { 
+    d3v4.select("#sunburst-in").style("margin-right", "0.7%");
+    createSunburst(json, root, state="out");
+  }
  };
 
 // Fade all but the current sequence, and show it in the breadcrumb trail.
