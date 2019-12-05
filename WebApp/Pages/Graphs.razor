@@ -17,55 +17,6 @@
     </ul>
 </nav>
 
-<!-- Sidebar toggle -->
-<!-- <button type="button" id="sidebarCollapse" class="btn btn-info" @onclick="@toggle">
-    <i class="fas fa-align-left"></i>
-    <span>Toggle Sidebar</span>
-</button> -->
-
-  
-
-<!-- Sidebar -->
-<!-- <nav id="sidebar" class="active">
-    <div id="dismiss">
-        <button @onclick="@collapse" style="background-color:rgb(0,0,0,0);">
-            <i class="fas fa-arrow-left"></i>
-        </button>
-    </div>
-    <div class="sidebar-header">
-        <h3>Linker Visualizer</h3>
-    </div>
-
-    <ul class="list-unstyled components">
-        <li class="active">
-            <a href="#homeSubmenu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">Line and Area</a>
-            <ul class="collapse list-unstyled" id="homeSubmenu">
-                @if (apps == null) {
-                    <p><em>Loading...</em></p>
-                } else {
-                    @foreach (var app in apps)
-                    {
-                        <li><a @onclick="@( e => Graph(app) )">@app</a></li>
-                    }
-                }
-            </ul>
-        </li>
-        <li>
-            <a @onclick="@( e => explanationDisplay("sunburst") )">Sunburst</a>
-        </li>
-        
-        <li>
-            <a @onclick="@( e => explanationDisplay("tree") )" id="tree-btn">Treemap</a>
-        </li>
-        <li>
-            <a @onclick="@( e => explanationDisplay("flower") )">Code flower</a>
-        </li>
-        <li>
-            <a @onclick="clear">Clear graphs</a>
-            </li>
-    </ul>
-</nav> -->
-
 <!-- <div id="options" style="display:none;">
     <form>
         <p>
@@ -216,7 +167,8 @@
     private bool sunburst_in { get; set; }
     string displayType;
     IFileListEntry file;
-    string in_file_name;
+    private string file_name;
+    private string in_file_name;
 
     async Task HandleInFileSelected(IFileListEntry[] files) {
         file = files.FirstOrDefault();
@@ -226,6 +178,7 @@
 
     async Task HandleOutFileSelected(IFileListEntry[] files) {
         file = files.FirstOrDefault();
+        file_name = file.Name;
         await HandleFileSelected(file, "out");
     }
 
@@ -247,6 +200,11 @@
             var result = await reader.ReadToEndAsync();
             return result;
         }
+    }
+
+    private string getFileName(string path) {
+        string[] temp_path = path.Split('/');
+        return temp_path[temp_path.Length - 1];
     }
 
     private async Task Graph(string app) {
@@ -301,10 +259,11 @@
             }
         }
         var json_data = (List<FormatData>)JsonConvert.DeserializeObject(json_str.ToString(), typeof(List<FormatData>));
+        string file_name = getFileName(path);
         if (state == "in") {
-            in_data = new FormatData {name="All (in)", children=json_data};
+            in_data = new FormatData {name="All (" + file_name + ")",  children=json_data};
         } else {
-            data = new FormatData {name="All (out)", children=json_data}; 
+            data = new FormatData {name="All (" + file_name + ")",  children=json_data}; 
         }
         watch.Stop();
         Console.WriteLine("get data " + state + " " + watch.ElapsedMilliseconds);
@@ -323,7 +282,8 @@
         return name;
     }
 
-    private void formatData(FormatData data, int size, bool overload, string state) {
+    private void formatData(FormatData data, int size, bool overload, string state, 
+                            string fileName="mscorlib.json") {
         temp_data = new FormatData {name=data.name, 
                                             size=data.size, 
                                             children=new List<FormatData>()};
@@ -351,7 +311,7 @@
                         var child_2 = children.Where(d => d.size > size).ToList();
                         children = child_2;
                         class_data.children = child_2;
-                        string begin = "All" + " (" + state+ ")" + "-" + as_name + "-" + class_name + "-";
+                        string begin = "All" + " (" + fileName+ ")" + "-" + as_name + "-" + class_name + "-";
                         children.ForEach(d => {
                             string name = d.name.Replace(",", "");
                             csv_str.Append(begin + name + "," + d.size + "\n");
@@ -387,12 +347,12 @@
     }
 
     private async Task display() {
-        formatData(data, inputSize, overload, "out");
-        formatData(in_data, inputSize, overload, "in");
+        formatData(data, inputSize, overload, "out", file_name);
+        formatData(in_data, inputSize, overload, "in", in_file_name);
         var tree = dataJson.Replace("size", "value");
         var tree_in = dataJson_in.Replace("size", "value");
         await JsRuntime.InvokeAsync<string>("displayAll", sunburst_str, sunburst_in_str, dataJson,
-                                            dataJson_in, tree, tree_in, compare);
+                                            dataJson_in, tree, tree_in, file_name, in_file_name, compare);
     }
 
     private async Task LoadHistory() {
@@ -402,12 +362,13 @@
     }
 
     protected override async Task OnInitializedAsync() {
-        
         displayType = "";
         sunburst_str = "";
         sunburst_in_str = "";
         inputSize = 300;
         overload = false;
+        file_name = "mscorlib.json";
+        in_file_name = "data.json";
 
         var watch = Stopwatch.StartNew();
         List<Task> tasks = new List<Task>();

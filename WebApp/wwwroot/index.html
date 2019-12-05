@@ -37,7 +37,8 @@
     <script src="js/flame.js"></script>
     <script src="js/color.js"></script>
     <script>
-        window.displayAll = function(csv_str, csv_in_str, dataJson, dataJson_in, tree, tree_in, compare) {
+        window.displayAll = function(csv_str, csv_in_str, dataJson, dataJson_in, 
+                                    tree, tree_in, title, title_in, compare) {
             d3v4.selectAll("svg").remove();
             d3v4.selectAll("#landing")
                 .style("position", "relative")
@@ -52,7 +53,7 @@
                 d3v4.select("#sunburst-in").style("margin-right", "auto");
                 d3v4.select("#in-tree").style("margin-right", "auto");
             }
-            displaySunburst(csv_str, csv_in_str, compare);
+            displaySunburst(csv_str, csv_in_str, title, title_in, compare);
             displayTreemap(tree, tree_in, compare);
         }
 

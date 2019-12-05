@@ -40,9 +40,9 @@ function sunburstDisplay() {
           information.")
 }
 
-function displaySunburst(dataJson, dataJson_in, compare) {
+function displaySunburst(dataJson, dataJson_in, title, title_in, compare) {
   sunburstDisplay();
-  createVisualization(dataJson, data_in=dataJson_in, compare);
+  createVisualization(dataJson, data_in=dataJson_in, title, title_in, compare);
   window.scrollTo(0,document.body.scrollHeight*0.9);
 }
 
@@ -72,7 +72,7 @@ function createRoot(json, in_root=null) {
   return root;
 }
 
-function createSunburst(json ,root, state="in") {
+function createSunburst(json ,root, title, state="in") {
   var id = "#sunburst-" + state;
   var sun = d3v4.select(id).append("svg:svg")
     .attr("width", width)
@@ -110,16 +110,16 @@ function createSunburst(json ,root, state="in") {
     if (state === "in") {
       inTotalSize = path.datum().value;
       in_vis = sun;
-      text.text("Linker input")
+      text.text(title)
     } else {
       totalSize = path.datum().value;
       vis = sun;
-      text.text("Linker output")
+      text.text(title)
     }
 }
 
 // Main function to draw and set up the visualization, once we have the data.
-function createVisualization(data, data_in, compare) {
+function createVisualization(data, data_in, title, title_in, compare) {
     d3v4.selectAll("#sunburst").remove();
     var in_json = createCsv(data_in, "in");
     var json = createCsv(data,  "out", in_root=in_root);
@@ -132,10 +132,10 @@ function createVisualization(data, data_in, compare) {
   // Basic setup of page elements.
   initializeBreadcrumbTrail();
 
-  createSunburst(in_json, in_root, state="in");
+  createSunburst(in_json, in_root, title_in, state="in");
   if (compare) { 
     d3v4.select("#sunburst-in").style("margin-right", "0.7%");
-    createSunburst(json, root, state="out");
+    createSunburst(json, root, title, state="out");
   }
  };
 
