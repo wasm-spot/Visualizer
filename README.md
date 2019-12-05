@@ -6,11 +6,13 @@ A visualizer for il linker related data
 Run `sh ./run.sh`
 
 # Directory Structure:
+```
 WebApp/: WebApp created using WebAssembly and d3.js to plot wasm linker performance
 
-tools/: <br/>
-    | web/: files for plotting JSON with d3.js<br/>
+tools/:
+    | web/: files for plotting JSON with d3.js
     | pyscripts/: preliminary python scripts for data exploration
+```
 
 # To run web app separately:
 In the WebApp/ folder, run:
