@@ -542,8 +542,12 @@ label {
 #landing {
   margin: auto;
   position: fixed;
-  width: 100%;
+  width: 50%;
   top: 50%;
+  left: 25%;
+  background-color: rgb(158, 202, 225, 0.7);
+  padding: 15px;
+  border-radius: 15px;
 }
 
 .landing-title {

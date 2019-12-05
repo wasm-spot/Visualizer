@@ -100,7 +100,7 @@
         
         <div class="viz-container" id="out-tree">
             <div class="menu">
-                @if (!zoomed) {
+                @if (!zoomed && compare) {
                     <button class="btn btn-secondary" @onclick="expandTree">zoom</button>
                 }
             </div>

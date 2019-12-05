@@ -43,6 +43,7 @@
             d3v4.selectAll("#landing")
                 .style("position", "relative")
                 .style("top", 0)
+                .style("left", 0)
                 .style("margin-bottom", "10px");
             console.log(d3v4.select("#chart"))
             d3v4.selectAll("#chart").style("display", "null");
@@ -96,7 +97,8 @@
         window.reset = function() {
             d3v4.selectAll("#landing").style("position", "fixed")
                 .style("margin-bottom", 0)
-                .style("top", "50%");
+                .style("top", "50%")
+                .style("left", "25%");
             d3v4.selectAll("#chart").style("display", "none");
         }
 
