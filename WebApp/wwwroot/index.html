@@ -57,6 +57,19 @@
             displayTreemap(tree, tree_in, compare);
         }
 
+        window.expandTree = function (tree_in, tree) {
+            d3v4.selectAll("#treemap").remove();
+            d3v4.select("#out-tree").style("display", "none")
+            displayTreemap(null, tree_in, false);
+            displayTreemap(null, tree, false);
+        }
+
+        window.shrinkTree = function(tree_in, tree) {
+            d3v4.selectAll("#treemap").remove();
+            d3v4.select("#out-tree").style("display", "inline-block");
+            displayTreemap(tree, tree_in, true);
+        }
+
         window.tree = function (dataJson) {
             displayTreemap(dataJson);
         }

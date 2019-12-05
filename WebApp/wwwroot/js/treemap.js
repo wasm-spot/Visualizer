@@ -79,7 +79,6 @@ if (flower) {
     .attr("height", height + margin.bottom + margin.top)
     .style("margin-left", margin.left + "px")
     .style("margin-right", -margin.right + "px")
-    .style("margin-top", margin.top + "px")
     .attr("id", "treemap")
     .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
