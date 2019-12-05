@@ -108,25 +108,19 @@
                 <label>Compare two data sources</label>
             </p>
 
-            <label>Upload your own data file</label>
-            <InputFile id="inputfile" OnChange="@( e => HandleFileSelected(file, "in") )" />
+            <label>Upload input data file</label>
+            <InputFile id="inputfile" OnChange="HandleInFileSelected" />
             @if (file != null)
             {
-                <p>Name: @file.Name</p>
-                <p>Size in bytes: @file.Size</p>
-                <p>Last modified date: @file.LastModified.ToShortDateString()</p>
-                <p>Content type: @file.Type</p>
+                <p>Name: @in_file_name</p>
             }
 
             @if(compare) {
-                <label>Upload another own data file</label>
-                <InputFile id="inputfile" OnChange="@( e => HandleFileSelected(file, "out") )" />
+                <label>Upload output data file</label>
+                <InputFile id="inputfile" OnChange="HandleOutFileSelected" />
                 @if (file != null)
                 {
                     <p>Name: @file.Name</p>
-                    <p>Size in bytes: @file.Size</p>
-                    <p>Last modified date: @file.LastModified.ToShortDateString()</p>
-                    <p>Content type: @file.Type</p>
                 }
             }
             <button id="submit" type="button" class="btn btn-submit" @onclick="display">display</button>
@@ -219,15 +213,23 @@
     private bool overload { get; set; }
     private bool compare { get; set; }
     private bool sunburst_in { get; set; }
-    private int currentSize;
-    private bool currentOverload;
     string displayType;
     IFileListEntry file;
+    string in_file_name;
 
-    async Task HandleFileSelected(IFileListEntry files, string state="in")
+    async Task HandleInFileSelected(IFileListEntry[] files) {
+        file = files.FirstOrDefault();
+        in_file_name = file.Name;
+        await HandleFileSelected(file, "in");
+    }
+
+    async Task HandleOutFileSelected(IFileListEntry[] files) {
+        file = files.FirstOrDefault();
+        await HandleFileSelected(file, "out");
+    }
+
+    async Task HandleFileSelected(IFileListEntry file, string state)
     {
-        //file = files.FirstOrDefault();
-        file = files;
         string json_str = await ReadFile();
         var json_file = (List<FormatData>)JsonConvert.DeserializeObject(json_str, typeof(List<FormatData>));
         if (json_file != null) {
