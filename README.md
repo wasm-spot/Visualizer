@@ -3,7 +3,7 @@
 A visualizer for il linker related data
 
 # To launch local instance of Visualizer:
-Run `sh ./run.sh`
+Run `sh ./run.sh <path of dll> <name of output json file>`
 
 # Directory Structure:
 ```
