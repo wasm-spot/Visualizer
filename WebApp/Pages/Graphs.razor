@@ -33,21 +33,24 @@
                 <label>Compare two data sources</label>
             </p>
 
-            <label>Upload input data file</label>
+            
+            <label>Upload input data files</label>
             <InputFile id="inputfile" OnChange="HandleInFileSelected" />
             @if (file != null)
             {
                 <p>Name: @in_file_name</p>
             }
+            
+            
 
             @if(compare) {
                 <label>Upload output data file</label>
                 <InputFile id="inputfile" OnChange="HandleOutFileSelected" />
                 @if (file != null)
                 {
-                    <p>Name: @file.Name</p>
+                    <p>Name: @file_name</p>
                 }
-            }
+            } 
             <br/>
             <button id="submit" type="button" class="btn btn-submit" @onclick="display">display</button>
         </form>
@@ -162,29 +165,30 @@
     async Task HandleInFileSelected(IFileListEntry[] files) {
         file = files.FirstOrDefault();
         in_file_name = file.Name;
-        await HandleFileSelected(file, "in");
+        await LoadFile(file, "in");
     }
 
     async Task HandleOutFileSelected(IFileListEntry[] files) {
         file = files.FirstOrDefault();
         file_name = file.Name;
-        await HandleFileSelected(file, "out");
+        await LoadFile(file, "in");
     }
 
-    async Task HandleFileSelected(IFileListEntry file, string state)
-    {
-        string json_str = await ReadFile();
+    async Task LoadFile(IFileListEntry file, string state) {
+        string json_str = await ReadFile(file); 
         var json_file = (List<FormatData>)JsonConvert.DeserializeObject(json_str, typeof(List<FormatData>));
         if (json_file != null) {
             if (state == "in") {
+                in_data.name = "All(" + in_file_name + ")";
                 in_data.children = json_file;
             } else {
+                data.name = "All(" + file_name + ")";
                 data.children = json_file;
             }
         }
-    }   
+    }
 
-    async Task<string> ReadFile() {
+    async Task<string> ReadFile(IFileListEntry file) {
         using (var reader = new System.IO.StreamReader(file.Data)) {
             var result = await reader.ReadToEndAsync();
             return result;
@@ -245,19 +249,8 @@
     private async Task getData(string path, string state="in") {
         StringBuilder json_str = new StringBuilder();
         var watch = Stopwatch.StartNew();
-        using(HttpResponseMessage response = await Http.GetAsync(path, HttpCompletionOption.ResponseHeadersRead))
-        using (Stream streamToReadFrom = await response.Content.ReadAsStreamAsync()) 
-        using (BufferedStream bs = new BufferedStream(streamToReadFrom)){
-            using (var reader = new StreamReader(bs)) {
-                
-                string s;
-                while ((s = reader.ReadLine()) != null) {
-                    json_str.Append(s);
-                }
-                
-            }
-        }
-        var json_data = (List<FormatData>)JsonConvert.DeserializeObject(json_str.ToString(), typeof(List<FormatData>));
+        List<FormatData> json_data = await Http.GetJsonAsync<List<FormatData>>(path);
+            
         string file_name = getFileName(path);
         if (state == "in") {
             in_data = new FormatData {name="All (" + file_name + ")",  children=json_data};
@@ -282,7 +275,7 @@
     }
 
     private void formatData(FormatData data, int size, bool overload, string state, 
-                            string fileName="mscorlib.json") {
+                            string fileName) {
         temp_data = new FormatData {name=data.name, 
                                             size=data.size, 
                                             children=new List<FormatData>()};
@@ -348,8 +341,14 @@
     }
 
     private async Task display() {
+        if (in_file_name == "") in_file_name = "data.json";
+        if (file_name == "") file_name = "mscorlib.json";
+        
+        Console.WriteLine(file_name);
+        
         formatData(data, inputSize, overload, "out", file_name);
         formatData(in_data, inputSize, overload, "in", in_file_name);
+        Console.WriteLine(data.name);
         await JsRuntime.InvokeAsync<string>("displayAll", sunburst_str, sunburst_in_str, dataJson,
                                             dataJson_in, tree, tree_in, file_name, in_file_name, compare);
     }
@@ -364,10 +363,10 @@
         displayType = "";
         sunburst_str = "";
         sunburst_in_str = "";
+        file_name = "";
+        in_file_name = "";
         inputSize = 300;
         overload = false;
-        file_name = "mscorlib.json";
-        in_file_name = "data.json";
         zoomed = false;
 
         var watch = Stopwatch.StartNew();

@@ -35,8 +35,8 @@ namespace History {
             var commits = await GetCommits (path, repo);
             var watch = Stopwatch.StartNew();
             foreach(var revision in commits) {
-                var table = await GetRaw (path, revision.sha, repo);
-                //var table = ReadTable(stream);
+                var stream = await GetRaw (path, revision.sha, repo);
+                var table = ReadTable(stream);
                 var commit = new Commit {
                     Sha = revision.sha,
                     Date = revision.date,
@@ -75,19 +75,10 @@ namespace History {
             return apps;
         }
 
-        public static async Task<DataTable> GetRaw (string path, string sha, string repo)
+        public static Task<Stream> GetRaw (string path, string sha, string repo)
         {
             var location = new Uri($"https://raw.githubusercontent.com/{repo}/{sha}/{path}");
-            using (HttpResponseMessage response = await client.GetAsync(location, HttpCompletionOption.ResponseHeadersRead))
-            using (Stream stream = await response.Content.ReadAsStreamAsync()) 
-            using (BufferedStream bs = new BufferedStream(stream)){
-                // using (var reader = new StreamReader(stream)) {
-                //     var data = await reader.ReadToEndAsync();
-                    return ReadTable(bs);
-                // }
-                
-            }
-            //return await client.GetStreamAsync(location);
+            return client.GetStreamAsync(location);
         }
         public static async Task<(string sha, DateTimeOffset date) []> GetCommits(string path, string repo)
         {
@@ -105,22 +96,10 @@ namespace History {
 
                 client.DefaultRequestHeaders.Add("Accept", "*/*");
                 client.DefaultRequestHeaders.Add("User-Agent", "curl/7.54.0");
+
                 var watch = Stopwatch.StartNew();
-                StringBuilder data = new StringBuilder();
-                using(HttpResponseMessage response = await client.GetAsync(new Uri ($"https://api.github.com/repos/{repo}/commits?path={path}"), HttpCompletionOption.ResponseHeadersRead))
-                using (Stream streamToReadFrom = await response.Content.ReadAsStreamAsync()) {
-                using (var bs = new BufferedStream(streamToReadFrom)) 
-                    using (var reader = new StreamReader(bs)){
-                        string s;
-                        while ((s = reader.ReadLine()) != null) {
-                            data.Append(s);
-                        }
-                    }
-                }
-                watch.Stop();
-                Console.WriteLine("get commits " + watch.ElapsedMilliseconds);
-                var json = JsonConvert.DeserializeAnonymousType (data.ToString(), obj).Select (o => ValueTuple.Create (o.sha, o.commit.author.date)).ToArray();
-                return json;              
+                var data = await client.GetStringAsync ( new Uri ($"https://api.github.com/repos/{repo}/commits?path={path}"));
+                return JsonConvert.DeserializeAnonymousType (data, obj).Select (o => ValueTuple.Create (o.sha, o.commit.author.date)).ToArray();
             } catch (Exception e) {
                 Console.WriteLine(e.ToString());
                 return Array.Empty<(string sha, DateTimeOffset date)>();
