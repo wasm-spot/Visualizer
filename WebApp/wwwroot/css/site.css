@@ -447,8 +447,9 @@ overflow: auto;
 
 .line-viz {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  width: 95%;
+  margin: auto;
   margin-bottom: 1.5%;
-  width: 99%;
 }
 
 #in-tree {
@@ -585,4 +586,14 @@ label {
 .fadeInUp {
   -webkit-animation-name: fadeInUp;
   animation-name: fadeInUp;
+}
+
+.row {
+  width: 98%;
+  margin: auto;
+}
+
+.option-button {
+  margin-top: 15px;
+  margin-left: 15px;
 }

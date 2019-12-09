@@ -63,7 +63,7 @@ function createRoot(json, in_root=null) {
     .sum(function(d) { return d.size; })
     .sort(function(a, b) { return b.value - a.value; }); 
   
-  console.log(root)
+  // console.log(root)
 
   if (in_root != null) {
 

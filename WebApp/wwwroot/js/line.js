@@ -2,6 +2,7 @@ var parseTime = d3v4.timeParse("%Y-%m-%dT%I:%M:%S.0000000+00:00");
 var formatTime = d3v4.timeFormat("%Y-%m-%d");
 var dayRange = d3v4.timeDay;
 
+
 function displayGraph(json) {
     d3v4.select("#line").select("svg").remove();
     d3v4.select("#area").select("svg").remove();
@@ -26,7 +27,7 @@ function displayGraph(json) {
 }
 
 function displayLineGraph(data, lib) {
-    var margin = {top: 120, right: 280, bottom: 150, left: 170},
+    var margin = {top: 120, right: 400, bottom: 150, left: 150},
     width = window.innerWidth - margin.left - margin.right,
     height = window.innerHeight - margin.top - margin.bottom;
 
@@ -234,9 +235,9 @@ function displayLineGraph(data, lib) {
 }
 
 function displayAreaGraph (data, lib) { 
-    var margin = {top: 120, right: 280, bottom: 150, left: 170},
+    var margin = {top: 120, right: 400, bottom: 150, left: 150},
     width = window.innerWidth - margin.left - margin.right,
-    height = window.innerHeight - margin.top - margin.bottom;    
+    height = window.innerHeight - margin.top - margin.bottom;  
 
     var x = d3v4.scaleTime().range([0, width]);
     var y = d3v4.scaleLinear().range([height, 0]);

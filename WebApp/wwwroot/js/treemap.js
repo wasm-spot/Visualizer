@@ -114,7 +114,7 @@ treemap(root
         return b.height - a.height || b.value - a.value;
     })
 );
-console.log(root)
+// console.log(root)
 display(root, flower);
 
 function display(d, flower=false) {

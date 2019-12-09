@@ -13,7 +13,7 @@
 
 <nav>
     <ul class="nav navbar-nav">
-        <li><button @onclick="reset" class="btn">Reset</button></li>
+        <li><button @onclick="reset" class="btn btn-secondary option-button">Reset</button></li>
     </ul>
 </nav>
 
@@ -63,26 +63,27 @@
         <h2 class="chart-title" id="sunburst-title"></h2>
         <div class="description" id="sunburst-description"></div>
         <div id="sequence"></div>
-
-        <div class="viz-container" id="sunburst-in">
-            <div class="explanation" id="in-explanation" style="visibility: hidden;">
-                    <span class="size" id="in-size"></span> =<br/>
-                    <span class="percentage" id="in-percentage"></span><br/>
-                    of overall size
-                    @if (dataJson == null) {
-                        <p><em>Loading...</em></p>
-                    }
-            </div>
-        </div>
-        
-        
-            <div class="viz-container" id="sunburst-out">
-                <div class="explanation" id="explanation" style="visibility: hidden;">
-                    <span class="size" id="out-size"></span> =<br/>
-                    <span class="percentage" id="percentage"></span><br/>
-                    of overall size
+        <div class="row">
+            <div class="viz-container" id="sunburst-in">
+                <div class="explanation" id="in-explanation" style="visibility: hidden;">
+                        <span class="size" id="in-size"></span> =<br/>
+                        <span class="percentage" id="in-percentage"></span><br/>
+                        of overall size
+                        @if (dataJson == null) {
+                            <p><em>Loading...</em></p>
+                        }
                 </div>
             </div>
+            
+            
+                <div class="viz-container" id="sunburst-out">
+                    <div class="explanation" id="explanation" style="visibility: hidden;">
+                        <span class="size" id="out-size"></span> =<br/>
+                        <span class="percentage" id="percentage"></span><br/>
+                        of overall size
+                    </div>
+                </div>
+        </div>
         
         
     </div>
@@ -90,22 +91,24 @@
         <h2 class="chart-title" id="tree-title"></h2>
         <div class="description" id="tree-description"></div>
 
-        <div class="viz-container" id="in-tree">
-            <div class="menu">
-                @if (!zoomed) {
-                    <button class="btn btn-secondary" @onclick="expandTree">zoom</button>
-                } else {
-                    <button class="btn btn-secondary" @onclick="shrinkTree">un-zoom</button>
-                }
-                
+        <div class="row">
+            <div class="viz-container" id="in-tree">
+                <div class="menu">
+                    @if (!zoomed) {
+                        <button class="btn btn-secondary" @onclick="expandTree">zoom</button>
+                    } else {
+                        <button class="btn btn-secondary" @onclick="shrinkTree">un-zoom</button>
+                    }
+                    
+                </div>
             </div>
-        </div>
-        
-        <div class="viz-container" id="out-tree">
-            <div class="menu">
-                @if (!zoomed && compare) {
-                    <button class="btn btn-secondary" @onclick="expandTree">zoom</button>
-                }
+            
+            <div class="viz-container" id="out-tree">
+                <div class="menu">
+                    @if (!zoomed && compare) {
+                        <button class="btn btn-secondary" @onclick="expandTree">zoom</button>
+                    }
+                </div>
             </div>
         </div>
         
@@ -116,7 +119,7 @@
         <div id="line-container">
             <h2 class="chart-title" id="line-title">Line and Stacked Area graphs</h2>
             <li class="dropdown">
-                <a class="dropdown-toggle btn" data-toggle="dropdown" href="#">Tests 
+                <a class="dropdown-toggle btn option-button" data-toggle="dropdown" href="#">Tests 
                  <span class="caret"></span></a>
 
                 <ul class="dropdown-menu">
@@ -250,7 +253,7 @@
         StringBuilder json_str = new StringBuilder();
         var watch = Stopwatch.StartNew();
         List<FormatData> json_data = await Http.GetJsonAsync<List<FormatData>>(path);
-            
+
         string file_name = getFileName(path);
         if (state == "in") {
             in_data = new FormatData {name="All (" + file_name + ")",  children=json_data};
@@ -272,6 +275,10 @@
         char[] separator = {'('};
         name = name.Split(separator)[0];
         return name;
+    }
+
+    private string formatMethodName(string name) {
+        return name.Replace(",", " ").Replace("::", " :: ").Replace("/", " / ");
     }
 
     private void formatData(FormatData data, int size, bool overload, string state, 
@@ -305,7 +312,7 @@
                         class_data.children = child_2;
                         string begin = "All" + " (" + fileName+ ")" + "-" + as_name + "-" + class_name + "-";
                         children.ForEach(d => {
-                            string name = d.name.Replace(",", "");
+                            string name = formatMethodName(d.name);
                             csv_str.Append(begin + name + "," + d.size + "\n");
                         });
                     }
@@ -344,11 +351,9 @@
         if (in_file_name == "") in_file_name = "data.json";
         if (file_name == "") file_name = "mscorlib.json";
         
-        Console.WriteLine(file_name);
-        
         formatData(data, inputSize, overload, "out", file_name);
         formatData(in_data, inputSize, overload, "in", in_file_name);
-        Console.WriteLine(data.name);
+
         await JsRuntime.InvokeAsync<string>("displayAll", sunburst_str, sunburst_in_str, dataJson,
                                             dataJson_in, tree, tree_in, file_name, in_file_name, compare);
     }
@@ -371,11 +376,18 @@
 
         var watch = Stopwatch.StartNew();
         List<Task> tasks = new List<Task>();
+            /*
         tasks.Add(LoadHistory());
         tasks.Add(getData("json/data.json", "in"));
         tasks.Add(getData("json/mscorlib.json", "out"));
         tasks.Add(clear());
-        await Task.WhenAll(tasks);
+        */
+        await clear();
+        await LoadHistory();
+        await getData("json/data.json", "in");
+        await getData("json/mscorlib.json", "out");
+        
+        // await Task.WhenAll(tasks);
         apps = info.Keys.ToArray();  
         watch.Stop();
         Console.WriteLine("get data " + watch.ElapsedMilliseconds);        
