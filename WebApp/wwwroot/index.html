@@ -15,7 +15,7 @@
     <script src="_framework/blazor.webassembly.js"></script>
     <script src="_content/BlazorInputFile/inputfile.js"></script>
     <link href="css/site.css" rel="stylesheet" />
-    <link rel="stylesheet" type="text/css" href="css/sequences.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
 </head>
 <body>
     
@@ -37,14 +37,15 @@
     <script src="js/flame.js"></script>
     <script src="js/color.js"></script>
     <script>
-        window.displayAll = function(csv_str, csv_in_str, dataJson, dataJson_in, 
-                                    tree, tree_in, title, title_in, compare) {
+        window.displayAll = function(csv_str, csv_in_str, tree, tree_in, title, title_in, compare) {
             d3v4.selectAll("svg").remove();
             d3v4.selectAll("#landing")
+                .attr("class", "fadeOut")
                 .style("position", "relative")
                 .style("top", 0)
                 .style("left", 0)
-                .style("margin-bottom", "10px");
+                .style("margin-bottom", "10px")
+            d3v4.selectAll("#landing").style("display", "null");
             d3v4.selectAll("#chart").style("display", "null");
             if (compare) {
                 d3v4.selectAll(".viz-container").style("display", "inline-block");

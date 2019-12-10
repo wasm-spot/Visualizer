@@ -17,7 +17,7 @@
     </ul>
 </nav>
 
-<div id="landing" class="fadeInUp">
+<div id="landing" class="animated fadeInUp delay-1s">
     <h1 class="landing-title">Linker Visualizer</h1>
     <div id="options">
         <form>
@@ -57,9 +57,9 @@
     </div>
 </div>
 
-<div id="chart" style="display: none;">
+<div id="chart" class="animated fadeInUp" style="display: none;">
             
-    <div id="sunburst-container">
+    <div id="container">
         <h2 class="chart-title" id="sunburst-title"></h2>
         <div class="description" id="sunburst-description"></div>
         <div id="sequence"></div>
@@ -75,7 +75,7 @@
                 </div>
             </div>
             
-            
+            @if(compare) {
                 <div class="viz-container" id="sunburst-out">
                     <div class="explanation" id="explanation" style="visibility: hidden;">
                         <span class="size" id="out-size"></span> =<br/>
@@ -83,11 +83,13 @@
                         of overall size
                     </div>
                 </div>
+            }
+                
         </div>
         
         
     </div>
-    <div id="treemap-container">
+    <div id="container">
         <h2 class="chart-title" id="tree-title"></h2>
         <div class="description" id="tree-description"></div>
 
@@ -102,14 +104,16 @@
                     
                 </div>
             </div>
-            
-            <div class="viz-container" id="out-tree">
-                <div class="menu">
-                    @if (!zoomed && compare) {
-                        <button class="btn btn-secondary" @onclick="expandTree">zoom</button>
-                    }
+            @if(compare) {
+                <div class="viz-container" id="out-tree">
+                    <div class="menu">
+                        @if (!zoomed) {
+                            <button class="btn btn-secondary" @onclick="expandTree">zoom</button>
+                        }
+                    </div>
                 </div>
-            </div>
+            }
+            
         </div>
         
         
@@ -354,14 +358,13 @@
         formatData(data, inputSize, overload, "out", file_name);
         formatData(in_data, inputSize, overload, "in", in_file_name);
 
-        await JsRuntime.InvokeAsync<string>("displayAll", sunburst_str, sunburst_in_str, dataJson,
-                                            dataJson_in, tree, tree_in, file_name, in_file_name, compare);
+        await JsRuntime.InvokeAsync<string>("displayAll", sunburst_str, sunburst_in_str, tree, tree_in, file_name, in_file_name, compare);
     }
 
     private async Task LoadHistory() {
         Console.WriteLine("load history start");
-        Task<Dictionary<string, List<History.Info>>> history = History.LibraryTable.LoadHistory();
-        info = await history;
+        info = await History.LibraryTable.LoadHistory();
+        apps = info.Keys.ToArray();  
     }
 
     protected override async Task OnInitializedAsync() {
@@ -374,21 +377,12 @@
         overload = false;
         zoomed = false;
 
-        var watch = Stopwatch.StartNew();
-        List<Task> tasks = new List<Task>();
-            /*
-        tasks.Add(LoadHistory());
-        tasks.Add(getData("json/data.json", "in"));
-        tasks.Add(getData("json/mscorlib.json", "out"));
-        tasks.Add(clear());
-        */
-        await clear();
+        var watch = Stopwatch.StartNew();      
+
         await LoadHistory();
         await getData("json/data.json", "in");
         await getData("json/mscorlib.json", "out");
         
-        // await Task.WhenAll(tasks);
-        apps = info.Keys.ToArray();  
         watch.Stop();
         Console.WriteLine("get data " + watch.ElapsedMilliseconds);        
     }

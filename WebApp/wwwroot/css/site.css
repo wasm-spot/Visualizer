@@ -358,6 +358,7 @@ button {
   max-width: 100%;
   overflow-y: auto;
   overflow-x: hidden;
+  animation-duration: 2s;
 }
 
 text {
@@ -436,13 +437,6 @@ overflow: auto;
 .tree {
   width: 49%;
   display: inline-block;
-}
-
-#treemap-container {
-  width: 98%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 1.5%;
 }
 
 .line-viz {
@@ -555,39 +549,6 @@ label {
   text-align: center;
 }
 
-@-webkit-keyframes fadeInUp {
-  from {
-    opacity: 0;
-    -webkit-transform: translate3d(0, 100%, 0);
-    transform: translate3d(0, 100%, 0);
-  }
-
-  to {
-    opacity: 1;
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    -webkit-transform: translate3d(0, 100%, 0);
-    transform: translate3d(0, 100%, 0);
-  }
-
-  to {
-    opacity: 1;
-    -webkit-transform: translate3d(0, 0, 0);
-    transform: translate3d(0, 0, 0);
-  }
-}
-
-.fadeInUp {
-  -webkit-animation-name: fadeInUp;
-  animation-name: fadeInUp;
-}
-
 .row {
   width: 98%;
   margin: auto;
@@ -596,4 +557,71 @@ label {
 .option-button {
   margin-top: 15px;
   margin-left: 15px;
+}
+
+#container {
+  width: 98%;
+  margin: 3% auto;
+}
+
+#sequence {
+  width: 95%;
+  margin: auto;
+  height: 10%;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  margin-bottom: 1.5%;
+  padding: 0.7%;
+}
+
+#legend {
+  padding: 10px 0 0 3px;
+}
+
+#sequence text, #legend text {
+  font-weight: 600;
+  fill: #fff;
+}
+
+#chart {
+  position: relative;
+}
+
+#chart path {
+  stroke: #fff;
+}
+
+.explanation-container {
+  margin-top: 60px;
+  margin-bottom: 50px;
+}
+
+.explanation {
+  position: absolute;
+  /* display: inline-flex; */
+  text-align: center;
+  color: #666;
+  z-index: -1;
+  margin-top: 15px;
+  margin-left: 10px;
+}
+
+.percentage {
+  font-size: 2.5em;
+}
+
+.size {
+  font-size: 18px;
+}
+
+.sunburst-title {
+  font-size: 18px;
+  text-align: right;
+}
+
+.viz-container {
+  width: 49%;
+  position: relative;
+  display: block;
+  margin: auto;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }

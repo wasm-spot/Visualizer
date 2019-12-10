@@ -18,8 +18,7 @@ function displayTreemap(dataJson, dataJson_in, compare) {
     } else {
         d3v4.select("#in-tree").style("width", "95%")
     }
-    
-    window.scrollTo(0,document.body.scrollHeight);
+    window.scrollTo(0, 0);
 }
 
 function displayTree(dataJson, flower=false, state="in", compare=false) {
