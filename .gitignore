@@ -13,3 +13,4 @@ WebApp/bin/*
 WebApp/obj/*
 WebApp/out/*
 *.xml
+*.json

@@ -159,6 +159,8 @@
     string dataJson_in;
     string tree;
     string tree_in;
+    private string data_path;
+    private string data_in_path;
     private int inputSize { get; set; }
     private bool overload { get; set; }
     private bool compare { get; set; }
@@ -251,6 +253,11 @@
     private async void shrinkTree() {
         zoomed = false;
         await JsRuntime.InvokeAsync<string>("shrinkTree", tree_in, tree);
+    }
+
+    private async Task ReadConfig() {
+        Dictionary<string, string> config = await Http.GetJsonAsync<Dictionary<string, string>>("json/config.json");
+        data_path = config["data"];
     }
 
     private async Task getData(string path, string state="in") {
@@ -352,7 +359,7 @@
     }
 
     private async Task display() {
-        if (in_file_name == "") in_file_name = "data.json";
+        if (in_file_name == "") in_file_name = data_path;
         if (file_name == "") file_name = "mscorlib.json";
         
         formatData(data, inputSize, overload, "out", file_name);
@@ -378,9 +385,9 @@
         zoomed = false;
 
         var watch = Stopwatch.StartNew();      
-
+        await ReadConfig();
         await LoadHistory();
-        await getData("json/data.json", "in");
+        await getData("json/" + data_path, "in");
         await getData("json/mscorlib.json", "out");
         
         watch.Stop();
