@@ -3,6 +3,7 @@ var width = window.innerWidth * 0.3;
 var height = window.innerHeight * 0.6;
 var radius = Math.min(width, height) / 2;
 var margin_left = width * 0.2;
+var max_nodes;
 
 // Breadcrumb dimensions: width, height, spacing, width of tip/tail.
 var b = {
@@ -65,11 +66,20 @@ function createRoot(json, in_root=null) {
   
   // console.log(root)
 
-  if (in_root != null) {
-
-  }
-
   return root;
+}
+
+function findMaxNode(nodes) {
+  var groupBy = (array, key) => {
+    return array.reduce((result, currentValue) => {
+      (result[currentValue[key]] = result[currentValue[key]] || []).push(
+        currentValue
+      );
+      return result;
+    }, {});
+  };
+  
+  return groupBy(nodes, "depth");
 }
 
 function createSunburst(json ,root, title, state="in") {
@@ -93,6 +103,8 @@ function createSunburst(json ,root, title, state="in") {
     .filter(function(d) {
         return (d.x1 - d.x0 > 0.005); // 0.005 radians = 0.29 degrees
     });
+  
+  max_nodes = findMaxNode(nodes)
 
   var path = sun.data([json]).selectAll("path")
     .data(nodes)
@@ -101,8 +113,9 @@ function createSunburst(json ,root, title, state="in") {
     .attr("d", arc)
     .attr("id", state)
     .attr("fill-rule", "evenodd")
-    .attr("fill-opacity", 0.6)
-    .style("fill", function(d) { return color(d.data.name); })
+    .style("fill", function(d) { 
+      return color(d.value/max_nodes[d.depth.toString()][0].value); 
+    })
     .style("opacity", 1)
     .on("mouseover", mouseover);
 
@@ -261,8 +274,7 @@ function updateBreadcrumbs(nodeArray, percentageString) {
 
   entering.append("svg:polygon")
       .attr("points", breadcrumbPoints)
-      .attr("fill-opacity", 0.6)
-      .style("fill", function(d) { return color(d.data.name); });
+      .style("fill", function(d) { return color(d.value/max_nodes[d.depth.toString()][0].value); });
 
   entering.append("svg:text")
       .attr("class", "bread")

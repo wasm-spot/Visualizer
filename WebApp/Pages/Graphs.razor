@@ -288,7 +288,8 @@
     }
 
     private string formatMethodName(string name) {
-        return name.Replace(",", " ").Replace("::", " :: ").Replace("/", " / ");
+        return "(Method " + name.Replace(",", " ").Replace("::", " :: ")
+                .Replace("/", " / ");
     }
 
     private void formatData(FormatData data, int size, bool overload, string state, 
@@ -298,12 +299,12 @@
                                             children=new List<FormatData>()};
         StringBuilder csv_str = new StringBuilder();
         foreach(var item in data.children) {
-            string as_name = item.name;
+            string as_name = "(Assembly) " + item.name;
             FormatData as_data = new FormatData{name=as_name, size=0};
             if (item.children != null) {
                 foreach(var cl in item.children) {    
                     cl.name = getClassName(cl.name);
-                    string class_name = cl.name;
+                    string class_name = "(Class) " + cl.name;
                     FormatData class_data = new FormatData{name=class_name, children=null};            
                     if (cl.children != null && cl.size > 0) {
                         var children = cl.children;

@@ -112,11 +112,13 @@ treemap(root
         return b.height - a.height || b.value - a.value;
     })
 );
+
 // console.log(root)
 display(root, flower);
 
 function display(d, flower=false) {
-    
+    var max_size = d.children[0].value;
+
     // write text into grandparent
     // and activate click's handler
     grandparent
@@ -174,17 +176,13 @@ function display(d, flower=false) {
             return d.data.name;
         });
     g.selectAll("rect.parent")
-        .attr("fill-opacity", 0.6)
         .attr("fill", function(d) {
-            // return getRandomColor(d.data.name);
-            return color(d.data.name);
+            return color(d.value/max_size);
         });
     
     g.selectAll("rect.child")
-        .attr("fill-opacity", 0.6)
         .attr("fill", function(d) {
-            // return getRandomColor(d.parent.data.name);
-            return color(d.parent.data.name);
+            return color(d.parent.value/max_size);
         });
     
     /* Adding a foreign object instead of a text object, allows for text wrapping */
@@ -206,6 +204,7 @@ function display(d, flower=false) {
                 return "11px";
             }
         })
+        .style("color", textColor(color(d.value/max_size)))
         .attr("class", "textdiv"); //textdiv class allows us to style the text easily with CSS
 
     function transition(d) {

@@ -24,10 +24,14 @@
     
     <script src="https://d3js.org/d3.v4.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.9.1/d3-tip.min.js"></script>
+    <script src="https://d3js.org/d3-color.v1.min.js"></script>
+    <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
     <script>
         var d3v4 = window.d3;
         window.d3 = null;
         var color;
+        var root_out, root_in, max_size;
     </script>
     <script src="js/sequences.js"></script>
     <script src="js/format.js"></script>
@@ -54,10 +58,17 @@
             return count
         }
 
+        function hierarchy(data) {
+            var root = d3v4.hierarchy(data)
+                    .sum((d) => { return d.value })
+                    .sort((a, b) => { return b.height - a.height || b.value - a.value});
+            return root
+        }
+
         window.displayAll = function(csv_str, csv_in_str, tree, tree_in, title, title_in, compare) {
             tree = JSON.parse(tree)
             tree_in = JSON.parse(tree_in)
-            color = d3v4.scaleOrdinal(d3v4.quantize(d3v4.interpolateRainbow, countNodes(tree) + 1))
+            color = d3v4.interpolateGreens;
             d3v4.selectAll("svg").remove();
             d3v4.selectAll("#landing")
                 .attr("class", "fadeOut")
