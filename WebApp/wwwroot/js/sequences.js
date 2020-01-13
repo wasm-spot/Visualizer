@@ -101,6 +101,7 @@ function createSunburst(json ,root, title, state="in") {
     .attr("d", arc)
     .attr("id", state)
     .attr("fill-rule", "evenodd")
+    .attr("fill-opacity", 0.6)
     .style("fill", function(d) { return color(d.data.name); })
     .style("opacity", 1)
     .on("mouseover", mouseover);
@@ -260,6 +261,7 @@ function updateBreadcrumbs(nodeArray, percentageString) {
 
   entering.append("svg:polygon")
       .attr("points", breadcrumbPoints)
+      .attr("fill-opacity", 0.6)
       .style("fill", function(d) { return color(d.data.name); });
 
   entering.append("svg:text")

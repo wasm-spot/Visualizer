@@ -160,7 +160,6 @@
     string tree;
     string tree_in;
     private string data_path;
-    private string data_in_path;
     private int inputSize { get; set; }
     private bool overload { get; set; }
     private bool compare { get; set; }
@@ -278,7 +277,7 @@
     private string getClassName(string className) {
         int index = Regex.Match(className, @"\p{Lu}").Index;
         className = className.Substring(index, className.Length-index);
-        className = className.Replace(",", "");
+        className = className.Replace(",", "").Replace("/", " / ");
         return className;
     }
 

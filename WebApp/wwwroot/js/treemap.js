@@ -8,7 +8,6 @@ function treeDisplay() {
 
 function displayTreemap(dataJson, dataJson_in, compare) {
     treeDisplay();
-    
     displayTree(dataJson_in, flower=false, state="in", compare=compare);
     if (compare) {
         d3v4.select("#in-tree")
@@ -37,7 +36,7 @@ function displayTree(dataJson, flower=false, state="in", compare=false) {
     } 
     
     if (!flower) {
-        data = JSON.parse(dataJson);
+        data = dataJson;
     } else {
         width *= 0.8;
         height *= 0.3;
@@ -175,12 +174,14 @@ function display(d, flower=false) {
             return d.data.name;
         });
     g.selectAll("rect.parent")
+        .attr("fill-opacity", 0.6)
         .attr("fill", function(d) {
             // return getRandomColor(d.data.name);
             return color(d.data.name);
         });
     
     g.selectAll("rect.child")
+        .attr("fill-opacity", 0.6)
         .attr("fill", function(d) {
             // return getRandomColor(d.parent.data.name);
             return color(d.parent.data.name);

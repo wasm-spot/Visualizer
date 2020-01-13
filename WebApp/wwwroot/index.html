@@ -27,7 +27,7 @@
     <script>
         var d3v4 = window.d3;
         window.d3 = null;
-        var color = d3v4.scaleOrdinal().range(d3v4.schemeCategory20c);
+        var color;
     </script>
     <script src="js/sequences.js"></script>
     <script src="js/format.js"></script>
@@ -37,7 +37,27 @@
     <script src="js/flame.js"></script>
     <script src="js/color.js"></script>
     <script>
+
+        function countNodes(data) {
+            var count = 0;
+            if (data.children != null) {
+                count += data.children.length;
+                data.children.forEach(c => {
+                    if (c.children != null) {
+                        count += c.children.length;
+                        c.children.forEach(m => {
+                            if (m.children != null) count += m.children.length;
+                        })
+                    }
+                })
+            }
+            return count
+        }
+
         window.displayAll = function(csv_str, csv_in_str, tree, tree_in, title, title_in, compare) {
+            tree = JSON.parse(tree)
+            tree_in = JSON.parse(tree_in)
+            color = d3v4.scaleOrdinal(d3v4.quantize(d3v4.interpolateRainbow, countNodes(tree) + 1))
             d3v4.selectAll("svg").remove();
             d3v4.selectAll("#landing")
                 .attr("class", "fadeOut")
