@@ -204,8 +204,12 @@ function display(d, flower=false) {
                 return "11px";
             }
         })
-        .style("color", textColor(color(d.value/max_size)))
         .attr("class", "textdiv"); //textdiv class allows us to style the text easily with CSS
+
+    g.selectAll(".textdiv")
+        .style("color", function(d) {
+            return textColor(color(d.value/max_size))
+        })
 
     function transition(d) {
         if (transitioning || !d) return;

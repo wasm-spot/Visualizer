@@ -291,8 +291,13 @@ function updateBreadcrumbs(nodeArray, percentageString) {
         return d.data.name; 
       })
       .style("font-size", "12px")
+      .style("color", (d) => {
+          var c = color(d.value/max_nodes[d.depth.toString()][0].value)
+          return textColor(c);
+      })
       .selectAll(".bread text")
         .call(wrap, b.w-50);
+
     
     var l = entering.selectAll(".bread text")._parents;
     l.forEach(function(t, i) {

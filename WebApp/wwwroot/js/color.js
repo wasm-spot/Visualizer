@@ -16,12 +16,18 @@ function getRandomColor(str) {
     return intToRGB(hashCode(str));
 }
 
-function checkLuma(hex) {
-    var c = hex.substring(1);      // strip #
-    var rgb = parseInt(c, 16);   // convert rrggbb to decimal
-    var r = (rgb >> 16) & 0xff;  // extract red
-    var g = (rgb >>  8) & 0xff;  // extract green
-    var b = (rgb >>  0) & 0xff;  // extract blue
+function checkLuma(rgb) {
+    // var c = hex.substring(1);      // strip #
+    // var rgb = parseInt(c, 16);   // convert rrggbb to decimal
+    // var r = (rgb >> 16) & 0xff;  // extract red
+    // var g = (rgb >>  8) & 0xff;  // extract green
+    // var b = (rgb >>  0) & 0xff;  // extract blue
+
+    var c = rgb.substring(4, rgb.length);
+    c = c.split(",");
+    var r = parseInt(c[0])/255;
+    var g = parseInt(c[1])/255;
+    var b = parseInt(c[2])/255;
 
     var luma = 0.2126 * r + 0.7152 * g + 0.0722 * b; // per ITU-R BT.709
     return luma;
@@ -29,8 +35,7 @@ function checkLuma(hex) {
 
 function textColor(color) {
    var luma = checkLuma(color);
-   console.log(luma, color)
-   if (luma >= 0.175) {
+   if (luma >= 0.9) {
        return "#000000";
    } else {
        return "#ffffff"
