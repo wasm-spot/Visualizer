@@ -2,10 +2,16 @@
 echo running linker...
 monolinker -a $1 -c link --dump-dependencies -out ./out/
 
-echo running linker analyzer...
-[ ! -d "WebApp/wwwroot/json/$2" ] && dotnet run --project linker/src/analyzer --framework netcoreapp3.0 -c illink_Debug --l out/ --json WebApp/wwwroot/json/$2 out/linker-dependencies.xml.gz
+IFS='/' read -ra array <<< "$1"
+file=${array[${#array[@]}-1]}
 
-echo {\"data\": \"$2\" }  > WebApp/wwwroot/json/config.json 
+path="${file:0:${#file}-5}.json"
+
+echo running linker analyzer...
+echo Saving linker analyzer output to WebApp/wwwroot/json/$path
+[ ! -d "WebApp/wwwroot/json/$path" ] && dotnet run --project linker/src/analyzer --framework netcoreapp3.0 -c illink_Debug --l out/ --json WebApp/wwwroot/json/$path out/linker-dependencies.xml.gz
+
+echo {\"data\": \"$path\" }  > WebApp/wwwroot/json/config.json 
 
 echo loading visualizer...
 (sleep 4s ; open https://localhost:5001) &
