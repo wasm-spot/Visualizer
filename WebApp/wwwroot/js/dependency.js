@@ -224,26 +224,41 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
 
   return chart;
 
-  function treemapData(name) {
+  function findDependency(name) {
     for (var i = 0; i < master.length; i++) {
       if (master[i].name == name) {
-        var item = master[i]
-        var treemap = {name: item.name, value: null};
-        var children = []
-        item.dependencies.forEach(child => {
-          child = master[parseInt(child)]
-          children.push({name: child.name, value: child.size, children : null});
-        })
-
-        treemap.children = children;
-
-        return treemap;
+        return master[i];
       }
     }
   }
 
-  function newDependencies(name) {
+  function treemapData(name) {
+    var item = findDependency(name)
+    var treemap = {name: item.name, value: null};
+    var children = []
+    item.dependencies.forEach(child => {
+      child = master[parseInt(child)]
+      children.push({name: child.name, value: child.size, children : null});
+    })
 
+    treemap.children = children;
+
+    return treemap;
+  
+  }
+
+  function newDependencies(name) {
+    var item = findDependency(name);
+    var depData = {name: item.name };
+    var children = [];
+    item.dependencies.forEach(child => {
+      child = master[parseInt(child)]
+      children.push({name: child.name, value: child.size, children : null});
+
+      while (child.dependencies.length > 0) {
+        child = child.dependencies[0];
+      }
+    })
   }
 
 };

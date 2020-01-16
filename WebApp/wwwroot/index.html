@@ -51,7 +51,7 @@
             deps: 14
         };
 
-        filtered = filterDepJson(filters);
+        // filtered = filterDepJson(filters);
 
         function countNodes(data) {
             var count = 0;
@@ -97,8 +97,7 @@
             }
             displaySunburst(csv_str, csv_in_str, title, title_in, compare);
             displayTreemap(tree, tree_in, compare);
-            console.log(filtered)
-            displayWheel(filtered);
+            filterDepJson(filters);
         }
 
         window.expandTree = function (tree_in, tree) {
