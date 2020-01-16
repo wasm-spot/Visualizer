@@ -27,11 +27,14 @@
     <script src="https://d3js.org/d3-color.v1.min.js"></script>
     <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://d3js.org/d3-hierarchy.v1.min.js"></script>
+
     <script>
         var d3v4 = window.d3;
         window.d3 = null;
-        var color;
+        var color = d3v4.interpolateGreens;
         var root_out, root_in, max_size;
+        var filtered;
     </script>
     <script src="js/sequences.js"></script>
     <script src="js/format.js"></script>
@@ -40,7 +43,15 @@
     <script src="js/slopegraph.js"></script>
     <script src="js/flame.js"></script>
     <script src="js/color.js"></script>
+    <script src="js/dependency.js"></script>
     <script>
+
+        var filters = {
+            size: 330,
+            deps: 14
+        };
+
+        filtered = filterDepJson(filters);
 
         function countNodes(data) {
             var count = 0;
@@ -68,7 +79,6 @@
         window.displayAll = function(csv_str, csv_in_str, tree, tree_in, title, title_in, compare) {
             tree = JSON.parse(tree)
             tree_in = JSON.parse(tree_in)
-            color = d3v4.interpolateGreens;
             d3v4.selectAll("svg").remove();
             d3v4.selectAll("#landing")
                 .attr("class", "fadeOut")
@@ -87,6 +97,8 @@
             }
             displaySunburst(csv_str, csv_in_str, title, title_in, compare);
             displayTreemap(tree, tree_in, compare);
+            console.log(filtered)
+            displayWheel(filtered);
         }
 
         window.expandTree = function (tree_in, tree) {
@@ -112,6 +124,10 @@
 
         window.graph = function(json) {
             displayGraph(json);
+        }
+
+        window.wheel = function(data) {
+            displayWheel(data);
         }
 
         window.slope = function(json) {
@@ -197,22 +213,10 @@
     </script>
     <app></app>
     <div id="visualization"></div>
+    <div id="temp"></div>
+    <div id="dep-tree"></div>
     <div class="tooltip" id="tooltip"></div>
     <div class="tooltip" id="tooltip-area"></div>
     
-    
-    <script>
-        
-        function hexToRgb(hex) {
-            hex = hex.replace('#', '');
-            var bigint = parseInt(hex, 16);
-            var r = (bigint >> 16) & 255;
-            var g = (bigint >> 8) & 255;
-            var b = bigint & 255;
-
-            return "rgb(" + r + "," + g + "," + b + ")";
-        }
-
-</script>
 </body>
 </html>

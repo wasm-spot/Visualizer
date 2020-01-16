@@ -172,3 +172,29 @@ function formatComparison(data_in, data_out, size=100, overload=true) {
     return data;
 }
 
+function getLength(data, filtered) {
+    var names = []
+    filtered.forEach(item => {
+        if (!names.includes(item.name) && item.size != 0) {
+            names.push(item.name)
+            item.dependencies.forEach(index => {
+                var dep = data[index];
+                if (!names.includes(dep.name) && dep.size != 0) {
+                    names.push(dep.name);
+                }
+            })
+        }
+    })
+
+    return names;
+}
+
+function makeMatrix(n) {
+    var arr = [];
+    for(let i = 0; i < n; i++) {
+        arr.push(new Array(n).fill(0));
+    }
+    return arr;
+}
+
+
