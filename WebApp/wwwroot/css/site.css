@@ -637,7 +637,11 @@ label {
   display: inline-block;
 }
 
-#temp {
+#wheel {
   width: 50%;
   display: inline-block;
+}
+
+.slidecontainer {
+  width: 100%; /* Width of the outside container */
 }

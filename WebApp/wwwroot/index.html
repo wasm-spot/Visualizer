@@ -192,30 +192,42 @@
 
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="js/flower.js"></script>
-    <script>
-        var d3v3 = window.d3;
-        window.d3 = null;
-        window.flower = function(dataJson) {            
-            displayFlower(dataJson);       
-        }
-
-        window.display = function(type) {
-            clear();
-            if (type == "tree") {
-                treeDisplay();
-            } else if (type == "sunburst") {
-                sunburstDisplay();
-            } else if (type == "flower") {
-                flowerDisplay();
-            }
-        }
-    </script>
     <app></app>
     <div id="visualization"></div>
-    <div id="temp"></div>
+    <div class="slidecontainer" style="display:none">
+        <div id="sizeValue"></div>
+        <input type="range" min="100" max="600" value="250" id="sizeRange">
+
+        <div id="depValue"></div>
+        <input type="range" min="0" max="50" value="5" id="depRange">
+    </div>
+    <div id="wheel"></div>
     <div id="dep-tree"></div>
     <div class="tooltip" id="tooltip"></div>
     <div class="tooltip" id="tooltip-area"></div>
-    
+
+    <script>
+        var sizeSlider = document.getElementById("sizeRange");
+        var depSlider = document.getElementById("depRange");
+        var sizeOutput = document.getElementById("sizeValue");
+        var depOutput = document.getElementById("depValue");
+        sizeOutput.innerHTML = sizeSlider.value; 
+        depOutput.innerHTML = depSlider.value; 
+
+        // Update the current slider value (each time you drag the slider handle)
+        sizeSlider.onchange = function() {
+            sizeOutput.innerHTML = this.value;
+            filters.size = this.value;
+            console.log(filters)
+            filterDepJson(filters)
+        }
+
+        depSlider.onchange = function() {
+            depOutput.innerHTML = this.value;
+            filters.deps = parseInt(this.value);
+            console.log(filters)
+            filterDepJson(filters)
+        }
+    </script>
 </body>
 </html>

@@ -59,7 +59,6 @@ function filterDepJson(filters) {
               matrix: matrix
           };
 
-          console.log(names.length)
           displayWheel(wheel, masterData, index)
       })        
   })  
@@ -102,7 +101,6 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
         numDeps.push(row.reduce((a, b) => a + b, 0))
       });
       var maxDeps = Math.max.apply(Math, numDeps)
-      console.log(maxDeps)
 
       var fill = function(d) {
         // return "hsl(" + parseInt(((packageNames[d.index][0].charCodeAt() - 97) / 26) * 360, 10) + ",90%,70%)";
@@ -162,6 +160,8 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
           var treeData = treemapData(name);
           console.log(treeData)
           displayTree(treeData, dep=true)
+          var depData = newDependencies(name);
+          console.log(depData)
         });
 
       g.append("svg:path")
@@ -249,28 +249,39 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
 
   function newDependencies(name) {
     var item = findDependency(name);
-    var depData = {name: item.name };
-    var children = [];
+    var depData = {name: item.name, children : [] };
     item.dependencies.forEach(child => {
       child = master[parseInt(child)]
-      children.push({name: child.name, value: child.size, children : null});
-
-      while (child.dependencies.length > 0) {
-        child = child.dependencies[0];
+      if (child.size > 0) {
+        var descendant = {name: child.name, value: child.size, children : []}
+        depData.children.push(descendant);
+        
+        while (child.dependencies != null) {
+          child = master[child.dependencies[0]];
+          descendant.children.push({name: child.name, value: child.size, children : []})
+          descendant = descendant.children[0];
+        }
       }
+      
+      
+      
     })
+    
+    return depData;
   }
 
 };
 
 function displayWheel(data, master, index) {
+  d3v4.select(".dependencyWheel").remove()
   var chart = d3v4.chart.dependencyWheel(master, index)
               .width(window.innerHeight * 0.85)
               .margin(150);
 
-  d3v4.select("#temp")
+  d3v4.select("#wheel")
     .datum(data)
     .call(chart)
+  d3v4.select(".slidecontainer").style("display", null);
 }
 
 
