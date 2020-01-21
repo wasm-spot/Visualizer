@@ -159,9 +159,10 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
           var name = data.packageNames[d.index];
           var treeData = treemapData(name);
           console.log(treeData)
-          displayTree(treeData, dep=true)
+          
           var depData = newDependencies(name);
-          console.log(depData)
+          displayTree(treeData, dep=true)
+          console.log(treeData)
         });
 
       g.append("svg:path")
@@ -230,6 +231,7 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
         return master[i];
       }
     }
+    return null;
   }
 
   function treemapData(name) {
@@ -237,8 +239,10 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
     var treemap = {name: item.name, value: null};
     var children = []
     item.dependencies.forEach(child => {
-      child = master[parseInt(child)]
-      children.push({name: child.name, value: child.size, children : null});
+      var childName = index[child]
+      child = findDependency(childName)
+      if (child != null)
+        children.push({name: child.name, value: child.size, children : null});
     })
 
     treemap.children = children;
@@ -248,26 +252,15 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
   }
 
   function newDependencies(name) {
-    var item = findDependency(name);
-    var depData = {name: item.name, children : [] };
-    item.dependencies.forEach(child => {
-      child = master[parseInt(child)]
-      if (child.size > 0) {
-        var descendant = {name: child.name, value: child.size, children : []}
-        depData.children.push(descendant);
-        
-        while (child.dependencies != null) {
-          child = master[child.dependencies[0]];
-          descendant.children.push({name: child.name, value: child.size, children : []})
-          descendant = descendant.children[0];
-        }
-      }
-      
-      
-      
-    })
+    var stack = [];
+    var node = findDependency(name);
+    stack.push(name)
     
-    return depData;
+    while (stack.length > 0) {
+      node.dependencies.forEach(child => {
+        stack.push(child)
+      })
+    }
   }
 
 };
