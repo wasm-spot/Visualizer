@@ -13,5 +13,5 @@ WebApp/bin/*
 WebApp/obj/*
 WebApp/out/*
 *.xml
-*.json
+
 tools/web/node_modules/*
