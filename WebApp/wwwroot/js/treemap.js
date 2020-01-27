@@ -17,7 +17,6 @@ function displayTreemap(dataJson, dataJson_in, compare) {
     } else {
         d3v4.select("#in-tree").style("width", "95%")
     }
-    window.scrollTo(0, 0);
 }
 
 function displayTree(data, dep=false, state="in", compare=false) {
@@ -28,9 +27,9 @@ function displayTree(data, dep=false, state="in", compare=false) {
         formatNumber = d3v4.format(","),
         transitioning;
 
+
     if (compare) {
         width *= 0.5;
-        grandparent_width *= 0.5;
     } 
     
     if (dep) {
@@ -52,10 +51,12 @@ function displayTree(data, dep=false, state="in", compare=false) {
         .paddingInner(0)
         .round(true);
     
+    d3v4.select("#treemap-" + state).remove();
+
     var svg = d3v4.select('#'+el_id).append("svg")
         .attr("id", function(d) {
             if (dep) return "dep";
-            return "treemap";
+            return "treemap-" + state;
         })
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.bottom + margin.top)
@@ -81,7 +82,7 @@ function displayTree(data, dep=false, state="in", compare=false) {
     if (dep) {
         grandparent.style("font-size", "10px");
     }
-
+    console.log(data)
     var root = d3v4.hierarchy(data);
     treemap(root
         .sum(function (d) {
@@ -91,8 +92,6 @@ function displayTree(data, dep=false, state="in", compare=false) {
             return b.height - a.height || b.value - a.value;
         })
     );
-
-    console.log(root)
 
     // console.log(root)
     display(root, dep);

@@ -51,24 +51,6 @@
             deps: 14
         };
 
-        // filtered = filterDepJson(filters);
-
-        function countNodes(data) {
-            var count = 0;
-            if (data.children != null) {
-                count += data.children.length;
-                data.children.forEach(c => {
-                    if (c.children != null) {
-                        count += c.children.length;
-                        c.children.forEach(m => {
-                            if (m.children != null) count += m.children.length;
-                        })
-                    }
-                })
-            }
-            return count
-        }
-
         function hierarchy(data) {
             var root = d3v4.hierarchy(data)
                     .sum((d) => { return d.value })
@@ -76,28 +58,71 @@
             return root
         }
 
-        window.displayAll = function(csv_str, csv_in_str, tree, tree_in, title, title_in, compare) {
-            tree = JSON.parse(tree)
-            tree_in = JSON.parse(tree_in)
-            d3v4.selectAll("svg").remove();
-            d3v4.selectAll("#landing")
-                .attr("class", "fadeOut")
-                .style("position", "relative")
-                .style("top", 0)
-                .style("left", 0)
-                .style("margin-bottom", "10px")
-            d3v4.selectAll("#landing").style("display", "null");
-            d3v4.selectAll("#chart").style("display", "null");
-            if (compare) {
-                d3v4.selectAll(".viz-container").style("display", "inline-block");
-            } else {
-                d3v4.selectAll(".viz-container").style("display", "block");
-                d3v4.select("#sunburst-in").style("margin-right", "auto");
-                d3v4.select("#in-tree").style("margin-right", "auto");
-            }
-            displaySunburst(csv_str, csv_in_str, title, title_in, compare);
-            displayTreemap(tree, tree_in, compare);
-            filterDepJson(filters);
+        window.displayAll = function(inputSize, overload, compare) {
+            d3.json("json/config.json", function(config) {
+                var inFileName = config.data;
+                var fileName = "mscorlib.json"
+                d3.json("json/" + inFileName, function(inData) {
+                    var sunburstInSlider = document.getElementById("sunburstInSizeRange");
+                    var sunburstInSizeOutput = document.getElementById("sunburstInSizeValue");
+
+                    var treeInSlider = document.getElementById("treeInSizeRange");
+                    var treeInSizeOutput = document.getElementById("treeInSizeValue");
+
+                    var sunburstInInputSize = sunburstInSlider.value;
+                    var treeInInputSize = treeInSlider.value;
+                    var filteredIn = filterJson(inData, inputSize, overload);
+                    
+                    var treeIn = filterJson(inData, treeInInputSize, overload)[0];
+                    var csvInStr = filterJson(inData, sunburstInInputSize, overload)[1];
+
+                    d3.json("json/" + fileName, function(data) {
+                        var filteredOut = filterJson(data, inputSize, overload);
+                        var treeOut = filteredOut[0];
+                        var csvOutStr = filteredOut[1];
+                        
+                        d3v4.selectAll(".slidecontainer").style("display", null)
+                        d3v4.selectAll("svg").remove();
+                        d3v4.selectAll("#landing")
+                            .attr("class", "fadeOut")
+                            .style("position", "relative")
+                            .style("top", 0)
+                            .style("left", 0) 
+                            .style("margin-bottom", "10px")
+                        d3v4.selectAll("#landing").style("display", "null");
+                        d3v4.selectAll("#chart").style("display", "null");
+                        if (compare) {
+                            d3v4.selectAll(".viz-container").style("display", "inline-block");
+                        } else {
+                            d3v4.selectAll(".viz-container").style("display", "block");
+                            d3v4.select("#sunburst-in").style("margin-right", "auto");
+                            d3v4.select("#in-tree").style("margin-right", "auto");
+                        }
+                        displaySunburst(csvOutStr, csvInStr, fileName, inFileName, compare);
+                        displayTreemap(treeOut, treeIn, compare);
+                        filterDepJson(filters);
+
+                        sunburstInSlider.onchange = function() {
+                            sunburstInSizeOutput.innerHTML = this.value;
+                            inputSize = this.value;
+                            filteredIn = filterJson(inData, inputSize, overload);
+                            displaySunburst(csvOutStr, filteredIn[1], fileName, inFileName, compare);
+                        }
+
+                        treeInSlider.onchange = function() {
+                            treeInSizeOutput.innerHTML = this.value;
+                            inputSize = this.value;
+                            filteredIn = filterJson(inData, inputSize, overload);
+                            displayTreemap(treeOut, filteredIn[0], compare);
+                        }
+
+                    })
+                    
+                })
+            })
+            
+
+            
         }
 
         window.expandTree = function (tree_in, tree) {

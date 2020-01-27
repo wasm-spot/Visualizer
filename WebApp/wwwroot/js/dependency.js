@@ -160,7 +160,7 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
           var treeData = treemapData(name);
           console.log(treeData)
           
-          var depData = newDependencies(name);
+          // var depData = newDependencies(name);
           displayTree(treeData, dep=true)
           console.log(treeData)
         });
