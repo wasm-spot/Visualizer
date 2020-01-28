@@ -51,23 +51,23 @@
             deps: 14
         };
 
-        function hierarchy(data) {
-            var root = d3v4.hierarchy(data)
-                    .sum((d) => { return d.value })
-                    .sort((a, b) => { return b.height - a.height || b.value - a.value});
-            return root
-        }
-
-        window.displayAll = function(inputSize, overload, compare) {
-            d3.json("json/config.json", function(config) {
+        window.onload = function(inputSize, overload, compare) {
+            d3v4.json("json/config.json", function(config) {
                 var inFileName = config.data;
                 var fileName = "mscorlib.json"
-                d3.json("json/" + inFileName, function(inData) {
+                d3v4.json("json/" + inFileName, function(inData) {
                     var sunburstInSlider = document.getElementById("sunburstInSizeRange");
                     var sunburstInSizeOutput = document.getElementById("sunburstInSizeValue");
 
                     var treeInSlider = document.getElementById("treeInSizeRange");
                     var treeInSizeOutput = document.getElementById("treeInSizeValue");
+
+                    var sizeSlider = document.getElementById("sizeRange");
+                    var depSlider = document.getElementById("depRange");
+                    var sizeOutput = document.getElementById("sizeValue");
+                    var depOutput = document.getElementById("depValue");
+                    sizeOutput.innerHTML = sizeSlider.value; 
+                    depOutput.innerHTML = depSlider.value; 
 
                     var sunburstInInputSize = sunburstInSlider.value;
                     var treeInInputSize = treeInSlider.value;
@@ -76,20 +76,13 @@
                     var treeIn = filterJson(inData, treeInInputSize, overload)[0];
                     var csvInStr = filterJson(inData, sunburstInInputSize, overload)[1];
 
-                    d3.json("json/" + fileName, function(data) {
+                    d3v4.json("json/" + fileName, function(data) {
                         var filteredOut = filterJson(data, inputSize, overload);
                         var treeOut = filteredOut[0];
                         var csvOutStr = filteredOut[1];
                         
                         d3v4.selectAll(".slidecontainer").style("display", null)
                         d3v4.selectAll("svg").remove();
-                        d3v4.selectAll("#landing")
-                            .attr("class", "fadeOut")
-                            .style("position", "relative")
-                            .style("top", 0)
-                            .style("left", 0) 
-                            .style("margin-bottom", "10px")
-                        d3v4.selectAll("#landing").style("display", "null");
                         d3v4.selectAll("#chart").style("display", "null");
                         if (compare) {
                             d3v4.selectAll(".viz-container").style("display", "inline-block");
@@ -98,6 +91,7 @@
                             d3v4.select("#sunburst-in").style("margin-right", "auto");
                             d3v4.select("#in-tree").style("margin-right", "auto");
                         }
+
                         displaySunburst(csvOutStr, csvInStr, fileName, inFileName, compare);
                         displayTreemap(treeOut, treeIn, compare);
                         filterDepJson(filters);
@@ -114,6 +108,18 @@
                             inputSize = this.value;
                             filteredIn = filterJson(inData, inputSize, overload);
                             displayTreemap(treeOut, filteredIn[0], compare);
+                        }
+
+                        sizeSlider.onchange = function() {
+                            sizeOutput.innerHTML = this.value;
+                            filters.size = this.value;
+                            filterDepJson(filters)
+                        }
+
+                        depSlider.onchange = function() {
+                            depOutput.innerHTML = this.value;
+                            filters.deps = parseInt(this.value);
+                            filterDepJson(filters)
                         }
 
                     })
@@ -192,10 +198,6 @@
                 .style("display", "none");
         }
 
-        window.onload = function() {
-            clear();   
-        }
-
         window.toggle = function() {
             $('#sidebar').removeClass('active');
             // fade in the overlay
@@ -213,46 +215,16 @@
         
 
     </script>
-    
 
-    <script src="https://d3js.org/d3.v3.min.js"></script>
-    <script src="js/flower.js"></script>
     <app></app>
     <div id="visualization"></div>
-    <div class="slidecontainer" style="display:none">
-        <div id="sizeValue"></div>
-        <input type="range" min="100" max="600" value="250" id="sizeRange">
+    
 
-        <div id="depValue"></div>
-        <input type="range" min="0" max="50" value="5" id="depRange">
-    </div>
-    <div id="wheel"></div>
-    <div id="dep-tree"></div>
     <div class="tooltip" id="tooltip"></div>
     <div class="tooltip" id="tooltip-area"></div>
 
     <script>
-        var sizeSlider = document.getElementById("sizeRange");
-        var depSlider = document.getElementById("depRange");
-        var sizeOutput = document.getElementById("sizeValue");
-        var depOutput = document.getElementById("depValue");
-        sizeOutput.innerHTML = sizeSlider.value; 
-        depOutput.innerHTML = depSlider.value; 
-
-        // Update the current slider value (each time you drag the slider handle)
-        sizeSlider.onchange = function() {
-            sizeOutput.innerHTML = this.value;
-            filters.size = this.value;
-            console.log(filters)
-            filterDepJson(filters)
-        }
-
-        depSlider.onchange = function() {
-            depOutput.innerHTML = this.value;
-            filters.deps = parseInt(this.value);
-            console.log(filters)
-            filterDepJson(filters)
-        }
+        
     </script>
 </body>
 </html>

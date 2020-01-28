@@ -33,7 +33,7 @@ function displayTree(data, dep=false, state="in", compare=false) {
     } 
     
     if (dep) {
-        width = window.innerWidth * 0.5 ;
+        width = window.innerWidth * 0.45 ;
         height *= 0.8;
         el_id = "dep-tree";
         d3v4.select("#dep").remove();
@@ -51,7 +51,7 @@ function displayTree(data, dep=false, state="in", compare=false) {
         .paddingInner(0)
         .round(true);
     
-    d3v4.select("#treemap-" + state).remove();
+    if (!dep) d3v4.select("#treemap-" + state).remove();
 
     var svg = d3v4.select('#'+el_id).append("svg")
         .attr("id", function(d) {

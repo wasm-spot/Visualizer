@@ -543,10 +543,11 @@ label {
 
 #landing {
   margin: auto;
-  position: fixed;
+  margin-bottom: 10px;
+  position: relative;
   width: 50%;
-  top: 50%;
-  left: 25%;
+  top: 0;
+  left: 0;
   background-color: rgb(158, 202, 225, 0.7);
   padding: 15px;
   border-radius: 15px;
@@ -638,10 +639,15 @@ label {
 }
 
 #wheel {
-  width: 50%;
+  width: 48%;
   display: inline-block;
 }
 
 .slidecontainer {
   width: 100%; /* Width of the outside container */
+  margin: 15px;
+}
+
+.value {
+  display: inline-block;
 }

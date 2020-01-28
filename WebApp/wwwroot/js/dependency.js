@@ -89,6 +89,7 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
         .attr("width", width)
         .attr("height", width)
         .attr("class", "dependencyWheel")
+        .style("display", "block")
       .append("g")
         .attr("transform", "translate(" + (width / 2) + "," + (width / 2) + ")");
 
@@ -160,9 +161,9 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
           var treeData = treemapData(name);
           console.log(treeData)
           
-          // var depData = newDependencies(name);
-          displayTree(treeData, dep=true)
-          console.log(treeData)
+          var depData = newDependencies(name);
+          console.log(depData)
+          displayTree(depData, dep=true)
         });
 
       g.append("svg:path")
@@ -252,15 +253,43 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
   }
 
   function newDependencies(name) {
-    var stack = [];
-    var node = findDependency(name);
-    stack.push(name)
-    
-    while (stack.length > 0) {
-      node.dependencies.forEach(child => {
-        stack.push(child)
-      })
+    var queue = [], depQueue = [];
+    var currNode = findDependency(name);
+    var allNodes = [name]
+    var dep = {"name": name, "children": []};
+    var root = dep;
+    queue.push(name)
+    depQueue.push(dep)
+    var depth = 0
+    while (queue.length != 0 && depth < 5) {
+      var n = queue.length
+      
+      while (n > 0) {
+        var p = queue.shift();
+        dep = depQueue.shift();
+        currNode = findDependency(p);
+        if (currNode != null) {
+          currNode.dependencies.forEach(child => {
+            name = index[child];
+            var childNode = findDependency(name)
+            var depChild;
+            if (childNode != null) {
+              depChild = {"name": name, "children": [], "value": childNode.size};
+            } else {
+              depChild = {"name": name, "children": null};
+            }
+            queue.push(name);
+            depQueue.push(depChild)
+            dep.children.push(depChild)
+            
+          })
+        }
+        n--;
+      }
+      depth++;
     }
+
+    return root;
   }
 
 };
@@ -268,7 +297,7 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
 function displayWheel(data, master, index) {
   d3v4.select(".dependencyWheel").remove()
   var chart = d3v4.chart.dependencyWheel(master, index)
-              .width(window.innerHeight * 0.85)
+              .width(window.innerWidth * 0.45)
               .margin(150);
 
   d3v4.select("#wheel")
