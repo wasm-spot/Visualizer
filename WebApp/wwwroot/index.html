@@ -51,33 +51,33 @@
             deps: 14
         };
 
-        window.onload = function(inputSize, overload, compare) {
+        window.onload = function() {
             d3v4.json("json/config.json", function(config) {
                 var inFileName = config.data;
                 var fileName = "mscorlib.json"
                 d3v4.json("json/" + inFileName, function(inData) {
+                    var overload = document.getElementById("overload").checked;
+                    var compare = document.getElementById("compare").checked;
+
                     var sunburstInSlider = document.getElementById("sunburstInSizeRange");
                     var sunburstInSizeOutput = document.getElementById("sunburstInSizeValue");
+                    sunburstInSizeOutput.innerHTML = sunburstInSlider.value
 
                     var treeInSlider = document.getElementById("treeInSizeRange");
                     var treeInSizeOutput = document.getElementById("treeInSizeValue");
+                    treeInSizeOutput.innerHTML = treeInSlider.value;
 
                     var sizeSlider = document.getElementById("sizeRange");
                     var depSlider = document.getElementById("depRange");
                     var sizeOutput = document.getElementById("sizeValue");
                     var depOutput = document.getElementById("depValue");
-                    sizeOutput.innerHTML = sizeSlider.value; 
-                    depOutput.innerHTML = depSlider.value; 
-
-                    var sunburstInInputSize = sunburstInSlider.value;
-                    var treeInInputSize = treeInSlider.value;
-                    var filteredIn = filterJson(inData, inputSize, overload);
                     
-                    var treeIn = filterJson(inData, treeInInputSize, overload)[0];
-                    var csvInStr = filterJson(inData, sunburstInInputSize, overload)[1];
+                    var filteredIn = filterJson(inData, 300, overload);
+                    var treeIn = filteredIn[0];
+                    var csvInStr = filteredIn[1];
 
                     d3v4.json("json/" + fileName, function(data) {
-                        var filteredOut = filterJson(data, inputSize, overload);
+                        var filteredOut = filterJson(data, 300, overload);
                         var treeOut = filteredOut[0];
                         var csvOutStr = filteredOut[1];
                         
@@ -87,6 +87,7 @@
                         if (compare) {
                             d3v4.selectAll(".viz-container").style("display", "inline-block");
                         } else {
+                            console.log(compare)
                             d3v4.selectAll(".viz-container").style("display", "block");
                             d3v4.select("#sunburst-in").style("margin-right", "auto");
                             d3v4.select("#in-tree").style("margin-right", "auto");
@@ -95,6 +96,12 @@
                         displaySunburst(csvOutStr, csvInStr, fileName, inFileName, compare);
                         displayTreemap(treeOut, treeIn, compare);
                         filterDepJson(filters);
+
+                        sizeOutput.innerHTML = sizeSlider.value; 
+                        depOutput.innerHTML = depSlider.value; 
+
+                        var sunburstInInputSize = sunburstInSlider.value;
+                        var treeInInputSize = treeInSlider.value;
 
                         sunburstInSlider.onchange = function() {
                             sunburstInSizeOutput.innerHTML = this.value;
@@ -160,17 +167,6 @@
             displayWheel(data);
         }
 
-        window.slope = function(json) {
-            clear();
-            d3v4.selectAll("#compare")
-                .style("display", "none");
-            d3v4.select("#compare-label")
-                .style("display", "none");
-            d3v4.select("#options")
-                .style("display", null);
-            displaySlopegraph(data_in, data_out);
-        }
-
         window.reset = function() {
             d3v4.selectAll("#landing").style("position", "fixed")
                 .style("margin-bottom", 0)
@@ -217,6 +213,138 @@
     </script>
 
     <app></app>
+
+    <div id="landing" class="animated fadeInUp">
+        <h1 class="landing-title">Linker Visualizer</h1>
+        <div id="options">
+            <form>
+                <p id="fields">
+                    <input id="overload" type="checkbox"/>
+                    <label>Merge overloaded methods</label>
+    
+                    <input id="compare" type="checkbox"/>
+                    <label>Compare two data sources</label>
+                </p>
+    
+                
+                <!-- <label>Upload input data files</label>
+                <InputFile id="inputfile" OnChange="HandleInFileSelected" />
+                @if (file != null)
+                {
+                    <p>Name: @inFileName</p>
+                }
+                
+                
+    
+                @if(compare) {
+                    <label>Upload output data file</label>
+                    <InputFile id="inputfile" OnChange="HandleOutFileSelected" />
+                    @if (file != null)
+                    {
+                        <p>Name: @fileName</p>
+                    }
+                } 
+                <br/> -->
+            </form>
+        </div>
+    </div>
+    
+    <div id="chart" class="animated fadeInUp">
+                
+        <div id="container">
+            <h2 class="chart-title" id="sunburst-title"></h2>
+            <div class="description" id="sunburst-description"></div>
+            <div id="sequence"></div>
+            <div class="row">
+                <div class="viz-container" id="sunburst-in">
+                    <div class="slidecontainer" style="display:none">
+                        Only view methods greater than this size:
+                        <br />
+                        <input type="range" min="100" max="2000" value="250" id="sunburstInSizeRange"> <div class="value" id="sunburstInSizeValue"></div>
+                    </div>
+    
+                    <div class="explanation" id="in-explanation" style="visibility: hidden;">
+                            <span class="size" id="in-size"></span> =<br/>
+                            <span class="percentage" id="in-percentage"></span><br/>
+                            of overall size
+               
+                    </div>
+                </div>
+                
+                <!-- @if(compare) {
+                    <div class="viz-container" id="sunburst-out">
+                        <div class="explanation" id="explanation" style="visibility: hidden;">
+                            <span class="size" id="out-size"></span> =<br/>
+                            <span class="percentage" id="percentage"></span><br/>
+                            of overall size
+                        </div>
+                    </div>
+                } -->
+                    
+            </div>
+            
+            
+        </div>
+        <div id="container">
+            <h2 class="chart-title" id="tree-title"></h2>
+            <div class="description" id="tree-description"></div>
+    
+            <div class="row">
+                <div class="viz-container" id="in-tree">
+                    <div class="menu">
+                        <!-- @if (!zoomed && compare) {
+                            <button class="btn btn-secondary" @onclick="expandTree">zoom</button>
+                        } else {
+                            <button class="btn btn-secondary" @onclick="shrinkTree">un-zoom</button>
+                        } -->
+    
+                        <div class="slidecontainer">
+                            Only view methods greater than this size:
+                            <br />
+                            <input type="range" min="100" max="2000" value="250" id="treeInSizeRange"> <div class="value" id="treeInSizeValue"></div>
+                        </div>
+                        
+                    </div>
+                </div>
+                <!-- @if(compare) {
+                    <div class="viz-container" id="out-tree">
+                        <div class="menu">
+                            @if (!zoomed) {
+                                <button class="btn btn-secondary" @onclick="expandTree">zoom</button>
+                            }
+                        </div>
+                    </div>
+                } -->
+                
+            </div>
+            
+            
+        </div>
+    
+        <div id="container">
+            <div class="row">
+                <div class="viz-container" id="wheel">
+                    <div class="slidecontainer" style="display:none">
+                        <div>
+                            Only view dependencies greater than this size:
+                            <br/>
+                            <input type="range" min="100" max="600" value="250" id="sizeRange"> <div class="value" id="sizeValue"></div>
+                        </div>
+    
+                        <div>
+                            Minimum number of dependencies:
+                            <br/>
+                            <input type="range" min="0" max="50" value="5" id="depRange"> <div class="value" id="depValue"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="viz-container" id="dep-tree"></div>
+            </div>
+        </div>
+        
+        
+    </div>
+    
     <div id="visualization"></div>
     
 
