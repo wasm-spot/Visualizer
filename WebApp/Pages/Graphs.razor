@@ -385,13 +385,6 @@
         public int size { get; set; }
         public List<FormatData> children { get; set; }
 
-        public FormatData Copy() {
-            FormatData other = (FormatData) this.MemberwiseClone();
-            other.name = String.Copy(name);
-            other.size = size;
-            other.children = new List<FormatData>(children);
-            return other;
-        }
     }
     
 
