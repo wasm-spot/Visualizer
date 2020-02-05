@@ -8,6 +8,14 @@
 
    <ItemGroup>
     <ProjectReference Include="linker\external\cecil\Mono.Cecil.csproj" />
+    <ProjectReference Include="linker\external\cecil\symbols\mdb\Mono.Cecil.Mdb.csproj" />
+    <ProjectReference Include="linker\external\cecil\symbols\pdb\Mono.Cecil.Pdb.csproj" />
+    <ProjectReference Include="linker\src\linker\Mono.Linker.csproj" 
+                      Condition="$(Configuration) == 'illink_Debug'" />
+    <ProjectReference Include="WebApp\WebApp.csproj" />
+    
+  </ItemGroup>
+  
   <ItemGroup>
     <Compile Include="Program.cs" />
  </ItemGroup>
