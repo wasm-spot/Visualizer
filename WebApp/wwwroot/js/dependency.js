@@ -187,9 +187,12 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
         })
         .style("cursor", "pointer")
         .style("font-size", "9px")
-        .text(function(d) { return packageNames[d.index]; })
+        .text(function(d) { 
+          var numDeps = matrix[d.index].reduce((a, b) => a + b);
+          if (numDeps > 20)
+            return packageNames[d.index]; 
+        })
         .on("mouseover", function(d) {
-          console.log(d)
           fade(0.1)
         })
         .on("mouseout", fade(1));
@@ -205,6 +208,10 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
             return "rotate(" + rotation + ")";
           })
           .style("opacity", 1);
+
+      gEnter.call(d3v4.zoom().on("zoom", function() {
+        gEnter.attr("transform", d3v4.event.transform)
+      }));
     });
   }
 
