@@ -43,13 +43,15 @@ function filterDepJson(filters) {
       });
 
       d3v4.json("json/index.json", function(index) {
-          var names = getLength(masterData, filtered)
+          var names = getLength(masterData, index, filtered)
           var n = names.length;
           var matrix = makeMatrix(n);
           filtered.forEach(item => {
               var row = names.indexOf(item.name)
               item.dependencies.forEach(dep => {
-                  matrix[row][names.indexOf(masterData[dep].name)] = 1
+                  var dep = findDependency(masterData, index[dep]);
+                  if (dep != null)
+                    matrix[row][names.indexOf(dep.name)] = 1
               })
               
           })
@@ -226,22 +228,13 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
 
   return chart;
 
-  function findDependency(name) {
-    for (var i = 0; i < master.length; i++) {
-      if (master[i].name == name) {
-        return master[i];
-      }
-    }
-    return null;
-  }
-
   function treemapData(name) {
-    var item = findDependency(name)
+    var item = findDependency(master, name)
     var treemap = {name: item.name, value: null};
     var children = []
     item.dependencies.forEach(child => {
       var childName = index[child]
-      child = findDependency(childName)
+      child = findDependency(master, childName)
       if (child != null)
         children.push({name: child.name, value: child.size, children : null});
     })
@@ -254,7 +247,7 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
 
   function newDependencies(name) {
     var queue = [], depQueue = [];
-    var currNode = findDependency(name);
+    var currNode = findDependency(master, name);
     var allNodes = [name]
     var dep = {"name": name, "children": []};
     var root = dep;
@@ -267,11 +260,11 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
       while (n > 0) {
         var p = queue.shift();
         dep = depQueue.shift();
-        currNode = findDependency(p);
+        currNode = findDependency(master, p);
         if (currNode != null) {
           currNode.dependencies.forEach(child => {
             name = index[child];
-            var childNode = findDependency(name)
+            var childNode = findDependency(master, name)
             var depChild;
             if (childNode != null) {
               depChild = {"name": name, "children": [], "value": childNode.size};
@@ -294,12 +287,46 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
 
 };
 
+function findDependency(master, name) {
+  for (var i = 0; i < master.length; i++) {
+    if (master[i].name == name) {
+      return master[i];
+    }
+  }
+  return null;
+}
+
+function getLength(data, index, filtered) {
+  var names = []
+  filtered.forEach(item => {
+      if (!names.includes(item.name) && item.size != 0) {
+          names.push(item.name)
+          item.dependencies.forEach(ix => {
+              var dep = findDependency(data, index[ix]);
+              if (dep!= null && !names.includes(dep.name) && dep.size != 0) {
+                  names.push(dep.name);
+              }
+          })
+      }
+  })
+
+  return names;
+}
+
+function makeMatrix(n) {
+  var arr = [];
+  for(let i = 0; i < n; i++) {
+      arr.push(new Array(n).fill(0));
+  }
+  return arr;
+}
+
 function displayWheel(data, master, index) {
   d3v4.select(".dependencyWheel").remove()
   var chart = d3v4.chart.dependencyWheel(master, index)
               .width(window.innerWidth * 0.45)
               .margin(150);
-
+  console.log(data)
   d3v4.select("#wheel")
     .datum(data)
     .call(chart)
