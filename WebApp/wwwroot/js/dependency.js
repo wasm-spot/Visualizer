@@ -71,6 +71,7 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
   var width = 700;
   var margin = 150;
   var padding = 0.02;
+  var scaleValue = 1;
   function chart(selection) {
     selection.each(function(data) {
 
@@ -147,7 +148,6 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
       };
 
       var chordResult = chord(matrix);
-
       var rootGroup = chordResult.groups[0];
       var rotation = - (rootGroup.endAngle - rootGroup.startAngle) / 2 * (180 / Math.PI);
 
@@ -161,11 +161,14 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
         .on("click", function(d) {
           var name = data.packageNames[d.index];
           var treeData = treemapData(name);
-          console.log(treeData)
           
           var depData = newDependencies(name);
           console.log(depData)
           displayTree(depData, dep=true)
+          d3v4.selectAll("#dep-parent")
+            .on("click", function(d) {
+              console.log(d)
+            })
         });
 
       g.append("svg:path")
@@ -178,6 +181,14 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
 
       g.append("svg:text")
         .each(function(d) { d.angle = (d.startAngle + d.endAngle) / 2; })
+        .attr("class", function(d) {
+          var numDeps = matrix[d.index].reduce((a, b) => a + b);
+          if (numDeps > 20) {
+            return "displayed";
+          } else {
+            return "hidden";
+          }
+        })
         .attr("dy", ".35em")
         .attr("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
         .attr("transform", function(d) {
@@ -188,9 +199,15 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
         .style("cursor", "pointer")
         .style("font-size", "9px")
         .text(function(d) { 
+          return packageNames[d.index]; 
+        })
+        .style("display", function(d) {
           var numDeps = matrix[d.index].reduce((a, b) => a + b);
-          if (numDeps > 20)
-            return packageNames[d.index]; 
+          if (numDeps > 20) {
+            return null;
+          } else {
+            return "none";
+          }
         })
         .on("mouseover", function(d) {
           fade(0.1)
@@ -209,9 +226,18 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
           })
           .style("opacity", 1);
 
-      gEnter.call(d3v4.zoom().on("zoom", function() {
-        gEnter.attr("transform", d3v4.event.transform)
+      gEnter.call(d3v4.zoom()
+      .on("zoom", function() {
+        gEnter.selectAll(".group")
+              .attr("transform", d3v4.event.transform)
+        gEnter.selectAll(".chord")
+              .attr("transform", d3v4.event.transform)
+        scaleValue = d3v4.event.transform.k;
+        text();
       }));
+
+
+      
     });
   }
 
@@ -234,6 +260,21 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
   };
 
   return chart;
+
+  function calcFontSize() {
+    return Math.min(24, 10 * Math.pow(scaleValue, -1.2));
+  }
+
+  function text() {
+    if (scaleValue > 2) {
+      d3v4.selectAll(".hidden").style("display", null);
+    } else {
+      d3v4.selectAll(".hidden").style("display", "none");
+    }
+    console.log(scaleValue, calcFontSize())
+    d3v4.selectAll(".displayed").style("font-size", calcFontSize() + "px");
+    d3v4.selectAll(".hidden").style("font-size", calcFontSize() + "px");
+  }
 
   function treemapData(name) {
     var item = findDependency(master, name)

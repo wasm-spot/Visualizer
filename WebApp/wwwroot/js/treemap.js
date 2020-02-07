@@ -137,7 +137,10 @@ function displayTree(data, dep=false, state="in", compare=false) {
             return d.children;
         })
             .classed("children", true)
-            .on("click", transition);
+            .attr("id", function() {
+                if (dep) return "dep-parent";
+            })
+            .on("click", transition);            
 
         g.selectAll(".child")
             .data(function (d) {
