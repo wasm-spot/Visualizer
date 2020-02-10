@@ -43,11 +43,11 @@ function filterDepJson(filters) {
       });
 
       d3v4.json("json/index.json", function(index) {
-          var names = getLength(masterData, index, filtered)
+          var names = getNames(masterData, index, filtered);
           var n = names.length;
           var matrix = makeMatrix(n);
           filtered.forEach(item => {
-              var row = names.indexOf(item.name)
+              var row = names.indexOf(item.name);
               item.dependencies.forEach(dep => {
                   var dep = findDependency(masterData, index[dep]);
                   if (dep != null)
@@ -78,6 +78,7 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
       var matrix = data.matrix;
       var packageNames = data.packageNames;
       var radius = width * 0.4 - margin;
+      var maxLevel = Math.floor(packageNames.length * -0.005 + 8);
 
       // create the layout
       var chord = d3v4.chord()
@@ -86,7 +87,6 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
 
       // Select the svg element, if it exists.
       var svg = d3v4.select(this).selectAll("svg").data([data]);
-
       // Otherwise, create the skeletal chart.
       var gEnter = svg.enter().append("svg:svg")
         .attr("width", width)
@@ -107,10 +107,8 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
       var maxDeps = Math.max.apply(Math, numDeps)
 
       var fill = function(d) {
-        // return "hsl(" + parseInt(((packageNames[d.index][0].charCodeAt() - 97) / 26) * 360, 10) + ",90%,70%)";
         var ratio = numDeps[d.index]/maxDeps;
         if (ratio === 0) return '#ccc'
-
         return color(ratio);
       };
 
@@ -150,7 +148,6 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
       var chordResult = chord(matrix);
       var rootGroup = chordResult.groups[0];
       var rotation = - (rootGroup.endAngle - rootGroup.startAngle) / 2 * (180 / Math.PI);
-
       var g = gEnter.selectAll("g.group")
         .data(chordResult.groups)
         .enter().append("svg:g")
@@ -160,34 +157,31 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
         })
         .on("click", function(d) {
           var name = data.packageNames[d.index];
-          var treeData = treemapData(name);
+          // var treeData = treemapData(name);
           
-          var depData = newDependencies(name);
-          console.log(depData)
-          displayTree(depData, dep=true)
+          var depData = newDependencies(name, maxLevel);
+          displayTree(depData[0], dep=true)
+          console.log(depData[1].length)
           d3v4.selectAll("#dep-parent")
-            .on("click", function(d) {
-              console.log(d)
+            .on("mouseover", function(d) {
+              var index = packageNames.indexOf(d.data.name)
+              
+              console.log(index)
             })
         });
-
-      g.append("svg:path")
-        .style("fill", fill)
-        .style("stroke", fill)
-        .attr("d", arc)
-        .style("cursor", "pointer")
-        .on("mouseover",fade(0.1))
-        .on("mouseout", fade(1));
 
       g.append("svg:text")
         .each(function(d) { d.angle = (d.startAngle + d.endAngle) / 2; })
         .attr("class", function(d) {
           var numDeps = matrix[d.index].reduce((a, b) => a + b);
-          if (numDeps > 20) {
+          if (numDeps > 2) {
             return "displayed";
           } else {
             return "hidden";
           }
+        })
+        .attr("id", function(d) {
+          return "text" + d.index;
         })
         .attr("dy", ".35em")
         .attr("text-anchor", function(d) { return d.angle > Math.PI ? "end" : null; })
@@ -203,16 +197,43 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
         })
         .style("display", function(d) {
           var numDeps = matrix[d.index].reduce((a, b) => a + b);
-          if (numDeps > 20) {
+          if (numDeps > 2) {
             return null;
           } else {
             return "none";
           }
         })
         .on("mouseover", function(d) {
+          d3v4.select(this).style("display", null);
           fade(0.1)
         })
-        .on("mouseout", fade(1));
+        .on("mouseout", function(d) {
+          d3v4.select(this).style("display", "none");
+          fade(1)
+        });
+
+      g.append("svg:path")
+        .style("fill", fill)
+        .style("stroke", fill)
+        .attr("class", function(d) {
+          var numDeps = matrix[d.index].reduce((a, b) => a + b);
+          if (numDeps > 2) {
+            return "text-displayed";
+          } else {
+            return "text-hidden";
+          }
+        })
+        .attr("d", arc)
+        .style("cursor", "pointer")
+        .on("mouseover", function(d) {
+          d3v4.select("#text" + d.index).style("display", null)
+          fade(0.1)
+        })
+        .on("mouseout", function(d) {
+          if (d3v4.select(this).attr("class") == "text-hidden" && scaleValue <= 3.15)
+            d3v4.select("#text" + d.index).style("display", "none")
+          fade(1)
+        });
 
       gEnter.selectAll("path.chord")
           .data(chordResult)
@@ -235,8 +256,6 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
         scaleValue = d3v4.event.transform.k;
         text();
       }));
-
-
       
     });
   }
@@ -266,12 +285,12 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
   }
 
   function text() {
-    if (scaleValue > 2) {
+    console.log(scaleValue)
+    if (scaleValue > 3.15) {
       d3v4.selectAll(".hidden").style("display", null);
     } else {
       d3v4.selectAll(".hidden").style("display", "none");
     }
-    console.log(scaleValue, calcFontSize())
     d3v4.selectAll(".displayed").style("font-size", calcFontSize() + "px");
     d3v4.selectAll(".hidden").style("font-size", calcFontSize() + "px");
   }
@@ -293,17 +312,18 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
   
   }
 
-  function newDependencies(name) {
+  function newDependencies(name, maxLevel) {
     var queue = [], depQueue = [];
     var currNode = findDependency(master, name);
-    var allNodes = [name]
+    var allNodes = [name];
+    var matrix = [];
     var dep = {"name": name, "children": []};
     var root = dep;
-    queue.push(name)
-    depQueue.push(dep)
-    var depth = 0
-    while (queue.length != 0 && depth < 5) {
-      var n = queue.length
+    queue.push(name);
+    depQueue.push(dep);
+    var depth = 0;
+    while (queue.length != 0 && depth < maxLevel) {
+      var n = queue.length;
       
       while (n > 0) {
         var p = queue.shift();
@@ -312,13 +332,16 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
         if (currNode != null) {
           currNode.dependencies.forEach(child => {
             name = index[child];
-            var childNode = findDependency(master, name)
+            var childNode = findDependency(master, name);
             var depChild;
             if (childNode != null) {
               depChild = {"name": name, "children": [], "value": childNode.size};
             } else {
               depChild = {"name": name, "children": null};
             }
+            if (!allNodes.includes(name)) {
+              allNodes.push(name);
+            } 
             queue.push(name);
             depQueue.push(depChild)
             dep.children.push(depChild)
@@ -330,7 +353,7 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
       depth++;
     }
 
-    return root;
+    return [root, allNodes];
   }
 
 };
@@ -344,7 +367,7 @@ function findDependency(master, name) {
   return null;
 }
 
-function getLength(data, index, filtered) {
+function getNames(data, index, filtered) {
   var names = []
   filtered.forEach(item => {
       if (!names.includes(item.name) && item.size != 0) {
@@ -357,7 +380,6 @@ function getLength(data, index, filtered) {
           })
       }
   })
-
   return names;
 }
 

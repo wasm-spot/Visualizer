@@ -188,6 +188,7 @@ function displayTree(data, dep=false, state="in", compare=false) {
                 }
             })
             .attr("class", "textdiv"); //textdiv class allows us to style the text easily with CSS
+            
 
         g.selectAll(".textdiv")
             .style("color", function(d) {
