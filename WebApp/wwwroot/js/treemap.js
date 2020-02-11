@@ -103,7 +103,9 @@ function displayTree(data, dep=false, state="in", compare=false) {
         // and activate click's handler
         grandparent
             .datum(d.parent)
-            .on("click", transition)
+            .on("click", d => {
+                transition(d, dep)
+            })
             .select("text")
             .text(name(d))
             .style("font-size", "12px");
@@ -140,7 +142,9 @@ function displayTree(data, dep=false, state="in", compare=false) {
             .attr("id", function() {
                 if (dep) return "dep-parent";
             })
-            .on("click", transition);            
+            .on("click", d => {
+                transition(d, dep)
+            });            
 
         g.selectAll(".child")
             .data(function (d) {
@@ -195,10 +199,10 @@ function displayTree(data, dep=false, state="in", compare=false) {
                 return textColor(color(d.value/max_size))
             })
 
-        function transition(d) {
+        function transition(d, dep) {
             if (transitioning || !d) return;
             transitioning = true;
-            var g2 = display(d),
+            var g2 = display(d, dep),
                 t1 = g1.transition().duration(650),
                 t2 = g2.transition().duration(650);
             // Update the domain only after entering new elements.
@@ -235,6 +239,7 @@ function displayTree(data, dep=false, state="in", compare=false) {
                 transitioning = false;
             });
         }
+        
         return g;
     }
     function text(text) {
