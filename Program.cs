@@ -14,9 +14,11 @@ namespace Visualizer
             {               
                 System.Console.WriteLine("Please enter the file path to an assembly dll.");
             } else {
-                var dll = args[0].Split("/");
+		char[] sep = {'/', '\\'};
+                var dll = args[0].Split(sep);
                 string fileName = dll[dll.Length-1];
                 fileName = fileName.Substring(0, fileName.Length-4) + ".json";
+		Console.WriteLine(fileName);
 
                 var config = new Utf8JsonWriter(new FileStream("WebApp/wwwroot/json/config.json", FileMode.Create, FileAccess.Write, FileShare.Read));
                 using(config) {
@@ -34,16 +36,17 @@ namespace Visualizer
                 Console.WriteLine("Running linker....");
                 process.Start();
                 process.WaitForExit();
-
+		
                 process.StartInfo.Arguments = $"linker/src/analyzer/bin/illink_Debug/netcoreapp3.0/illinkanalyzer.dll --alldeps --l output/ --outjson WebApp/wwwroot/json/ --json WebApp/wwwroot/json/{fileName} output/linker-dependencies.xml.gz";
                 Console.WriteLine("Running linker analyzer...");
                 process.Start();
                 process.WaitForExit();
-
-                process.StartInfo.Arguments = "run --project WebApp";
+		
+                process.StartInfo.Arguments = "run --project WebApp --urls http://localhost:5050";
                 Console.WriteLine("Launching visualizer...");
                 process.Start();
                 process.WaitForExit();
+		
             }
 
         }
