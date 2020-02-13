@@ -136,7 +136,7 @@ function displayTree(data, dep=false, state="in", compare=false) {
         
         // add class and click handler to all g's with children
         g.filter(function (d) {
-            return d.children;
+            return d.children || [d];
         })
             .classed("children", true)
             .attr("id", function() {
