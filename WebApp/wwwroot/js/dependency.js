@@ -79,6 +79,7 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
       var radius = width * 0.4 - margin;
       // var maxLevel = Math.floor(packageNames.length * -0.005 + 7);
       var maxLevel = 5;
+      var grandParent;
 
       // create the layout
       var chord = d3v4.chord()
@@ -157,12 +158,12 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
         })
         .on("click", function(d) {
           var name = data.packageNames[d.index];
+          grandParent = name;
           var treeData = treemapData(name);
           
           var depData = newDependencies(name, maxLevel);
-          console.log(depData[0])
           displayTree(treeData, dep=true)
-          var wheelData = createDependencies(depData[1], depData[0], maxLevel);
+          var wheelData = createDependencies(depData, maxLevel);
           d3v4.select("#wheel2").select("svg").remove();
           displayWheel(wheelData, master, index, "wheel2");
           d3v4.select("#wheelName").html(name);
@@ -292,11 +293,11 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
   return chart;
 
   function click(d, maxLevel) {
-    console.log("click")
+    grandParent = d.data.name;
     treeData = treemapData(d.data.name);
     displayTree(treeData, dep=true)
     depData = newDependencies(d.data.name, maxLevel);
-    var wheelData = createDependencies(depData[1], depData[0]);
+    var wheelData = createDependencies(depData, maxLevel);
     console.log(wheelData)
     d3v4.select("#wheel2").select("svg").remove();
     displayWheel(wheelData, master, index, "wheel2");
@@ -351,6 +352,7 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
         dep = depQueue.shift();
         if (p in masterTree) {
           dep = masterTree[p];
+          return dep;
         }
         else {
           currNode = findDependency(master, p);
@@ -368,7 +370,6 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
                 }
 
                 if (childNode.dependencies == null) {
-                  console.log("root")
                   depChild = {"name": name, "children": null};
                   masterTree[childNode.name] = depChild;
                 } else {  
@@ -391,38 +392,54 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
       depth++;
     }
 
-    return [root, allNodes];
+    return root;
   }
 
-  function createDependencies(names, deps, maxLevel) {
-    var matrix = makeMatrix(names.length);
+  function createDependencies(deps, maxLevel) {
+    var names = [];
     var queue = [];
     queue.push(deps);
-    var row, col;
     var depth = 0;
     while (queue.length != 0 && depth < maxLevel) {
       var n = queue.length;
-
       while (n > 0) {
         var node = queue.shift();
-        row = names.indexOf(node.name);
-        if (node.children != null && row != -1) {
+        if (node.children != null) {
+          if (!names.includes(node.name)) {
+            names.push(node.name)
+          }
           node.children.forEach(child => {
             queue.push(child);
-            col = names.indexOf(child.name)
-            if (col != -1) matrix[row][col] = 1;
-            
-            
           })
         }
         n--;
       }
       depth++;
     }
+    var matrix = dependencyMatrix(names);
     return {"packageNames": names, "matrix": matrix};
   }
 
+  function dependencyMatrix(names) {
+    var matrix = makeMatrix(names.length);
+    var row, col;
+    names.forEach(name => {
+      row = names.indexOf(name);
+      var dependencies = master[parseInt(getKeyByValue(index, name))].dependencies;
+      dependencies.forEach(dep => {
+        var depName = master[dep].name;
+        col = names.indexOf(depName);
+        matrix[row][col] = 1;
+      })
+    })
+    return matrix;
+  }
+
 };
+
+function getKeyByValue(dict, value) {
+  return Object.keys(dict).find(key => dict[key] === value);
+}
 
 function findDependency(master, name) {
   for (var i = 0; i < master.length; i++) {
