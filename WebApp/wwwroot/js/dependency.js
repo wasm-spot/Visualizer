@@ -60,12 +60,12 @@ function filterDepJson(filters) {
               matrix: matrix
           };
           d3v4.select(".dependencyWheel").remove()
-          displayWheel(wheel, masterData, index, "wheel")
+          displayWheel(wheel, masterData, index, sub=false, "wheel")
       })        
   })  
 }
 
-d3v4.chart.dependencyWheel = function(master, index, options) {
+d3v4.chart.dependencyWheel = function(master, index, sub=false, options) {
   var masterTree = {};
   var width = 700;
   var margin = 150;
@@ -165,10 +165,10 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
           displayTree(treeData, dep=true)
           var wheelData = createDependencies(depData, maxLevel);
           d3v4.select("#wheel2").select("svg").remove();
-          displayWheel(wheelData, master, index, "wheel2");
+          displayWheel(wheelData, master, index, sub=true, "wheel2");
           d3v4.select("#wheelName").html(name);
           d3v4.select("#dep-tree").selectAll(".children")
-            .on("mouseover", function(d) {
+            .on("mouseover", function(d) { 
               var index = packageNames.indexOf(d.data.name)
               d3v4.select("#text" + index).style("display", null)
             })
@@ -208,12 +208,17 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
           return packageNames[d.index]; 
         })
         .style("display", function(d) {
-          var numDeps = matrix[d.index].reduce((a, b) => a + b);
-          if (numDeps > 2) {
-            return null;
+          if (!sub) {
+            var numDeps = matrix[d.index].reduce((a, b) => a + b);
+            if (numDeps > 2) {
+              return null;
+            } else {
+              return "none";
+            }
           } else {
-            return "none";
-          }
+            return null;
+          } 
+          
         })
         .on("mouseover", function(d) {
           d3v4.select(this).style("display", null);
@@ -298,9 +303,10 @@ d3v4.chart.dependencyWheel = function(master, index, options) {
     displayTree(treeData, dep=true)
     depData = newDependencies(d.data.name, maxLevel);
     var wheelData = createDependencies(depData, maxLevel);
+    console.log(depData)
     console.log(wheelData)
     d3v4.select("#wheel2").select("svg").remove();
-    displayWheel(wheelData, master, index, "wheel2");
+    displayWheel(wheelData, master, index, sub=true, "wheel2");
     d3v4.select("#dep-tree").selectAll(".children")
                 .on("click", (d) => {click(d, maxLevel)})
   }
@@ -474,9 +480,8 @@ function makeMatrix(n) {
   return arr;
 }
 
-function displayWheel(data, master, index, id) {
-  
-  var chart = d3v4.chart.dependencyWheel(master, index)
+function displayWheel(data, master, index, sub=false, id) {
+  var chart = d3v4.chart.dependencyWheel(master, index, sub=sub)
               .width(window.innerWidth * 0.45)
               .margin(150);
   console.log(data)
