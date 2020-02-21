@@ -47,8 +47,8 @@
     <script>
 
         var filters = {
-            size: 330,
-            deps: 10
+            size: 700,
+            deps: 3
         };
 
         var inFileName, fileName;
@@ -96,6 +96,9 @@
             var depSlider = document.getElementById("depRange");
             var sizeOutput = document.getElementById("sizeValue");
             var depOutput = document.getElementById("depValue");
+            var submit = document.getElementById("submit");
+            var search = document.getElementById("search");
+            var searchValue = search.value;
             
             var filteredIn = filterJson(inData, 300, overload);
             var treeIn = filteredIn[0];
@@ -151,13 +154,23 @@
             sizeSlider.onchange = function() {
                 sizeOutput.innerHTML = this.value;
                 filters.size = this.value;
-                filterDepJson(filters)
+                filterDepJson(filters, search=searchValue);
             }
 
             depSlider.onchange = function() {
                 depOutput.innerHTML = this.value;
                 filters.deps = parseInt(this.value);
-                filterDepJson(filters)
+                filterDepJson(filters, search=searchValue);
+            }
+
+            submit.onclick = function() {
+                search = document.getElementById("search");
+                searchValue = search.value;
+                filterDepJson(filters, search=searchValue);
+            }
+
+            search.onchange = function() {
+                searchValue = search.value;
             }
 
             input.onchange = function() {
@@ -386,13 +399,18 @@
                         <div>
                             Only view dependencies greater than this size:
                             <br/>
-                            <input type="range" min="100" max="600" value="330" id="sizeRange"> <div class="value" id="sizeValue"></div>
+                            <input type="range" min="100" max="2000" value="500" id="sizeRange"> <div class="value" id="sizeValue"></div>
                         </div>
     
                         <div>
                             Minimum number of dependencies:
                             <br/>
-                            <input type="range" min="0" max="50" value="10" id="depRange"> <div class="value" id="depValue"></div>
+                            <input type="range" min="0" max="50" value="3" id="depRange"> <div class="value" id="depValue"></div>
+                        </div>
+
+                        <div>
+                            <input id="search" type="text" placeholder="Search...">
+                            <button id="submit" type="submit">Submit</button>
                         </div>
                     </div>
                 </div>

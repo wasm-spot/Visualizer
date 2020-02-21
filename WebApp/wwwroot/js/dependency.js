@@ -32,13 +32,18 @@ d3v4.chart = d3v4.chart || {};
  * @see https://github.com/fzaninotto/DependencyWheel for complete source and license
  */
 
-function filterDepJson(filters) {
+function filterDepJson(filters, search=null) {
   d3v4.json("json/dep.json", function(masterData) {
       var filtered = []
       masterData.forEach(row => {
           if ((parseInt(row.size) >= filters.size) && 
-              (row.dependencies.length >= filters.deps)) {
+              (row.dependencies.length <= filters.deps)) {
+                if (search != null) {
+                  if (row.name.includes(search)) filtered.push(row);
+                } else {
                   filtered.push(row);
+                }
+                  
           }
       });
 
@@ -210,7 +215,7 @@ d3v4.chart.dependencyWheel = function(master, index, sub=false, options) {
         .style("display", function(d) {
           if (!sub) {
             var numDeps = matrix[d.index].reduce((a, b) => a + b);
-            if (numDeps > 2) {
+            if (numDeps < 2) {
               return null;
             } else {
               return "none";
@@ -234,7 +239,7 @@ d3v4.chart.dependencyWheel = function(master, index, sub=false, options) {
         .style("stroke", fill)
         .attr("class", function(d) {
           var numDeps = matrix[d.index].reduce((a, b) => a + b);
-          if (numDeps > 2) {
+          if (numDeps < 2) {
             return "text-displayed";
           } else {
             return "text-hidden";
