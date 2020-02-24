@@ -165,7 +165,7 @@ d3v4.chart.dependencyWheel = function(master, index, sub=false, options) {
           var name = data.packageNames[d.index];
           grandParent = name;
           var treeData = treemapData(name);
-          
+          console.log(maxLevel)
           var depData = newDependencies(name, maxLevel);
           displayTree(treeData, dep=true)
           var wheelData = createDependencies(depData, maxLevel);

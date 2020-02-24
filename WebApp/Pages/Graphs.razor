@@ -240,10 +240,6 @@
         await JsRuntime.InvokeAsync<string>("graph", json);
     }
 
-    private async Task clear() {
-        await JsRuntime.InvokeAsync<string>("clear");
-    }
-
     private async Task reset() {
         await JsRuntime.InvokeAsync<string>("reset");
     }
