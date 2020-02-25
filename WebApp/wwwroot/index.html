@@ -53,13 +53,22 @@
 
         var inFileName, fileName;
         var inData, data;
+        var compare;
 
         window.onload = function() {
             d3v4.json("json/config.json", function(config) {
-                inFileName = config.data;
+                if (config.inData != null) {
+                    inFileName = config.inData;
+                    fileName = config.data;
+                    compare = true;
+                } else {
+                    inFileName = config.data;
+                    fileName = "mscorlib.json";
+                    compare = false;
+                }
+    
                 d3v4.json("json/" + inFileName, function(input) {
                     inData = input;
-                    fileName = "mscorlib.json"
                     d3v4.json("json/" + fileName, function(output) {
                         data = output;
                         display();
@@ -70,11 +79,12 @@
         }
 
         window.display = function() {
+            console.log(compare)
             var input = document.getElementById("inputInFile");
             var output = document.getElementById("inputOutFile");
 
             var overload = document.getElementById("overload").checked;
-            var compare = document.getElementById("compare").checked;
+            document.getElementById("compare").checked = compare;
 
             var sunburstInSlider = document.getElementById("sunburstInSizeRange");
             var sunburstInSizeOutput = document.getElementById("sunburstInSizeValue");
@@ -141,14 +151,16 @@
                 treeInSizeOutput.innerHTML = this.value;
                 inputSize = this.value;
                 filteredIn = filterJson(inData, inputSize, overload);
-                displayTreemap(treeOut, filteredIn[0], compare);
+                treeIn = filteredIn[0];
+                displayTreemap(treeOut, treeIn, compare);
             }
 
             treeOutSlider.onchange = function() {
                 treeOutSizeOutput.innerHTML = this.value;
                 inputSize = this.value;
                 filteredOut = filterJson(data, inputSize, overload);
-                displayTreemap(filteredOut[0], treeIn, compare);
+                treeOut = filteredOut[0];
+                displayTreemap(treeOut, treeIn, compare);
             }
 
             sizeSlider.onchange = function() {
@@ -198,7 +210,8 @@
         }
 
         window.both = function() {
-            if (document.getElementById("compare").checked) {
+            compare = document.getElementById("compare").checked
+            if (document.getElementById("compare").checked || compare) {
                 d3v4.select("#sunburst-out").style("display", null)
                 d3v4.selectAll(".viz-container").style("display", "inline-block");
                 d3v4.select("#inputOut").style("display", null)
@@ -317,7 +330,7 @@
             <div id="sequence"></div>
             <div class="row">
                 <div class="viz-container" id="sunburst-in">
-                    <div class="slidecontainer" style="display:none">
+                    <div class="slidecontainer">
                         Only view methods greater than this size:
                         <br />
                         <input type="range" min="100" max="2000" value="250" id="sunburstInSizeRange"> <div class="value" id="sunburstInSizeValue"></div>
@@ -332,7 +345,7 @@
                 </div>
                 
        
-                <div class="viz-container" id="sunburst-out" style="display: none">
+                <div class="viz-container" id="sunburst-out">
                     <div class="slidecontainer" style="display:none">
                         Only view methods greater than this size:
                         <br />
@@ -367,13 +380,13 @@
                         <div class="slidecontainer">
                             Only view methods greater than this size:
                             <br />
-                            <input type="range" min="100" max="2000" value="250" id="treeInSizeRange"> <div class="value" id="treeInSizeValue"></div>
+                            <input type="range" min="0" max="2000" value="250" id="treeInSizeRange"> <div class="value" id="treeInSizeValue"></div>
                         </div>
                         
                     </div>
                 </div>
 
-                <div class="viz-container" id="out-tree" style="display: none;">
+                <div class="viz-container" id="out-tree" >
                     <!-- <div class="menu">
                         @if (!zoomed) {
                             <button class="btn btn-secondary" @onclick="expandTree">zoom</button>
@@ -382,7 +395,7 @@
                     <div class="slidecontainer">
                         Only view methods greater than this size:
                         <br />
-                        <input type="range" min="100" max="2000" value="250" id="treeOutSizeRange"> <div class="value" id="treeOutSizeValue"></div>
+                        <input type="range" min="0" max="2000" value="250" id="treeOutSizeRange"> <div class="value" id="treeOutSizeValue"></div>
                     </div>
                 </div>
                 
@@ -399,13 +412,13 @@
                         <div>
                             Only view dependencies greater than this size:
                             <br/>
-                            <input type="range" min="100" max="2000" value="500" id="sizeRange"> <div class="value" id="sizeValue"></div>
+                            <input type="range" min="0" max="2000" value="500" id="sizeRange"> <div class="value" id="sizeValue"></div>
                         </div>
     
                         <div>
                             Minimum number of dependencies:
                             <br/>
-                            <input type="range" min="0" max="100" value="3" id="depRange"> <div class="value" id="depValue"></div>
+                            <input type="range" min="0" max="500" value="3" id="depRange"> <div class="value" id="depValue"></div>
                         </div>
 
                         <div>

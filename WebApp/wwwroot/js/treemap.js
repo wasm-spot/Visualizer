@@ -82,7 +82,6 @@ function displayTree(data, dep=false, state="in", compare=false) {
     if (dep) {
         grandparent.style("font-size", "10px");
     }
-    console.log(data)
     var root = d3v4.hierarchy(data);
     treemap(root
         .sum(function (d) {
@@ -97,7 +96,11 @@ function displayTree(data, dep=false, state="in", compare=false) {
     display(root, dep);
 
     function display(d, dep=false) {
-        var max_size = d.children[0].value;
+        var max_size = 0.9;
+        if(d.children != null) {
+            max_size = d.children[0].value;
+        }
+        
 
         // write text into grandparent
         // and activate click's handler
@@ -119,20 +122,20 @@ function displayTree(data, dep=false, state="in", compare=false) {
         var g1 = svg.insert("g", ".grandparent")
             .datum(d)
             .attr("class", "depth");
-
-        if (d._children != null) {
+        
+        if (d.children != null) {
             var g = g1.selectAll("g")
-            .data(d._children)
-            .enter()
-            .append("g")
+                .data(d.children)
+                .enter()
+                .append("g")
         } else {
             var g = g1.selectAll("g")
-            .data(d.children)
-            .enter()
-            .append("g")
+                .data(d)
+                .enter()
+                .append("g").append("rect")
+                .call(rect)
         }
-        
-            // g.enter().append("g");
+
         
         // add class and click handler to all g's with children
         g.filter(function (d) {

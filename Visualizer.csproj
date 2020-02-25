@@ -6,12 +6,8 @@
     <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
   </PropertyGroup>
 
-   <ItemGroup>
-    <ProjectReference Include="linker\external\cecil\Mono.Cecil.csproj" />
-    <ProjectReference Include="linker\external\cecil\symbols\mdb\Mono.Cecil.Mdb.csproj" />
-    <ProjectReference Include="linker\external\cecil\symbols\pdb\Mono.Cecil.Pdb.csproj" />
-    <ProjectReference Include="WebApp\WebApp.csproj" />
-    
+  <ItemGroup>
+    <PackageReference Include="Mono.Options" Version="6.6.0.161" />
   </ItemGroup>
   
   <ItemGroup>
