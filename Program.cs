@@ -12,6 +12,7 @@ namespace Visualizer
         {
             bool compare = false;
             bool sub = false;
+            bool disable = false;
             string path = null;
             string inFileName = null;
 
@@ -19,6 +20,7 @@ namespace Visualizer
                 { "c|compare", "compare linker input to output", v => { compare = v != null; } },
                 { "d|dll=", "file path to assembly file", v => { path = v; } },
                 { "s|substitution", "use linker-subs.xml", v => { sub = v != null; } },
+                { "disable", "disable optimization", v => { disable = v != null; } },
             };
 
             if (args.Length == 0)
@@ -65,12 +67,16 @@ namespace Visualizer
                         process.Start();
                         process.WaitForExit();
                     }
-
+                    string command = $"linker/artifacts/bin/Mono.Linker/Debug/netcoreapp3.0/illink.dll -c link -a {path} --dump-dependencies";
                     if (sub) {
-                        process.StartInfo.Arguments = $"linker/artifacts/bin/Mono.Linker/Debug/netcoreapp3.0/illink.dll -c link -a {path} --substitutions linker-subs.xml --dump-dependencies";
-                    } else {
-                        process.StartInfo.Arguments = $"linker/artifacts/bin/Mono.Linker/Debug/netcoreapp3.0/illink.dll -c link -a {path} --dump-dependencies";
+                        command += "--substitutions linker-subs.xml";
                     }
+
+                    if (disable) {
+                        command += "--disable-opt ipconstprop";
+                    }
+
+                    process.StartInfo.Arguments = command;
                     
                     Console.WriteLine("Running linker....");
                     process.Start();
