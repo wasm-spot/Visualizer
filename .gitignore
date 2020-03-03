@@ -12,6 +12,5 @@ WebApp/.vscode/*
 WebApp/bin/*
 WebApp/obj/*
 WebApp/out/*
-*.xml
 WebApp/output/*
 tools/web/node_modules/*

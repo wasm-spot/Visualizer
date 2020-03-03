@@ -11,12 +11,14 @@ namespace Visualizer
         static void Main(string[] args)
         {
             bool compare = false;
+            bool sub = false;
             string path = null;
             string inFileName = null;
 
             var optionsParser = new OptionSet() {
                 { "c|compare", "compare linker input to output", v => { compare = v != null; } },
                 { "d|dll=", "file path to assembly file", v => { path = v; } },
+                { "s|substitution", "use linker-subs.xml", v => { sub = v != null; } },
             };
 
             if (args.Length == 0)
@@ -52,16 +54,6 @@ namespace Visualizer
                     process.StartInfo.UseShellExecute = true;
                     process.StartInfo.FileName = "dotnet";
 
-                    process.StartInfo.Arguments = $"linker/artifacts/bin/Mono.Linker/Debug/netcoreapp3.0/illink.dll -c link -a {path} --dump-dependencies";
-                    Console.WriteLine("Running linker....");
-                    process.Start();
-                    process.WaitForExit();
-            
-                    process.StartInfo.Arguments = $"linker/artifacts/bin/analyzer/Debug/netcoreapp3.0/illinkanalyzer.dll --alldeps --l output/ --outjson WebApp/wwwroot/json/ --json WebApp/wwwroot/json/{fileName} output/linker-dependencies.xml.gz";
-                    Console.WriteLine("Running linker analyzer...");
-                    process.Start();
-                    process.WaitForExit();
-
                     if (compare) {
                         process.StartInfo.Arguments = $"linker/artifacts/bin/Mono.Linker/Debug/netcoreapp3.0/illink.dll -c copy -a {path} -o nolink/ --dump-dependencies";
                         Console.WriteLine("Running linker....");
@@ -73,6 +65,21 @@ namespace Visualizer
                         process.Start();
                         process.WaitForExit();
                     }
+
+                    if (sub) {
+                        process.StartInfo.Arguments = $"linker/artifacts/bin/Mono.Linker/Debug/netcoreapp3.0/illink.dll -c link -a {path} --substitutions linker-subs.xml --dump-dependencies";
+                    } else {
+                        process.StartInfo.Arguments = $"linker/artifacts/bin/Mono.Linker/Debug/netcoreapp3.0/illink.dll -c link -a {path} --dump-dependencies";
+                    }
+                    
+                    Console.WriteLine("Running linker....");
+                    process.Start();
+                    process.WaitForExit();
+            
+                    process.StartInfo.Arguments = $"linker/artifacts/bin/analyzer/Debug/netcoreapp3.0/illinkanalyzer.dll --alldeps --l output/ --outjson WebApp/wwwroot/json/ --json WebApp/wwwroot/json/{fileName} output/linker-dependencies.xml.gz";
+                    Console.WriteLine("Running linker analyzer...");
+                    process.Start();
+                    process.WaitForExit();
             
                     process.StartInfo.Arguments = "run --project WebApp";
                     Console.WriteLine("Launching visualizer...");

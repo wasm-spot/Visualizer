@@ -9,14 +9,10 @@ function treeDisplay() {
 function displayTreemap(dataJson, dataJson_in, compare) {
     treeDisplay();
     displayTree(dataJson_in, dep=false, state="in", compare=compare);
-    if (compare) {
-        d3v4.select("#in-tree")
-            .style("margin-right", "0.7%")
-            .style("width", "49%");
-        displayTree(dataJson, dep=false, state="out", compare=compare);
-    } else {
-        d3v4.select("#in-tree").style("width", "95%")
-    }
+    d3v4.select("#in-tree").style("width", "95%")
+    displayTree(dataJson, dep=false, state="out", compare=compare);
+    d3v4.select("#out-tree").style("width", "95%")
+    
 }
 
 function displayTree(data, dep=false, state="in", compare=false) {
@@ -26,11 +22,6 @@ function displayTree(data, dep=false, state="in", compare=false) {
         height = window.innerHeight - margin.top - margin.bottom,
         formatNumber = d3v4.format(","),
         transitioning;
-
-
-    if (compare) {
-        width *= 0.5;
-    } 
     
     if (dep) {
         width = window.innerWidth * 0.45 ;
