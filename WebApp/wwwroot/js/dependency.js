@@ -50,6 +50,7 @@ function filterDepJson(filters, search=null) {
       d3v4.json("json/index.json", function(index) {
           var names = getNames(masterData, index, filtered);
           var n = names.length;
+          var reversed = [];
           var matrix = makeMatrix(n);
           filtered.forEach(item => {
               var row = names.indexOf(item.name);
@@ -60,18 +61,30 @@ function filterDepJson(filters, search=null) {
               })
               
           })
+          for (var item in index) {
+            reversed.push({"name": index[item], "dependencies": []});
+          }
+          masterData.forEach((item, i) => {
+            reversed[i].size = item.size;
+            if (item.dependencies != null) {
+              item.dependencies.forEach(dep => {
+                reversed[dep].dependencies.push(i);
+              })
+            }
+          })
+          console.log(reversed)
           var wheel = {
               packageNames : names,
               matrix: matrix
           };
           d3v4.select(".dependencyWheel").remove()
-          displayWheel(wheel, masterData, index, sub=false, "wheel")
+          displayWheel(wheel, masterData, index, reversed, sub=false, "wheel")
       })        
   })  
 }
 
-d3v4.chart.dependencyWheel = function(master, index, sub=false, options) {
-  var masterTree = {};
+d3v4.chart.dependencyWheel = function(master, index, reversed, sub=false, options) {
+  var masterTree = {}, reversedMasterTree = {};
   var width = 700;
   var margin = 150;
   var padding = 0.02;
@@ -86,8 +99,6 @@ d3v4.chart.dependencyWheel = function(master, index, sub=false, options) {
       var radius = width * 0.4 - margin;
       // var maxLevel = Math.floor(packageNames.length * -0.005 + 7);
       var maxLevel = 5;
-      var grandParent;
-      console.log(levels)
       // create the layout
       var chord = d3v4.chord()
         .padAngle(padding)
@@ -173,12 +184,16 @@ d3v4.chart.dependencyWheel = function(master, index, sub=false, options) {
           var name = data.packageNames[d.index];
           grandParent = name;
           var treeData = treemapData(name);
-          var depData = newDependencies(name, maxLevel);
+          var depData = newDependencies(name, maxLevel, reverse=false);
+          var reversedDepData = newDependencies(name, maxLevel, reverse=true);
           displayTree(treeData, dep=true)
           console.log(depData)
-          var wheelData = createDependencies(depData, maxLevel);
+          var wheelData = createDependencies(depData, maxLevel, reverse=false);
+          var reversedWheelData = createDependencies(reversedDepData, maxLevel, reverse=true);
           d3v4.select("#wheel2").select("svg").remove();
-          displayWheel(wheelData, master, index, sub=true, "wheel2");
+          d3v4.select("#reversedwheel").select("svg").remove();
+          displayWheel(wheelData, master, index, reversed, sub=true, "wheel2");
+          displayWheel(reversedWheelData, reversed, index, reversed, sub=true, "reversedwheel");
           d3v4.select("#wheelName").html(name);
           d3v4.select("#dep-tree").selectAll(".children")
             .on("mouseover", function(d) { 
@@ -314,12 +329,14 @@ d3v4.chart.dependencyWheel = function(master, index, sub=false, options) {
     grandParent = d.data.name;
     treeData = treemapData(d.data.name);
     displayTree(treeData, dep=true)
-    depData = newDependencies(d.data.name, maxLevel);
-    var wheelData = createDependencies(depData, maxLevel);
-    console.log(depData)
-    console.log(wheelData)
+    depData = newDependencies(d.data.name, maxLevel, reverse=false);
+    reversedDepData = newDependencies(d.data.name, maxLevel, reverse=true);
+    var wheelData = createDependencies(depData, maxLevel, reverse=false);
+    var reversedWheelData = createDependencies(reversedDepData, maxLevel, reverse=true);
     d3v4.select("#wheel2").select("svg").remove();
-    displayWheel(wheelData, master, index, sub=true, "wheel2");
+    d3v4.select("#reversedwheel").select("svg").remove();
+    displayWheel(wheelData, master, index, reversed, sub=true, "wheel2");
+    displayWheel(reversedWheelData, reversed, index, reversed, sub=true, "reversedwheel");
     d3v4.select("#dep-tree").selectAll(".children")
                 .on("click", (d) => {click(d, maxLevel)})
   }
@@ -354,7 +371,7 @@ d3v4.chart.dependencyWheel = function(master, index, sub=false, options) {
   
   }
 
-  function newDependencies(name, maxLevel) {
+  function newDependencies(name, maxLevel, reverse=false) {
     var queue = [], depQueue = [];
     var currNode;
     var dep = {"name": name, "children": []};
@@ -362,31 +379,45 @@ d3v4.chart.dependencyWheel = function(master, index, sub=false, options) {
     queue.push(name);
     depQueue.push(dep);
     var depth = 0;
-    if (name in masterTree) {
-      dep = masterTree[name];
+    var tree;
+    if (reverse) {
+      tree = reversedMasterTree;
+    } else {
+      tree = masterTree;
+    }
+    if (name in tree) {
+      dep = tree[name];
       return dep;
     }
-
     while (queue.length != 0 && depth < maxLevel) {
       var n = queue.length;
       
       while (n > 0) {
         var p = queue.shift();
         dep = depQueue.shift();
-      
-        currNode = findDependency(master, p);
+        if (reverse) {
+          currNode = findDependency(reversed, p);
+        } else {
+          currNode = findDependency(master, p);
+        }
+        
         if (currNode.dependencies != null) {
           currNode.dependencies.forEach(child => {
-            var childNode = master[child];
+            if (reversed) {
+              var childNode = reversed[child];
+            } else {
+              var childNode = master[child];
+            }
+            
             name = childNode.name
             var depChild;
-            if (name in masterTree) {
-              depChild = masterTree[childNode.name];
+            if (name in tree) {
+              depChild = tree[childNode.name];
             } else {
 
               if (childNode.dependencies == null) {
                 depChild = {"name": name, "children": null};
-                masterTree[childNode.name] = depChild;
+                tree[childNode.name] = depChild;
               } else {  
                 depChild = {"name": name, "children": [], "value": childNode.size};
                 queue.push(name);
@@ -396,8 +427,8 @@ d3v4.chart.dependencyWheel = function(master, index, sub=false, options) {
             dep.children.push(depChild)
             
           })
-          if (!(currNode.name in masterTree)) {
-            masterTree[currNode.name] = dep;
+          if (!(currNode.name in tree)) {
+            tree[currNode.name] = dep;
           }
         }
         
@@ -409,7 +440,7 @@ d3v4.chart.dependencyWheel = function(master, index, sub=false, options) {
     return root;
   }
 
-  function createDependencies(deps, maxLevel) {
+  function createDependencies(deps, maxLevel, reverse=false) {
     var names = [];
     var queue = [];
     var levels = {};
@@ -432,21 +463,29 @@ d3v4.chart.dependencyWheel = function(master, index, sub=false, options) {
       }
       depth++;
     }
-    var matrix = dependencyMatrix(names);
+    var matrix = dependencyMatrix(names, reverse=reverse);
     return {"packageNames": names, "matrix": matrix, "levels": levels};
   }
 
-  function dependencyMatrix(names) {
+  function dependencyMatrix(names, reverse=false) {
     var matrix = makeMatrix(names.length);
-    var row, col;
+    var row, col, data;
+    if (reverse) {
+      data = reversed;
+    } else {
+      data = master;
+    }
     names.forEach(name => {
       row = names.indexOf(name);
-      var dependencies = master[parseInt(getKeyByValue(index, name))].dependencies;
-      dependencies.forEach(dep => {
-        var depName = master[dep].name;
-        col = names.indexOf(depName);
-        matrix[row][col] = 1;
-      })
+      var dependencies = data[parseInt(getKeyByValue(index, name))].dependencies;
+      if (dependencies != null) {
+        dependencies.forEach(dep => {
+          var depName = data[dep].name;
+          col = names.indexOf(depName);
+          matrix[row][col] = 1;
+        })
+      }
+      
     })
     return matrix;
   }
@@ -490,8 +529,8 @@ function makeMatrix(n) {
   return arr;
 }
 
-function displayWheel(data, master, index, sub=false, id) {
-  var chart = d3v4.chart.dependencyWheel(master, index, sub=sub)
+function displayWheel(data, master, index, reversed, sub=false, id) {
+  var chart = d3v4.chart.dependencyWheel(master, index, reversed, sub=sub)
               .width(window.innerWidth * 0.45)
               .margin(150);
   console.log(data)
