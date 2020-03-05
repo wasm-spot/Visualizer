@@ -12,6 +12,7 @@ namespace Visualizer
         {
             bool compare = false;
             bool sub = false;
+            bool verbose = false;
             bool disable = false;
             string path = null;
             string inFileName = null;
@@ -21,6 +22,7 @@ namespace Visualizer
                 { "d|dll=", "file path to assembly file", v => { path = v; } },
                 { "s|substitution", "use linker-subs.xml", v => { sub = v != null; } },
                 { "disable", "disable optimization", v => { disable = v != null; } },
+                { "v|verbose=", "display all dependencies from the analyzer", v => { verbose = v != null; } },
             };
 
             if (args.Length == 0)
@@ -69,11 +71,11 @@ namespace Visualizer
                     }
                     string command = $"linker/artifacts/bin/Mono.Linker/Debug/netcoreapp3.0/illink.dll -c link -a {path} --dump-dependencies";
                     if (sub) {
-                        command += "--substitutions linker-subs.xml";
+                        command += " --substitutions linker-subs.xml";
                     }
 
                     if (disable) {
-                        command += "--disable-opt ipconstprop";
+                        command += " --disable-opt ipconstprop";
                     }
 
                     process.StartInfo.Arguments = command;
