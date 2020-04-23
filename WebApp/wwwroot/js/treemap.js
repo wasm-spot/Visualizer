@@ -15,9 +15,17 @@ function displayTreemap(dataJson, dataJson_in, compare, resource = false) {
         inTree += "-res"
         outTree += "-res"
     }
-    d3v4.select(inTree).style("width", "95%")
+    d3v4.select(inTree).style("width", () => {
+        if (!resource) return "95%"
+        return "49%"
+    })
+    .style("margin", null)
     displayTree(dataJson, dep=false, state="out", compare=compare, resource=resource);
-    d3v4.select(outTree).style("width", "95%")
+    d3v4.select(outTree).style("width", () => {
+        if (!resource) return "95%"
+        return "49%"
+    })
+    .style("margin", null)
     
 }
 
@@ -35,6 +43,9 @@ function displayTree(data, dep=false, state="in", compare=false, resource=false)
         height *= 0.8;
         el_id = "dep-tree";
         d3v4.select("#dep").remove();
+    }
+    if (resource) {
+        width = window.innerWidth * 0.45 ;
     }
 
     // sets x and y scale to determine size of visible boxes
