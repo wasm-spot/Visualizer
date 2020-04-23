@@ -21,7 +21,8 @@ function getClassName(className) {
 //  given json file of assembly dependencies, reformat to match format
 //  needed for treemap visualization
 function filterJson(data, size=100, overload=true) {
-    var treeDict = {"name" : "All", children : []}
+    var treeDict = {"name" : "All", "children" : []}
+    var resDict = {"name": "All", "children" : []}
     var csvStr = "";
     data.forEach(function(as) {
         var asDict = {};
@@ -31,47 +32,54 @@ function filterJson(data, size=100, overload=true) {
         var classes = as["children"];
         if (classes != null) {
             classes.forEach(function(cl) {
-                var classDict = {};
-                var className = getClassName(cl["name"]) + " (Class)";
-                var methods = cl["children"];
-                if (methods != null) {
-                    var names = [];
-                    var sizes = [];
-                    methods.forEach(function(method) {
-                        var methodName = method["name"];
-                        if (overload) {
-                            methodName = getMethodName(methodName) + " (Method)";
-                        }
-                        var ix = names.indexOf(methodName);
-                        if (ix != -1) {
-                            sizes[ix] += +method["size"];
-                        } else {
-                            names.push(methodName + " (Method)");
-                            sizes.push(+method["size"])
-                        }
-                    })
-                    for (var i=0; i<names.length; i++) {
-                        if (sizes[i] >= size) {
-                            if (classDict["children"] == null) {
-                                classDict["children"] = [];
-                                classDict["name"] = className;
-                            } 
-                            // Treemap format
-                            classDict["children"].push({"name": names[i] , 
-                                                    "value": sizes[i]});
+                if (cl.type == "class") {
+                    var classDict = {};
+                    var className = getClassName(cl["name"]) + " (Class)";
+                    var methods = cl["children"];
+                    if (methods != null) {
+                        var names = [];
+                        var sizes = [];
+                        methods.forEach(function(method) {
+                            var methodName = method["name"];
+                            if (overload) {
+                                methodName = getMethodName(methodName) + " (Method)";
+                            }
+                            var ix = names.indexOf(methodName);
+                            if (ix != -1) {
+                                sizes[ix] += +method["size"];
+                            } else {
+                                names.push(methodName + " (Method)");
+                                sizes.push(+method["size"])
+                            }
+                        })
+                        for (var i=0; i<names.length; i++) {
+                            if (sizes[i] >= size) {
+                                if (classDict["children"] == null) {
+                                    classDict["children"] = [];
+                                    classDict["name"] = className;
+                                } 
+                                // Treemap format
+                                classDict["children"].push({"name": names[i] , 
+                                                        "value": sizes[i]});
 
-                            // sunburst format
-                            var name = names[i];
-                            var line = asName + "-" + className + "-" + name + "," + sizes[i] + "\n";
-                            csvStr += line;
-                             
+                                // sunburst format
+                                var name = names[i];
+                                var line = asName + "-" + className + "-" + name + "," + sizes[i] + "\n";
+                                csvStr += line;
+                                
+                            }
+                        }
+                
+                        if (classDict["name"] != null) {
+                            asDict["children"].push(classDict);
                         }
                     }
-               
-                    if (classDict["name"] != null) {
-                        asDict["children"].push(classDict);
-                    }
-                    
+                }
+                if (cl.type == "resource") {
+                    var resource = {"name": cl.name + "( Resource)", "value": cl.size}
+                    var assembly = {"name": asName, "children" : [resource]}
+                    resDict.children.push(assembly)
+                    asDict["children"].push(resource);
                 }
             })
             
@@ -79,7 +87,7 @@ function filterJson(data, size=100, overload=true) {
         treeDict.children.push(asDict)
     })
 
-    return [treeDict, csvStr];
+    return [treeDict, csvStr, resDict];
 }
 
 function formatMethods(data, size=100, overload=true) {

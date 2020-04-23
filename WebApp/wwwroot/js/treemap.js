@@ -6,17 +6,24 @@ function treeDisplay() {
                             its methods.");
 }
 
-function displayTreemap(dataJson, dataJson_in, compare) {
+function displayTreemap(dataJson, dataJson_in, compare, resource = false) {
     treeDisplay();
-    displayTree(dataJson_in, dep=false, state="in", compare=compare);
-    d3v4.select("#in-tree").style("width", "95%")
-    displayTree(dataJson, dep=false, state="out", compare=compare);
-    d3v4.select("#out-tree").style("width", "95%")
+    displayTree(dataJson_in, dep=false, state="in", compare=compare, resource=resource);
+    var inTree = "#in-tree"
+    var outTree = "#out-tree"
+    if (resource) {
+        inTree += "-res"
+        outTree += "-res"
+    }
+    d3v4.select(inTree).style("width", "95%")
+    displayTree(dataJson, dep=false, state="out", compare=compare, resource=resource);
+    d3v4.select(outTree).style("width", "95%")
     
 }
 
-function displayTree(data, dep=false, state="in", compare=false) {
+function displayTree(data, dep=false, state="in", compare=false, resource=false) {
     var el_id = state + '-tree';
+    if (resource) el_id += "-res";
     var margin = {top: 30, right: 30, bottom: 30, left: 10},
         width = window.innerWidth * 0.9,
         height = window.innerHeight - margin.top - margin.bottom,
@@ -42,7 +49,7 @@ function displayTree(data, dep=false, state="in", compare=false) {
         .paddingInner(0)
         .round(true);
     
-    if (!dep) d3v4.select("#treemap-" + state).remove();
+    if (!dep && !resource) d3v4.select("#treemap-" + state).remove();
 
     var svg = d3v4.select('#'+el_id).append("svg")
         .attr("id", function(d) {
