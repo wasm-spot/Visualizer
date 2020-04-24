@@ -79,7 +79,6 @@
         }
 
         window.display = function() {
-            console.log(compare)
             var input = document.getElementById("inputInFile");
             var output = document.getElementById("inputOutFile");
 
@@ -110,12 +109,12 @@
             var search = document.getElementById("search");
             var searchValue = search.value;
             
-            var filteredIn = filterJson(inData, 300, overload);
+            var filteredIn = filterJson(inData, 250, overload);
             var treeIn = filteredIn[0];
             var csvInStr = filteredIn[1];
             var resIn = filteredIn[2];
 
-            var filteredOut = filterJson(data, 300, overload);
+            var filteredOut = filterJson(data, 250, overload);
             var treeOut = filteredOut[0];
             var csvOutStr = filteredOut[1];
             var resOut = filteredOut[2];

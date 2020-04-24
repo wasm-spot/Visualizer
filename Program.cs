@@ -59,6 +59,7 @@ namespace Visualizer
                     process.StartInfo.FileName = "dotnet";
 
                     if (compare) {
+                        Directory.Delete("nolink/", true);
                         process.StartInfo.Arguments = $"linker/artifacts/bin/Mono.Linker/Debug/netcoreapp3.0/illink.dll -c copy -a {path} -o nolink/ --dump-dependencies";
                         Console.WriteLine("Running linker....");
                         process.Start();
@@ -79,7 +80,7 @@ namespace Visualizer
                     }
 
                     process.StartInfo.Arguments = command;
-                    
+                    Directory.Delete("output/", true);
                     Console.WriteLine("Running linker....");
                     process.Start();
                     process.WaitForExit();
