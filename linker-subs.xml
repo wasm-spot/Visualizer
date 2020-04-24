@@ -1,0 +1,30 @@
+<linker>
+    <assembly fullname="mscorlib">
+        <!-- <type fullname="System.IntPtr">
+            <method signature="System.Int32 get_Size()" body="stub" value="4"/>
+        </type> -->
+        <type fullname="System.UIntPtr">
+        <method signature="System.Int32 get_Size()" body="stub" value="4"/>
+        </type>
+        <type fullname="System.Numerics.Vector`1">
+            <method signature="System.Int32 GetHashCode()" body="stub" value="4"/>
+        </type>
+        <type fullname="System.DateTimeParse">
+            <method signature="System.Boolean Lex(System.DateTimeParse/DS,System.__DTString&amp;,System.DateTimeToken&amp;,System.DateTimeRawInfo&amp;,System.DateTimeResult&amp;,System.Globalization.DateTimeFormatInfo&amp;,System.Globalization.DateTimeStyles)" body="stub" value="true" />
+        </type>
+        <type fullname="System.String">
+            <method signature="System.Void MakeSeparatorList(System.ReadOnlySpan\u00601\u003CSystem.Char\u003E,System.Collections.Generic.ValueListBuilder\u00601\u003CSystem.Int32\u003E\u0026)" body="stub" />
+        </type>
+        <!-- <type fullname="System.Numerics.Vector">
+        <method signature="System.Boolean get_IsHardwareAccelerated()" body="stub"/>
+        </type> -->
+        <!-- <type fullname="System.BitConverter">
+        <field name="IsLittleEndian" value="true"/>
+        </type> -->
+  </assembly>
+  <assembly fullname="System.Core">
+    <type fullname="System.Linq.Expressions.Compiler.LambdaCompiler">
+        <method signature="System.Void EmitLift(System.Linq.Expressions.ExpressionType,System.Type,System.Linq.Expressions.MethodCallExpression,System.Linq.Expressions.ParameterExpression[],System.Linq.Expressions.Expression[])" body="stub" />
+    </type>
+  </assembly>
+</linker>

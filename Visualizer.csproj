@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <EnableDefaultCompileItems>False</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mono.Options" Version="6.6.0.161" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Compile Include="Program.cs" />
+ </ItemGroup>
+
+</Project>

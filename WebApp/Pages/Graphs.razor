@@ -2,7 +2,6 @@
 @inject HttpClient Http
 @inject IJSRuntime JsRuntime;
 @using Newtonsoft.Json;
-@using Newtonsoft.Json.Linq;
 @using System.Linq;
 @using System.Text.RegularExpressions;
 @using BlazorInputFile;
@@ -11,20 +10,11 @@
 @using System.Net.Http;
 @using System.Text;
 
-<nav>
-    <ul class="nav navbar-nav">
-        <li><button @onclick="reset" class="btn btn-secondary option-button">Reset</button></li>
-    </ul>
-</nav>
 
-<div id="landing" class="animated fadeInUp delay-1s">
+@* <div id="landing" class="animated fadeInUp">
     <h1 class="landing-title">Linker Visualizer</h1>
     <div id="options">
         <form>
-            <p>
-                <label>Only view methods greater than this size: </label>
-                <input @bind="inputSize" id="size"/>
-            </p>
             <p id="fields">
                 <input @bind="overload" id="overload" type="checkbox"/>
                 <label>Merge overloaded methods</label>
@@ -38,7 +28,7 @@
             <InputFile id="inputfile" OnChange="HandleInFileSelected" />
             @if (file != null)
             {
-                <p>Name: @in_file_name</p>
+                <p>Name: @inFileName</p>
             }
             
             
@@ -48,16 +38,15 @@
                 <InputFile id="inputfile" OnChange="HandleOutFileSelected" />
                 @if (file != null)
                 {
-                    <p>Name: @file_name</p>
+                    <p>Name: @fileName</p>
                 }
             } 
             <br/>
-            <button id="submit" type="button" class="btn btn-submit" @onclick="display">display</button>
         </form>
     </div>
 </div>
 
-<div id="chart" class="animated fadeInUp" style="display: none;">
+<div id="chart" class="animated fadeInUp">
             
     <div id="container">
         <h2 class="chart-title" id="sunburst-title"></h2>
@@ -65,13 +54,17 @@
         <div id="sequence"></div>
         <div class="row">
             <div class="viz-container" id="sunburst-in">
+                <div class="slidecontainer" style="display:none">
+                    Only view methods greater than this size:
+                    <br />
+                    <input type="range" min="100" max="2000" value="250" id="sunburstInSizeRange"> <div class="value" id="sunburstInSizeValue"></div>
+                </div>
+
                 <div class="explanation" id="in-explanation" style="visibility: hidden;">
                         <span class="size" id="in-size"></span> =<br/>
                         <span class="percentage" id="in-percentage"></span><br/>
                         of overall size
-                        @if (dataJson == null) {
-                            <p><em>Loading...</em></p>
-                        }
+           
                 </div>
             </div>
             
@@ -96,11 +89,17 @@
         <div class="row">
             <div class="viz-container" id="in-tree">
                 <div class="menu">
-                    @if (!zoomed) {
+                    @if (!zoomed && compare) {
                         <button class="btn btn-secondary" @onclick="expandTree">zoom</button>
                     } else {
                         <button class="btn btn-secondary" @onclick="shrinkTree">un-zoom</button>
                     }
+
+                    <div class="slidecontainer">
+                        Only view methods greater than this size:
+                        <br />
+                        <input type="range" min="100" max="2000" value="250" id="treeInSizeRange"> <div class="value" id="treeInSizeValue"></div>
+                    </div>
                     
                 </div>
             </div>
@@ -117,6 +116,27 @@
         </div>
         
         
+    </div>
+
+    <div id="container">
+        <div class="row">
+            <div class="viz-container" id="wheel">
+                <div class="slidecontainer" style="display:none">
+                    <div>
+                        Only view dependencies greater than this size:
+                        <br/>
+                        <input type="range" min="100" max="600" value="250" id="sizeRange"> <div class="value" id="sizeValue"></div>
+                    </div>
+
+                    <div>
+                        Minimum number of dependencies:
+                        <br/>
+                        <input type="range" min="0" max="50" value="5" id="depRange"> <div class="value" id="depValue"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="viz-container" id="dep-tree"></div>
+        </div>
     </div>
 
     @if (apps != null) {
@@ -140,58 +160,57 @@
             <div class="line-viz" id="line"></div>
             <div class="line-viz" id="area"></div>
         </div>
-    }
+    } 
     
     
 </div>
-
+*@
 
 
 @code {  
     Dictionary<string, List<History.Info>> info;
     string[] apps;
-    FormatData data;
-    FormatData in_data;
-    FormatData temp_data;
-    string sunburst_str;
-    string sunburst_in_str;
+    FormatData tempData;
+    string sunburstStr;
+    string sunburstInStr;
     string dataJson;
-    string dataJson_in;
+    string dataJsonIn;
     string tree;
-    string tree_in;
-    private string data_path;
+    string treeIn;
     private int inputSize { get; set; }
     private bool overload { get; set; }
     private bool compare { get; set; }
-    private bool sunburst_in { get; set; }
     string displayType;
+    string inFileName;
+    string fileName;
+    string dataPath;
+    FormatData data;
+    FormatData inData;
     IFileListEntry file;
-    private string file_name;
-    private string in_file_name;
     private bool zoomed;
 
     async Task HandleInFileSelected(IFileListEntry[] files) {
         file = files.FirstOrDefault();
-        in_file_name = file.Name;
+        inFileName = file.Name;
         await LoadFile(file, "in");
     }
 
     async Task HandleOutFileSelected(IFileListEntry[] files) {
         file = files.FirstOrDefault();
-        file_name = file.Name;
+        fileName = file.Name;
         await LoadFile(file, "in");
     }
 
     async Task LoadFile(IFileListEntry file, string state) {
-        string json_str = await ReadFile(file); 
-        var json_file = (List<FormatData>)JsonConvert.DeserializeObject(json_str, typeof(List<FormatData>));
-        if (json_file != null) {
+        string jsonStr = await ReadFile(file); 
+        var jsonFile = (List<FormatData>)JsonConvert.DeserializeObject(jsonStr, typeof(List<FormatData>));
+        if (jsonFile != null) {
             if (state == "in") {
-                in_data.name = "All(" + in_file_name + ")";
-                in_data.children = json_file;
+                inData.name = "All(" + inFileName + ")";
+                inData.children = jsonFile;
             } else {
-                data.name = "All(" + file_name + ")";
-                data.children = json_file;
+                data.name = "All(" + fileName + ")";
+                data.children = jsonFile;
             }
         }
     }
@@ -204,8 +223,8 @@
     }
 
     private string getFileName(string path) {
-        string[] temp_path = path.Split('/');
-        return temp_path[temp_path.Length - 1];
+        string[] tempPath = path.Split('/');
+        return tempPath[tempPath.Length - 1];
     }
 
     private async Task Graph(string app) {
@@ -218,10 +237,6 @@
         }
         var json = JsonConvert.SerializeObject(data);
         await JsRuntime.InvokeAsync<string>("graph", json);
-    }
-
-    private async Task clear() {
-        await JsRuntime.InvokeAsync<string>("clear");
     }
 
     private async Task reset() {
@@ -240,38 +255,14 @@
         await JsRuntime.InvokeAsync<string>("sunburst");   
     }
 
-    private async void slope() {
-        await JsRuntime.InvokeAsync<string>("slope");
-    }
-
     private async void expandTree() {
         zoomed = true;
-        await JsRuntime.InvokeAsync<string>("expandTree", tree_in, tree);
+        await JsRuntime.InvokeAsync<string>("expandTree", treeIn, tree);
     }
 
     private async void shrinkTree() {
         zoomed = false;
-        await JsRuntime.InvokeAsync<string>("shrinkTree", tree_in, tree);
-    }
-
-    private async Task ReadConfig() {
-        Dictionary<string, string> config = await Http.GetJsonAsync<Dictionary<string, string>>("json/config.json");
-        data_path = config["data"];
-    }
-
-    private async Task getData(string path, string state="in") {
-        StringBuilder json_str = new StringBuilder();
-        var watch = Stopwatch.StartNew();
-        List<FormatData> json_data = await Http.GetJsonAsync<List<FormatData>>(path);
-
-        string file_name = getFileName(path);
-        if (state == "in") {
-            in_data = new FormatData {name="All (" + file_name + ")",  children=json_data};
-        } else {
-            data = new FormatData {name="All (" + file_name + ")",  children=json_data}; 
-        }
-        watch.Stop();
-        Console.WriteLine("get data " + state + " " + watch.ElapsedMilliseconds);
+        await JsRuntime.InvokeAsync<string>("shrinkTree", treeIn, tree);
     }
 
     private string getClassName(string className) {
@@ -294,18 +285,18 @@
 
     private void formatData(FormatData data, int size, bool overload, string state, 
                             string fileName) {
-        temp_data = new FormatData {name=data.name, 
+        tempData = new FormatData {name=data.name, 
                                             size=data.size, 
                                             children=new List<FormatData>()};
-        StringBuilder csv_str = new StringBuilder();
+        StringBuilder csvStr = new StringBuilder();
         foreach(var item in data.children) {
-            string as_name = "(Assembly) " + item.name;
-            FormatData as_data = new FormatData{name=as_name, size=0};
+            string asName = "(Assembly) " + item.name;
+            FormatData asData = new FormatData{name=asName, size=0};
             if (item.children != null) {
                 foreach(var cl in item.children) {    
                     cl.name = getClassName(cl.name);
-                    string class_name = "(Class) " + cl.name;
-                    FormatData class_data = new FormatData{name=class_name, children=null};            
+                    string className = "(Class) " + cl.name;
+                    FormatData classData = new FormatData{name=className, children=null};            
                     if (cl.children != null && cl.size > 0) {
                         var children = cl.children;
                         if (overload) {
@@ -318,39 +309,39 @@
                                                 size=d.Sum(da => da.size)
                                             }).ToList();
                         }
-                        var child_2 = children.Where(d => d.size > size).ToList();
-                        children = child_2;
-                        class_data.children = child_2;
-                        string begin = "All" + " (" + fileName+ ")" + "-" + as_name + "-" + class_name + "-";
+                        var child2 = children.Where(d => d.size > size).ToList();
+                        children = child2;
+                        classData.children = child2;
+                        string begin = "All" + " (" + fileName+ ")" + "-" + asName + "-" + className + "-";
                         children.ForEach(d => {
                             string name = formatMethodName(d.name);
-                            csv_str.Append(begin + name + "," + d.size + "\n");
+                            csvStr.Append(begin + name + "," + d.size + "\n");
                         });
                     }
                         
-                    if (class_data.children != null && 
-                        class_data.children.Count() > 0) {
-                        if (as_data.children == null) {
-                            as_data.children = new List<FormatData>();
+                    if (classData.children != null && 
+                        classData.children.Count() > 0) {
+                        if (asData.children == null) {
+                            asData.children = new List<FormatData>();
                         }
-                        as_data.children.Add(class_data); 
+                        asData.children.Add(classData); 
                     }
                     
                 }
             }
-            temp_data.children.Add(as_data);
+            tempData.children.Add(asData);
         }
         
         if (state == "out") {
-            sunburst_str = csv_str.ToString();
-            dataJson = JsonConvert.SerializeObject(temp_data);
+            sunburstStr = csvStr.ToString();
+            dataJson = JsonConvert.SerializeObject(tempData);
             tree = dataJson.Replace("size", "value");
         } else if (state == "in") {
-            dataJson_in = JsonConvert.SerializeObject(temp_data);
-            sunburst_in_str = csv_str.ToString();
-            tree_in = dataJson_in.Replace("size", "value");
+            dataJsonIn = JsonConvert.SerializeObject(tempData);
+            sunburstInStr = csvStr.ToString();
+            treeIn = dataJsonIn.Replace("size", "value");
         }
-        temp_data = null;
+        tempData = null;
     }
 
     private async Task explanationDisplay(string type) {
@@ -359,13 +350,10 @@
     }
 
     private async Task display() {
-        if (in_file_name == "") in_file_name = data_path;
-        if (file_name == "") file_name = "mscorlib.json";
-        
-        formatData(data, inputSize, overload, "out", file_name);
-        formatData(in_data, inputSize, overload, "in", in_file_name);
+        if (inFileName == "") inFileName = dataPath;
+        if (fileName == "") fileName = "mscorlib.json";
 
-        await JsRuntime.InvokeAsync<string>("displayAll", sunburst_str, sunburst_in_str, tree, tree_in, file_name, in_file_name, compare);
+        await JsRuntime.InvokeAsync<string>("displayAll", inputSize, overload, compare);
     }
 
     private async Task LoadHistory() {
@@ -376,22 +364,15 @@
 
     protected override async Task OnInitializedAsync() {
         displayType = "";
-        sunburst_str = "";
-        sunburst_in_str = "";
-        file_name = "";
-        in_file_name = "";
+        sunburstStr = "";
+        sunburstInStr = "";
+        fileName = "";
+        inFileName = "";
         inputSize = 300;
         overload = false;
         zoomed = false;
 
         var watch = Stopwatch.StartNew();      
-        await ReadConfig();
-        await LoadHistory();
-        await getData("json/" + data_path, "in");
-        await getData("json/mscorlib.json", "out");
-        
-        watch.Stop();
-        Console.WriteLine("get data " + watch.ElapsedMilliseconds);        
     }
     
     public class FormatData{
@@ -399,13 +380,6 @@
         public int size { get; set; }
         public List<FormatData> children { get; set; }
 
-        public FormatData Copy() {
-            FormatData other = (FormatData) this.MemberwiseClone();
-            other.name = String.Copy(name);
-            other.size = size;
-            other.children = new List<FormatData>(children);
-            return other;
-        }
     }
     
 

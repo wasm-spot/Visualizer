@@ -1,9 +1,6 @@
-function getMethodName(name, type="sunburst") {
+function getMethodName(name) {
     name = name.split("(")[0];
-    if (type == "sunburst") {
-        name = name.replace(" ", "\n");
-        name = "Removed," + name; 
-    }
+
     return name;
 }
 
@@ -23,74 +20,78 @@ function getClassName(className) {
 
 //  given json file of assembly dependencies, reformat to match format
 //  needed for treemap visualization
-function filterJson(data, size=100, overload=true, type="tree") {
-    var as_dict = {};
-    if (type == "sunburst") {
-        var csv_str = "";
-    } 
+function filterJson(data, size=100, overload=true) {
+    var treeDict = {"name" : "All", "children" : []}
+    var resDict = {"name": "All", "children" : []}
+    var csvStr = "";
     data.forEach(function(as) {
-        var as_name = as["name"];
-        as_dict["name"] = as_name;
-        as_dict["children"] = [];
-        var classes = as["sections"];
+        var asDict = {};
+        var asName = as["name"] + " (Assembly)";
+        asDict["name"] = asName;
+        asDict["children"] = [];
+        var classes = as["children"];
         if (classes != null) {
             classes.forEach(function(cl) {
-                var class_dict = {};
-                var class_name = getClassName(cl["name"]);
-                var methods = cl["sections"];
-                if (methods != null) {
-                    var names = [];
-                    var sizes = [];
-                    methods.forEach(function(method) {
-                        var methodName = method["name"];
-                        if (overload) {
-                            methodName = getMethodName(methodName, type=type);
-                        }
-                        var ix = names.indexOf(methodName);
-                        if (ix != -1) {
-                            sizes[ix] += +method["size"];
-                        } else {
-                            names.push(methodName);
-                            sizes.push(+method["size"])
-                        }
-                    })
-                    for (var i=0; i<names.length; i++) {
-                        if (sizes[i] >= size) {
-                            if (class_dict["children"] == null) {
-                                class_dict["children"] = [];
-                                class_dict["name"] = class_name;
-                            } else if (type == "tree") {
-                                class_dict["children"].push({"name": names[i], 
-                                                        "value": sizes[i]});
+                if (cl.type == "class") {
+                    var classDict = {};
+                    var className = getClassName(cl["name"]) + " (Class)";
+                    var methods = cl["children"];
+                    if (methods != null) {
+                        var names = [];
+                        var sizes = [];
+                        methods.forEach(function(method) {
+                            var methodName = method["name"];
+                            if (overload) {
+                                methodName = getMethodName(methodName) + " (Method)";
                             }
-                            else if (type == "flower") {
-                                class_dict["children"].push({"name": names[i], 
-                                                        "size": sizes[i]});
-                            } else if (type == "sunburst") {
+                            var ix = names.indexOf(methodName);
+                            if (ix != -1) {
+                                sizes[ix] += +method["size"];
+                            } else {
+                                names.push(methodName + " (Method)");
+                                sizes.push(+method["size"])
+                            }
+                        })
+                        for (var i=0; i<names.length; i++) {
+                            if (sizes[i] >= size) {
+                                if (classDict["children"] == null) {
+                                    classDict["children"] = [];
+                                    classDict["name"] = className;
+                                } 
+                                // Treemap format
+                                classDict["children"].push({"name": names[i] , 
+                                                        "value": sizes[i]});
+
+                                // sunburst format
                                 var name = names[i];
-                                var line = as_name + "-" + class_name + "-" + name + "," + sizes[i] + "\n";
-                                csv_str += line;
-                            } 
+                                var line = asName + "-" + className + "-" + name + "," + sizes[i] + "\n";
+                                csvStr += line;
+                                
+                            }
+                        }
+                
+                        if (classDict["name"] != null) {
+                            asDict["children"].push(classDict);
                         }
                     }
-               
-                    if (class_dict["name"] != null) {
-                        as_dict["children"].push(class_dict);
-                    }
-                    
+                }
+                if (cl.type == "resource") {
+                    var resource = {"name": cl.name + "( Resource)", "value": cl.size}
+                    var assembly = {"name": asName, "children" : [resource]}
+                    resDict.children.push(assembly)
+                    asDict["children"].push(resource);
                 }
             })
             
         }
+        treeDict.children.push(asDict)
     })
-    if (type == "sunburst") {
-        return csv_str;
-    }
-    return as_dict;
+
+    return [treeDict, csvStr, resDict];
 }
 
 function formatMethods(data, size=100, overload=true) {
-    var data_list = [];
+    var dataList = [];
     data.forEach(function(as) {
         var asName = as["name"];
         if (as.sections != null) {
@@ -114,7 +115,7 @@ function formatMethods(data, size=100, overload=true) {
 
                 for (var i=0; i<names.length; i++) {
                     if (sizes[i] >= size) {
-                        data_list.push({"name": className + "\n" + names[i], 
+                        dataList.push({"name": className + "\n" + names[i], 
                                         "value": sizes[i]});
                     }
                 }
@@ -122,18 +123,18 @@ function formatMethods(data, size=100, overload=true) {
         }
     })
 
-    return data_list;
+    return dataList;
 }
 
 function formatClasses(data, size=100, overload=true) {
-    var data_list = {};
+    var dataList = {};
     data.forEach(function(as) {
         var asName = as["name"];
         if (as.sections != null) {
-            var class_list = [];
+            var classList = [];
             as.sections.forEach(function(cl) {
                 if (cl.size >= size){
-                    class_list.push({"name": cl.name, "value": cl.size});
+                    classList.push({"name": cl.name, "value": cl.size});
                 }
                 var names = [];
                 var sizes = [];
@@ -150,25 +151,26 @@ function formatClasses(data, size=100, overload=true) {
                         sizes.push(+method.size);
                     }
                 })
-                var method_list = [];
+                var methodList = [];
                 for (var i=0; i< names.length; i++) {
                     if (sizes[i] >= size) {
-                        method_list.push({"name": names[i], "value": sizes[i]});
+                        methodList.push({"name": names[i], "value": sizes[i]});
                     }
                 }
-                data_list[cl.name] = method_list;
+                dataList[cl.name] = methodList;
             })
-            data_list["class"] = class_list;
+            dataList["class"] = classList;
         }
     })
     
-    return data_list;
+    return dataList;
 }
 
-function formatComparison(data_in, data_out, size=100, overload=true) {
+function formatComparison(dataIn, dataOut, size=100, overload=true) {
     var data = {}
-    data["linker_in"] = formatClasses(data_in);
-    data["linker_out"] = formatClasses(data_out);
+    data["linker_in"] = formatClasses(dataIn);
+    data["linker_out"] = formatClasses(dataOut);
     return data;
 }
+
 

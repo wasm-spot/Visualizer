@@ -27,11 +27,14 @@
     <script src="https://d3js.org/d3-color.v1.min.js"></script>
     <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
     <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://d3js.org/d3-hierarchy.v1.min.js"></script>
+
     <script>
         var d3v4 = window.d3;
         window.d3 = null;
-        var color;
+        var color = d3v4.interpolateGreens;
         var root_out, root_in, max_size;
+        var filtered;
     </script>
     <script src="js/sequences.js"></script>
     <script src="js/format.js"></script>
@@ -40,54 +43,193 @@
     <script src="js/slopegraph.js"></script>
     <script src="js/flame.js"></script>
     <script src="js/color.js"></script>
+    <script src="js/dependency.js"></script>
     <script>
 
-        function countNodes(data) {
-            var count = 0;
-            if (data.children != null) {
-                count += data.children.length;
-                data.children.forEach(c => {
-                    if (c.children != null) {
-                        count += c.children.length;
-                        c.children.forEach(m => {
-                            if (m.children != null) count += m.children.length;
-                        })
-                    }
-                })
-            }
-            return count
+        var filters = {
+            size: 700,
+            deps: 3
+        };
+
+        var inFileName, fileName;
+        var inData, data;
+        var compare;
+
+        window.onload = function() {
+            d3v4.json("json/config.json", function(config) {
+                if (config.inData != null) {
+                    inFileName = config.inData;
+                    fileName = config.data;
+                    compare = true;
+                } else {
+                    inFileName = config.data;
+                    fileName = "mscorlib.json";
+                    compare = false;
+                }
+    
+                d3v4.json("json/" + inFileName, function(input) {
+                    inData = input;
+                    d3v4.json("json/" + fileName, function(output) {
+                        data = output;
+                        display();
+                   })
+               })
+               
+            })
         }
 
-        function hierarchy(data) {
-            var root = d3v4.hierarchy(data)
-                    .sum((d) => { return d.value })
-                    .sort((a, b) => { return b.height - a.height || b.value - a.value});
-            return root
-        }
+        window.display = function() {
+            var input = document.getElementById("inputInFile");
+            var output = document.getElementById("inputOutFile");
 
-        window.displayAll = function(csv_str, csv_in_str, tree, tree_in, title, title_in, compare) {
-            tree = JSON.parse(tree)
-            tree_in = JSON.parse(tree_in)
-            color = d3v4.interpolateGreens;
+            var overload = document.getElementById("overload").checked;
+            document.getElementById("compare").checked = compare;
+
+            var sunburstInSlider = document.getElementById("sunburstInSizeRange");
+            var sunburstInSizeOutput = document.getElementById("sunburstInSizeValue");
+            sunburstInSizeOutput.innerHTML = sunburstInSlider.value
+
+            var sunburstOutSlider = document.getElementById("sunburstOutSizeRange");
+            var sunburstOutSizeOutput = document.getElementById("sunburstOutSizeValue");
+            sunburstOutSizeOutput.innerHTML = sunburstOutSlider.value
+
+            var treeInSlider = document.getElementById("treeInSizeRange");
+            var treeInSizeOutput = document.getElementById("treeInSizeValue");
+            treeInSizeOutput.innerHTML = treeInSlider.value;
+
+            var treeOutSlider = document.getElementById("treeOutSizeRange");
+            var treeOutSizeOutput = document.getElementById("treeOutSizeValue");
+            treeOutSizeOutput.innerHTML = treeOutSlider.value;
+
+            var sizeSlider = document.getElementById("sizeRange");
+            var depSlider = document.getElementById("depRange");
+            var sizeOutput = document.getElementById("sizeValue");
+            var depOutput = document.getElementById("depValue");
+            var submit = document.getElementById("submit");
+            var search = document.getElementById("search");
+            var searchValue = search.value;
+            
+            var filteredIn = filterJson(inData, 250, overload);
+            var treeIn = filteredIn[0];
+            var csvInStr = filteredIn[1];
+            var resIn = filteredIn[2];
+
+            var filteredOut = filterJson(data, 250, overload);
+            var treeOut = filteredOut[0];
+            var csvOutStr = filteredOut[1];
+            var resOut = filteredOut[2];
+            
+            d3v4.selectAll(".slidecontainer").style("display", null)
             d3v4.selectAll("svg").remove();
-            d3v4.selectAll("#landing")
-                .attr("class", "fadeOut")
-                .style("position", "relative")
-                .style("top", 0)
-                .style("left", 0)
-                .style("margin-bottom", "10px")
-            d3v4.selectAll("#landing").style("display", "null");
             d3v4.selectAll("#chart").style("display", "null");
-            if (compare) {
+
+            displaySunburst(csvOutStr, csvInStr, fileName, inFileName, compare);
+            displayTreemap(treeOut, treeIn, compare);
+            displayTreemap(resOut, resIn, compare, resource = true);
+            filterDepJson(filters);
+
+
+            sizeOutput.innerHTML = sizeSlider.value; 
+            depOutput.innerHTML = depSlider.value; 
+
+            var sunburstInInputSize = sunburstInSlider.value;
+            var treeInInputSize = treeInSlider.value;
+
+            sunburstInSlider.onchange = function() {
+                sunburstInSizeOutput.innerHTML = this.value;
+                inputSize = this.value;
+                filteredIn = filterJson(inData, inputSize, overload);
+                displaySunburst(csvOutStr, filteredIn[1], fileName, inFileName, compare);
+            }
+
+            sunburstOutSlider.onchange = function() {
+                sunburstOutSizeOutput.innerHTML = this.value;
+                inputSize = this.value;
+                filteredOut = filterJson(data, inputSize, overload);
+                displaySunburst(filteredOut[1], csvInStr, fileName, inFileName, compare);
+            }
+
+            treeInSlider.onchange = function() {
+                treeInSizeOutput.innerHTML = this.value;
+                inputSize = this.value;
+                filteredIn = filterJson(inData, inputSize, overload);
+                treeIn = filteredIn[0];
+                displayTreemap(treeOut, treeIn, compare);
+            }
+
+            treeOutSlider.onchange = function() {
+                treeOutSizeOutput.innerHTML = this.value;
+                inputSize = this.value;
+                filteredOut = filterJson(data, inputSize, overload);
+                treeOut = filteredOut[0];
+                displayTreemap(treeOut, treeIn, compare);
+            }
+
+            sizeSlider.onchange = function() {
+                sizeOutput.innerHTML = this.value;
+                filters.size = this.value;
+                filterDepJson(filters, search=searchValue);
+            }
+
+            depSlider.onchange = function() {
+                depOutput.innerHTML = this.value;
+                filters.deps = parseInt(this.value);
+                filterDepJson(filters, search=searchValue);
+            }
+
+            submit.onclick = function() {
+                search = document.getElementById("search");
+                searchValue = search.value;
+                filterDepJson(filters, search=searchValue);
+            }
+
+            search.onchange = function() {
+                searchValue = search.value;
+            }
+
+            input.onchange = function() {
+                var reader = new FileReader()
+                var file = input.files[0]
+                inFileName = file.name;
+                reader.readAsText(file)
+                reader.onload = function() {
+                    inData = JSON.parse(reader.result);
+                    display();
+                }
+            }
+
+            output.onchange = function() {
+                var reader = new FileReader()
+                var file = output.files[0]
+                fileName = file.name
+                reader.readAsText(file)
+                reader.onload = function() {
+                    data = JSON.parse(reader.result);
+                    display();
+                }
+            }
+             
+        }
+
+        window.both = function() {
+            compare = document.getElementById("compare").checked
+            if (document.getElementById("compare").checked || compare) {
+                d3v4.select("#sunburst-out").style("display", null)
                 d3v4.selectAll(".viz-container").style("display", "inline-block");
+                d3v4.select("#inputOut").style("display", null)
+                display()
+                
             } else {
                 d3v4.selectAll(".viz-container").style("display", "block");
                 d3v4.select("#sunburst-in").style("margin-right", "auto");
                 d3v4.select("#in-tree").style("margin-right", "auto");
+                d3v4.select("#sunburst-out").style("display", "none");
+                d3v4.select("#out-tree").style("display", "none");
+                d3v4.select("#inputOut").style("display", "none")
+                display()
             }
-            displaySunburst(csv_str, csv_in_str, title, title_in, compare);
-            displayTreemap(tree, tree_in, compare);
         }
+
 
         window.expandTree = function (tree_in, tree) {
             d3v4.selectAll("#treemap").remove();
@@ -114,23 +256,8 @@
             displayGraph(json);
         }
 
-        window.slope = function(json) {
-            clear();
-            d3v4.selectAll("#compare")
-                .style("display", "none");
-            d3v4.select("#compare-label")
-                .style("display", "none");
-            d3v4.select("#options")
-                .style("display", null);
-            displaySlopegraph(data_in, data_out);
-        }
-
-        window.reset = function() {
-            d3v4.selectAll("#landing").style("position", "fixed")
-                .style("margin-bottom", 0)
-                .style("top", "50%")
-                .style("left", "25%");
-            d3v4.selectAll("#chart").style("display", "none");
+        window.wheel = function(data) {
+            displayWheel(data);
         }
 
         window.clear = function(){
@@ -152,10 +279,6 @@
                 .style("display", "none");
         }
 
-        window.onload = function() {
-            clear();   
-        }
-
         window.toggle = function() {
             $('#sidebar').removeClass('active');
             // fade in the overlay
@@ -173,46 +296,170 @@
         
 
     </script>
+
+    <app></app>
+
+    <div id="landing">
+        <h1 class="landing-title">Linker Visualizer</h1>
+        <div id="options">
+            <form>
+                <p id="fields">
+                    <input id="overload" type="checkbox"/>
+                    <label>Merge overloaded methods</label>
+    
+                    <input id="compare" type="checkbox" onclick="both();"/>
+                    <label>Compare two data sources</label>
+                </p>
+                
+                
+                <label>Upload input data files</label>
+                <input id="inputInFile" type="file"/>
+                
+                <div id="inputOut" style="display: none;">
+                    <label>Upload alternative data for comparison</label>
+                    <input id="inputOutFile" type="file"/>
+                </div>
+            
+            </form>
+        </div>
+    </div>
+    
+    <div id="chart">
+                
+        <div id="container">
+            <h2 class="chart-title" id="sunburst-title"></h2>
+            <div class="description" id="sunburst-description"></div>
+            <div id="sequence"></div>
+            <div class="row">
+                <div class="viz-container" id="sunburst-in">
+                    <div class="slidecontainer">
+                        Only view methods greater than this size:
+                        <br />
+                        <input type="range" min="100" max="2000" value="250" id="sunburstInSizeRange"> <div class="value" id="sunburstInSizeValue"></div>
+                    </div>
+    
+                    <div class="explanation" id="in-explanation" style="visibility: hidden;">
+                            <span class="size" id="in-size"></span> =<br/>
+                            <span class="percentage" id="in-percentage"></span><br/>
+                            of overall size
+               
+                    </div>
+                </div>
+                
+       
+                <div class="viz-container" id="sunburst-out">
+                    <div class="slidecontainer" style="display:none">
+                        Only view methods greater than this size:
+                        <br />
+                        <input type="range" min="100" max="2000" value="250" id="sunburstOutSizeRange"> <div class="value" id="sunburstOutSizeValue"></div>
+                    </div>
+
+                    <div class="explanation" id="explanation" style="visibility: hidden;">
+                        <span class="size" id="out-size"></span> =<br/>
+                        <span class="percentage" id="percentage"></span><br/>
+                        of overall size
+                    </div>
+                </div>
+                
+                    
+            </div>
+            
+            
+        </div>
+        <div id="container">
+            <h2 class="chart-title" id="tree-title"></h2>
+            <div class="description" id="tree-description"></div>
+    
+            <div class="row">
+                <div class="viz-container" id="in-tree">
+                    <div class="menu">
+    
+                        <div class="slidecontainer">
+                            Only view methods greater than this size:
+                            <br />
+                            <input type="range" min="0" max="2000" value="250" id="treeInSizeRange"> <div class="value" id="treeInSizeValue"></div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                
+            </div>
+            <div class="row">
+                <div class="viz-container" id="out-tree" >  
+                    <div class="slidecontainer">
+                        Only view methods greater than this size:
+                        <br />
+                        <input type="range" min="0" max="2000" value="250" id="treeOutSizeRange"> <div class="value" id="treeOutSizeValue"></div>
+                    </div>
+                </div>
+            </div>
+            
+            
+        </div>
+
+        <div id="container">
+    
+            <div class="row">
+                <div class="viz-container" id="in-tree-res">
+                    <h3>Resources</h3>
+                </div>
+
+            
+                <div class="viz-container" id="out-tree-res" >  
+                    <h3>Resources</h3>
+                </div>
+            </div>
+            
+            
+        </div>
+    
+        <div id="container">
+            <div class="row">
+                <div class="viz-container" id="wheel">
+                    <div class="slidecontainer" style="display:none">
+                        <div>
+                            Only view dependencies greater than this size:
+                            <br/>
+                            <input type="range" min="0" max="2000" value="500" id="sizeRange"> <div class="value" id="sizeValue"></div>
+                        </div>
+    
+                        <div>
+                            Minimum number of dependencies:
+                            <br/>
+                            <input type="range" min="0" max="500" value="3" id="depRange"> <div class="value" id="depValue"></div>
+                        </div>
+
+                        <div>
+                            <input id="search" type="text" placeholder="Search...">
+                            <button id="submit" type="submit">Submit</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="viz-container" id="dep-tree"></div>
+            </div>
+            <div class="row">
+                <div class="viz-container" id="wheel2">
+                    <h2>Dependencies</h2>
+                    <div id="wheelName"></div>
+                </div>
+                <div class="viz-container" id="reversedwheel">
+                    <h2>References</h2>
+                </div>
+            </h3>
+        </div>
+        
+        
+    </div>
+    
+    <div id="visualization"></div>
     
 
-    <script src="https://d3js.org/d3.v3.min.js"></script>
-    <script src="js/flower.js"></script>
-    <script>
-        var d3v3 = window.d3;
-        window.d3 = null;
-        window.flower = function(dataJson) {            
-            displayFlower(dataJson);       
-        }
-
-        window.display = function(type) {
-            clear();
-            if (type == "tree") {
-                treeDisplay();
-            } else if (type == "sunburst") {
-                sunburstDisplay();
-            } else if (type == "flower") {
-                flowerDisplay();
-            }
-        }
-    </script>
-    <app></app>
-    <div id="visualization"></div>
     <div class="tooltip" id="tooltip"></div>
     <div class="tooltip" id="tooltip-area"></div>
-    
-    
+
     <script>
         
-        function hexToRgb(hex) {
-            hex = hex.replace('#', '');
-            var bigint = parseInt(hex, 16);
-            var r = (bigint >> 16) & 255;
-            var g = (bigint >> 8) & 255;
-            var b = bigint & 255;
-
-            return "rgb(" + r + "," + g + "," + b + ")";
-        }
-
-</script>
+    </script>
 </body>
 </html>

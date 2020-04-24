@@ -37,14 +37,13 @@ function sunburstDisplay() {
   d3v4.select("#sunburst-title").html("Sunburst")
   d3v4.select("#sunburst-description")
     .html("A sunburst diagram visualizes the relative size and hierarchy of \
-          classes and methods in a library. Hover over each sector for more \
+          classes and methods in an assembly. Hover over each sector for more \
           information.")
 }
 
 function displaySunburst(dataJson, dataJson_in, title, title_in, compare) {
   sunburstDisplay();
   createVisualization(dataJson, data_in=dataJson_in, title, title_in, compare);
-  window.scrollTo(0,document.body.scrollHeight*0.9);
 }
 
 function createCsv(data, state) {
@@ -233,6 +232,7 @@ function mouseleave(d) {
 
 function initializeBreadcrumbTrail() {
   // Add the svg area.
+  d3v4.select("#trail").remove();
   var trail = d3v4.select("#sequence").append("svg:svg")
       .attr("width", window.innerWidth)
       .attr("height", window.innerHeight*0.15)
